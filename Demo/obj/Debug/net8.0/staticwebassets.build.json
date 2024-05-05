@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "wnX+0GP5/z3te8sgnaex12CsHYfimW6gT36TmH7pcjI=",
+  "Hash": "dm7naEHac1IK2Ik635oWkMRi6tdU7HdMdctOxVQ1tgI=",
   "Source": "Demo",
   "BasePath": "_content/Demo",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "Demo\\wwwroot",
       "Source": "Demo",
-      "ContentRoot": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\",
       "BasePath": "_content/Demo",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\css\\app.css",
+      "Identity": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\css\\app.css",
       "SourceId": "Demo",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\",
       "BasePath": "_content/Demo",
       "RelativePath": "css/app.css",
       "AssetKind": "All",
@@ -36,10 +36,10 @@
       "OriginalItemSpec": "wwwroot\\css\\app.css"
     },
     {
-      "Identity": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\css\\pager.css",
+      "Identity": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\css\\pager.css",
       "SourceId": "Demo",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\",
       "BasePath": "_content/Demo",
       "RelativePath": "css/pager.css",
       "AssetKind": "All",
@@ -55,10 +55,10 @@
       "OriginalItemSpec": "wwwroot\\css\\pager.css"
     },
     {
-      "Identity": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\images\\admin.png",
+      "Identity": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\images\\admin.png",
       "SourceId": "Demo",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\",
       "BasePath": "_content/Demo",
       "RelativePath": "images/admin.png",
       "AssetKind": "All",
@@ -74,10 +74,10 @@
       "OriginalItemSpec": "wwwroot\\images\\admin.png"
     },
     {
-      "Identity": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\images\\favicon.png",
+      "Identity": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\images\\favicon.png",
       "SourceId": "Demo",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\",
       "BasePath": "_content/Demo",
       "RelativePath": "images/favicon.png",
       "AssetKind": "All",
@@ -93,10 +93,10 @@
       "OriginalItemSpec": "wwwroot\\images\\favicon.png"
     },
     {
-      "Identity": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\images\\loader.gif",
+      "Identity": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\images\\loader.gif",
       "SourceId": "Demo",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\",
       "BasePath": "_content/Demo",
       "RelativePath": "images/loader.gif",
       "AssetKind": "All",
@@ -112,10 +112,10 @@
       "OriginalItemSpec": "wwwroot\\images\\loader.gif"
     },
     {
-      "Identity": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\images\\photo.jpg",
+      "Identity": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\images\\photo.jpg",
       "SourceId": "Demo",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\",
       "BasePath": "_content/Demo",
       "RelativePath": "images/photo.jpg",
       "AssetKind": "All",
@@ -131,10 +131,10 @@
       "OriginalItemSpec": "wwwroot\\images\\photo.jpg"
     },
     {
-      "Identity": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\js\\app.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\js\\app.js",
       "SourceId": "Demo",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\",
       "BasePath": "_content/Demo",
       "RelativePath": "js/app.js",
       "AssetKind": "All",
@@ -150,10 +150,10 @@
       "OriginalItemSpec": "wwwroot\\js\\app.js"
     },
     {
-      "Identity": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\js\\jquery.min.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\js\\jquery.min.js",
       "SourceId": "Demo",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\",
       "BasePath": "_content/Demo",
       "RelativePath": "js/jquery.min.js",
       "AssetKind": "All",
@@ -169,10 +169,10 @@
       "OriginalItemSpec": "wwwroot\\js\\jquery.min.js"
     },
     {
-      "Identity": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\js\\jquery.unobtrusive-ajax.min.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\js\\jquery.unobtrusive-ajax.min.js",
       "SourceId": "Demo",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\",
       "BasePath": "_content/Demo",
       "RelativePath": "js/jquery.unobtrusive-ajax.min.js",
       "AssetKind": "All",
@@ -188,10 +188,10 @@
       "OriginalItemSpec": "wwwroot\\js\\jquery.unobtrusive-ajax.min.js"
     },
     {
-      "Identity": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\js\\jquery.validate.min.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\js\\jquery.validate.min.js",
       "SourceId": "Demo",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\",
       "BasePath": "_content/Demo",
       "RelativePath": "js/jquery.validate.min.js",
       "AssetKind": "All",
@@ -207,10 +207,10 @@
       "OriginalItemSpec": "wwwroot\\js\\jquery.validate.min.js"
     },
     {
-      "Identity": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\js\\jquery.validate.unobtrusive.min.js",
+      "Identity": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\js\\jquery.validate.unobtrusive.min.js",
       "SourceId": "Demo",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\",
       "BasePath": "_content/Demo",
       "RelativePath": "js/jquery.validate.unobtrusive.min.js",
       "AssetKind": "All",
@@ -226,10 +226,10 @@
       "OriginalItemSpec": "wwwroot\\js\\jquery.validate.unobtrusive.min.js"
     },
     {
-      "Identity": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\photos\\m1.jpg",
+      "Identity": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\photos\\m1.jpg",
       "SourceId": "Demo",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\",
       "BasePath": "_content/Demo",
       "RelativePath": "photos/m1.jpg",
       "AssetKind": "All",
@@ -245,10 +245,10 @@
       "OriginalItemSpec": "wwwroot\\photos\\m1.jpg"
     },
     {
-      "Identity": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\photos\\m2.jpg",
+      "Identity": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\photos\\m2.jpg",
       "SourceId": "Demo",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\yongc\\OneDrive\\Desktop\\Y2S2\\EWA\\Assignment\\Demo\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\",
       "BasePath": "_content/Demo",
       "RelativePath": "photos/m2.jpg",
       "AssetKind": "All",
