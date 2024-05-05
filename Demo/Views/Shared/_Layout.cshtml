@@ -16,7 +16,7 @@
     <div class="info">@Html.Raw(TempData["Info"])</div>
 
     <header>
-        <h1><a href="/">University Management System</a></h1>
+                    <div class="profile-details">
 
         @if (User.Identity!.IsAuthenticated)
         {
@@ -62,10 +62,14 @@
         {
             <a href="/Account/UpdateProfile">Update Profile</a>
         }
-    </nav>
-
+        </nav>*@
+        <section class="home-section">
+            <div class="home-content">
+                <i class='bx bx-menu'></i>
+                <header>
+                    <h1>@ViewBag.Title</h1>
+                </header>
     <main>
-        <h1>@ViewBag.Title</h1>
         @RenderBody()
     </main>
 
@@ -73,7 +77,7 @@
         Developed by <b>Simon pattern 多多</b> &middot;
         Copyrighted &copy; @DateTime.Today.Year
     </footer>
-
+        </section>
     <script src="/js/jquery.min.js"></script>
     <script src="/js/jquery.unobtrusive-ajax.min.js"></script>
     <script src="/js/jquery.validate.min.js"></script>
