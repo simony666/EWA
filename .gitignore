@@ -1,4 +1,4 @@
 .vs
-./bin
-./obj
-./DB_log.ldf
+./Demo/bin/*
+./Demo/obj/*
+./Demo/DB_log.ldf
