@@ -1,0 +1,191 @@
+﻿@inject Helper hp
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/css/pager.css">
+    <link rel="stylesheet" href="/css/app.css" asp-append-version="true">
+    @RenderSection("head", false)
+</head>
+<body>
+    <div class="info">@Html.Raw(TempData["Info"])</div>
+    <div class="container">
+        <nav class="sidebar close">
+            <div class="logo-details">
+                <i class='bx bxl-c-plus-plus'></i>
+                <span class="logo_name">Kindegarden Management</span>
+            </div>
+            <ul class="nav-links">
+                <li>
+                    <a href="#">
+                        <i class='bx bx-grid-alt'></i>
+                        <span class="link_name">Dashboard</span>
+                    </a>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Category</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="iocn-link">
+                        <a href="#">
+                            <i class='bx bx-collection'></i>
+                            <span class="link_name">Student Registration Management</span>
+                        </a>
+                        <i class='bx bxs-chevron-down arrow'></i>
+                    </div>
+                    <ul class="sub-menu">
+                        <li><a class="link_name" href="#">Student Registration Management</a></li>
+                        <li><a href="insertStudentUI.jsp">Add student</a></li>
+                        <li><a href="/UniversityManagement/studentServlet">View student Details</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="iocn-link">
+                        <a href="#">
+                            <i class='bx bx-collection'></i>
+                            <span class="link_name">Tutor List</span>
+                        </a>
+                        <i class='bx bxs-chevron-down arrow'></i>
+                    </div>
+                    <ul class="sub-menu">
+                        <li><a class="link_name" href="#">Tutor List</a></li>
+                        <li><a href="displayTutorsUI.jsp">View Tutor List</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="iocn-link">
+                        <a href="#">
+                            <i class='bx bx-book-alt'></i>
+                            <span class="link_name">Subject Management</span>
+                        </a>
+                        <i class='bx bxs-chevron-down arrow'></i>
+                    </div>
+                    <ul class="sub-menu">
+                        <li><a class="link_name" href="#">Subject Management</a></li>
+                        <li><a href="createCourseUI.jsp">Create Subject</a></li>
+                        <li><a href="/UniversityManagement/courseServlet">View Subject</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="iocn-link">
+                        <a href="#">
+                            <i class='bx bx-book-alt'></i>
+                            <span class="link_name">Classes Management</span>
+                        </a>
+                        <i class='bx bxs-chevron-down arrow'></i>
+                    </div>
+                    <ul class="sub-menu">
+                        <li><a class="link_name" href="#">Classes Management</a></li>
+                        <li><a href="programmeCourseUI.jsp">View Classes</a></li>
+
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class='bx bx-line-chart'></i>
+                        <span class="link_name">Report</span>
+                    </a>
+
+                    <ul class="sub-menu">
+                        <li><a class="link_name" href="#">Report</a></li>
+                        <li><a href="/UniversityManagement/studentServlet?action=studentChart">Students Chart</a></li>
+                        <li><a href="/UniversityManagement/courseServlet?action=showHistory">Show History</a></li>
+                        <li><a href="/UniversityManagement/courseServlet?action=courseChart">Courses Chart </a></li>
+                    </ul>
+
+                </li>
+
+
+                <li>
+                    <div class="profile-details">
+                        <div class="profile-content">
+                            <!--塞 user photo-->
+                            <!--<img src="image/profile.jpg" alt="profileImg">-->
+                        </div>
+                        <div class="name-job">
+                            <div class="profile_name">塞 user name</div>
+                            <div class="job">塞user role</div>
+                        </div>
+                        <i class='bx bx-log-out'></i>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        @* <header>
+            <h1><a href="/">Kindegarden Management System</a></h1>
+
+            @if (User.Identity!.IsAuthenticated)
+        {
+            <div>
+                @User.Identity.Name |
+                @if (User.IsInRole("Member")) { <text>Member</text> }
+                @if (User.IsInRole("Admin"))  { <text>Admin</text>  }
+            </div>
+        }
+
+            @if (User.IsInRole("Member"))
+        {
+            var photoURL = hp.GetMemberPhotoURL();
+
+            if (photoURL != null)
+            {
+            <img src="/photos/@photoURL">
+            }
+        }
+        </header> 
+
+        <nav>
+            <a href="/">Index</a>
+            @if (User.IsInRole("Member"))
+        {
+            <a href="/Product/Order">Order</a>
+        }
+
+        <div></div>
+
+            @if (User.Identity.IsAuthenticated)
+        {
+            <a href="/Account/Logout">Logout</a>
+            <a href="/Account/UpdatePassword">Update Password</a>
+        }
+        else
+        {
+            <a href="/Account/Login">Login</a>
+            <a href="/Account/Register">Register</a>
+            <a href="/Account/ResetPassword">Reset Password</a>
+        }
+            @if (User.IsInRole("Member"))
+        {
+            <a href="/Account/UpdateProfile">Update Profile</a>
+        }
+        </nav>*@
+        <section class="home-section">
+            <div class="home-content">
+                <i class='bx bx-menu'></i>
+                <header>
+                    <h1>@ViewBag.Title</h1>
+                </header>
+                <main>
+                    @RenderBody()
+                </main>
+
+        <footer>
+            Developed by <b>Simon pattern 多多</b> &middot;
+            Copyrighted &copy; @DateTime.Today.Year
+        </footer>
+        </section>
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/jquery.unobtrusive-ajax.min.js"></script>
+        <script src="/js/jquery.validate.min.js"></script>
+        <script src="/js/jquery.validate.unobtrusive.min.js"></script>
+        <script src="/js/app.js" asp-append-version="true"></script>
+        @RenderSection("foot", false)
+</body>
+</html>

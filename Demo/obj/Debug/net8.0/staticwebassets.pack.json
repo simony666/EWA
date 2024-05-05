@@ -1,55 +1,55 @@
 {
   "Files": [
     {
-      "Id": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\css\\app.css",
+      "Id": "C:\\Users\\User\\Source\\Repos\\simony666\\EWA\\Demo\\wwwroot\\css\\app.css",
       "PackagePath": "staticwebassets\\css\\app.css"
     },
     {
-      "Id": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\css\\pager.css",
+      "Id": "C:\\Users\\User\\Source\\Repos\\simony666\\EWA\\Demo\\wwwroot\\css\\pager.css",
       "PackagePath": "staticwebassets\\css\\pager.css"
     },
     {
-      "Id": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\images\\admin.png",
+      "Id": "C:\\Users\\User\\Source\\Repos\\simony666\\EWA\\Demo\\wwwroot\\images\\admin.png",
       "PackagePath": "staticwebassets\\images\\admin.png"
     },
     {
-      "Id": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\images\\favicon.png",
+      "Id": "C:\\Users\\User\\Source\\Repos\\simony666\\EWA\\Demo\\wwwroot\\images\\favicon.png",
       "PackagePath": "staticwebassets\\images\\favicon.png"
     },
     {
-      "Id": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\images\\loader.gif",
+      "Id": "C:\\Users\\User\\Source\\Repos\\simony666\\EWA\\Demo\\wwwroot\\images\\loader.gif",
       "PackagePath": "staticwebassets\\images\\loader.gif"
     },
     {
-      "Id": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\images\\photo.jpg",
+      "Id": "C:\\Users\\User\\Source\\Repos\\simony666\\EWA\\Demo\\wwwroot\\images\\photo.jpg",
       "PackagePath": "staticwebassets\\images\\photo.jpg"
     },
     {
-      "Id": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\js\\app.js",
+      "Id": "C:\\Users\\User\\Source\\Repos\\simony666\\EWA\\Demo\\wwwroot\\js\\app.js",
       "PackagePath": "staticwebassets\\js\\app.js"
     },
     {
-      "Id": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\js\\jquery.min.js",
+      "Id": "C:\\Users\\User\\Source\\Repos\\simony666\\EWA\\Demo\\wwwroot\\js\\jquery.min.js",
       "PackagePath": "staticwebassets\\js\\jquery.min.js"
     },
     {
-      "Id": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\js\\jquery.unobtrusive-ajax.min.js",
+      "Id": "C:\\Users\\User\\Source\\Repos\\simony666\\EWA\\Demo\\wwwroot\\js\\jquery.unobtrusive-ajax.min.js",
       "PackagePath": "staticwebassets\\js\\jquery.unobtrusive-ajax.min.js"
     },
     {
-      "Id": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\js\\jquery.validate.min.js",
+      "Id": "C:\\Users\\User\\Source\\Repos\\simony666\\EWA\\Demo\\wwwroot\\js\\jquery.validate.min.js",
       "PackagePath": "staticwebassets\\js\\jquery.validate.min.js"
     },
     {
-      "Id": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\js\\jquery.validate.unobtrusive.min.js",
+      "Id": "C:\\Users\\User\\Source\\Repos\\simony666\\EWA\\Demo\\wwwroot\\js\\jquery.validate.unobtrusive.min.js",
       "PackagePath": "staticwebassets\\js\\jquery.validate.unobtrusive.min.js"
     },
     {
-      "Id": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\photos\\m1.jpg",
+      "Id": "C:\\Users\\User\\Source\\Repos\\simony666\\EWA\\Demo\\wwwroot\\photos\\m1.jpg",
       "PackagePath": "staticwebassets\\photos\\m1.jpg"
     },
     {
-      "Id": "C:\\Users\\User\\source\\repos\\EWA\\Demo\\wwwroot\\photos\\m2.jpg",
+      "Id": "C:\\Users\\User\\Source\\Repos\\simony666\\EWA\\Demo\\wwwroot\\photos\\m2.jpg",
       "PackagePath": "staticwebassets\\photos\\m2.jpg"
     },
     {
