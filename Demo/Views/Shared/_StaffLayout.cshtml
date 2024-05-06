@@ -14,7 +14,6 @@
     @RenderSection("head", false)
 </head>
 <body>
-    <div class="info">@Html.Raw(TempData["Info"])</div>
     <div class="container">
         <nav class="sidebar close">
             <div class="logo-details">
@@ -68,8 +67,8 @@
                     </div>
                     <ul class="sub-menu">
                         <li><a class="link_name" href="#">Subject Management</a></li>
-                        <li><a href="createCourseUI.jsp">Create Subject</a></li>
-                        <li><a href="/UniversityManagement/courseServlet">View Subject</a></li>
+                        <li><a href="/Subject/Create">Create Subject</a></li>
+                        <li><a href="/Subject/Index">View Subject</a></li>
                     </ul>
                 </li>
                 <li>
@@ -82,7 +81,8 @@
                     </div>
                     <ul class="sub-menu">
                         <li><a class="link_name" href="#">Classes Management</a></li>
-                        <li><a href="programmeCourseUI.jsp">View Classes</a></li>
+                        <li><a href="/Classes/Create">Create Classes</a></li>
+                        <li><a href="/Classes/Index">View Classes</a></li>
 
                     </ul>
                 </li>
@@ -169,6 +169,7 @@
         <section class="home-section">
             <div class="home-content">
                 <i class='bx bx-menu'></i>
+                 <div class="info">@Html.Raw(TempData["Info"])</div>
                 <header>
                     <h1>@ViewBag.Title</h1>
                 </header>
