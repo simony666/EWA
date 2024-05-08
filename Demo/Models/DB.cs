@@ -82,6 +82,9 @@ public class Tutors
 
     // FK
     public string ClassesId { get; set; }
+
+    // Navigation
+    public ICollection<Subjects> Subjects { get; set; } = new List<Subjects>();
 }
 
 public class Students

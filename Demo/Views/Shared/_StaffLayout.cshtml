@@ -14,7 +14,6 @@
     @RenderSection("head", false)
 </head>
 <body>
-    <div class="info">@Html.Raw(TempData["Info"])</div>
     <div class="container">
         <nav class="sidebar close">
             <div class="logo-details">
@@ -169,6 +168,7 @@
         <section class="home-section">
             <div class="home-content">
                 <i class='bx bx-menu'></i>
+                 <div class="info">@Html.Raw(TempData["Info"])</div>
                 <header>
                     <h1>@ViewBag.Title</h1>
                 </header>

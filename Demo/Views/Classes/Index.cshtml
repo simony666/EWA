@@ -1,0 +1,32 @@
+﻿@model ClassesVM
+
+@{
+    ViewBag.Title = "Classes | View Classes";
+    IEnumerable<Classes> classes = ViewBag.Classes;
+}
+
+ <p>@classes.Count() record(s)</p> 
+
+<table class="table">
+    <tr>
+        <th>Classes Id</th>
+        <th>Classes Name</th>
+        <th>Capacity</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    @foreach (var c in classes)
+    {
+        <tr>
+            <td>@c.Id</td>
+            <td>@c.Name</td>
+            <td>@c.Capacity</td>
+            <td>
+                <button data-post="/Classes/Update/@c.Id">Update</button>
+            </td>
+            <td>
+                <button data-post="/Classes/Delete/@c.Id">Delete</button>
+            </td>
+        </tr>
+    }
+</table>
