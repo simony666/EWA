@@ -1,7 +1,7 @@
 .vs
 /Demo/bin/*
 /Demo/obj/*
-/Demo/DB_log.ldf
 /Demo/obj
 Demo/DB_log.ldf
-Demo/DB_log.ldf
+Demo/Demo.csproj
+Demo/DB.mdf
