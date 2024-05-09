@@ -15,108 +15,7 @@
 </head>
 <body>
     <div class="container">
-        <nav class="sidebar close">
-            <div class="logo-details">
-                <i class='bx bxl-c-plus-plus'></i>
-                <span class="logo_name">Kindegarden Management</span>
-            </div>
-            <ul class="nav-links">
-                <li>
-                    <a href="#">
-                        <i class='bx bx-grid-alt'></i>
-                        <span class="link_name">Dashboard</span>
-                    </a>
-                    <ul class="sub-menu blank">
-                        <li><a class="link_name" href="#">Category</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <div class="iocn-link">
-                        <a href="#">
-                            <i class='bx bx-collection'></i>
-                            <span class="link_name">Student Registration Management</span>
-                        </a>
-                        <i class='bx bxs-chevron-down arrow'></i>
-                    </div>
-                    <ul class="sub-menu">
-                        <li><a class="link_name" href="#">Student Registration Management</a></li>
-                        <li><a href="insertStudentUI.jsp">Add student</a></li>
-                        <li><a href="/UniversityManagement/studentServlet">View student Details</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <div class="iocn-link">
-                        <a href="#">
-                            <i class='bx bx-collection'></i>
-                            <span class="link_name">Tutor List</span>
-                        </a>
-                        <i class='bx bxs-chevron-down arrow'></i>
-                    </div>
-                    <ul class="sub-menu">
-                        <li><a class="link_name" href="#">Tutor List</a></li>
-                        <li><a href="displayTutorsUI.jsp">View Tutor List</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <div class="iocn-link">
-                        <a href="#">
-                            <i class='bx bx-book-alt'></i>
-                            <span class="link_name">Subject Management</span>
-                        </a>
-                        <i class='bx bxs-chevron-down arrow'></i>
-                    </div>
-                    <ul class="sub-menu">
-                        <li><a class="link_name" href="#">Subject Management</a></li>
-                        <li><a href="createCourseUI.jsp">Create Subject</a></li>
-                        <li><a href="/UniversityManagement/courseServlet">View Subject</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <div class="iocn-link">
-                        <a href="#">
-                            <i class='bx bx-book-alt'></i>
-                            <span class="link_name">Classes Management</span>
-                        </a>
-                        <i class='bx bxs-chevron-down arrow'></i>
-                    </div>
-                    <ul class="sub-menu">
-                        <li><a class="link_name" href="#">Classes Management</a></li>
-                        <li><a href="programmeCourseUI.jsp">View Classes</a></li>
-
-                    </ul>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <i class='bx bx-line-chart'></i>
-                        <span class="link_name">Report</span>
-                    </a>
-
-                    <ul class="sub-menu">
-                        <li><a class="link_name" href="#">Report</a></li>
-                        <li><a href="/UniversityManagement/studentServlet?action=studentChart">Students Chart</a></li>
-                        <li><a href="/UniversityManagement/courseServlet?action=showHistory">Show History</a></li>
-                        <li><a href="/UniversityManagement/courseServlet?action=courseChart">Courses Chart </a></li>
-                    </ul>
-
-                </li>
-
-
-                <li>
-                    <div class="profile-details">
-                        <div class="profile-content">
-                            <!--塞 user photo-->
-                            <!--<img src="image/profile.jpg" alt="profileImg">-->
-                        </div>
-                        <div class="name-job">
-                            <div class="profile_name">塞 user name</div>
-                            <div class="job">塞user role</div>
-                        </div>
-                        <i class='bx bx-log-out'></i>
-                    </div>
-                </li>
-            </ul>
-        </nav>
+      <partial name="_staff_navbar">
         @* <header>
             <h1><a href="/">Kindegarden Management System</a></h1>
 
@@ -165,10 +64,11 @@
             <a href="/Account/UpdateProfile">Update Profile</a>
         }
         </nav>*@
+        </partial>
         <section class="home-section">
             <div class="home-content">
                 <i class='bx bx-menu'></i>
-                 <div class="info">@Html.Raw(TempData["Info"])</div>
+                <div class="info">@Html.Raw(TempData["Info"])</div>
                 <header>
                     <h1>@ViewBag.Title</h1>
                 </header>
