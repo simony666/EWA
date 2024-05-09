@@ -3,6 +3,8 @@
 @{
     ViewBag.Title = "Subject | Index";
     IEnumerable<Subjects> subjects = ViewBag.Subjects;
+    var tutors = ViewBag.Tutors;
+
 }
 
 <form method="post" class="form">
@@ -18,30 +20,27 @@
     </section>
 </form>
 
-@* <p>@subjects.Count() record(s)</p> *@
+<p>@subjects.Count() record(s)</p> 
 
 <table class="table">
     <tr>
         <th>Subjects Id</th>
         <th>Subjects Name</th>
-        <th>Subjects Fees</th>
-        <th>Day Of Week</th>
-        <th>Start - End time</th>
-        <th>Classes</th>
+        <th>Subjects Fees</th>  
         <th>Tutors</th>
+        <th>Edit</th>
+        <th>Delete</th>
     </tr>
-    @* @foreach (var s in subjects)
+    @foreach (var s in subjects)
     {
+        var tutorName = tutors.ContainsKey(s.TutorId) ? tutors[s.TutorId] : "Unknown";
     <tr>
-    <td>@s.Id</td>
-    <td>@s.Name</td>
-    <td>@s.Fees</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td>
-    <button data-post="/Subject/Delete/@s.Id">Delete</button>
-    </td>
+        <td>@s.Id</td>
+        <td>@s.Name</td>
+        <td>RM @s.Fees</td>
+        <td>@tutorName</td>
+        <td><button data-post="/Subject/Update/@s.Id">Update</button></td>
+        <td><button data-post="/Subject/Delete/@s.Id">Delete</button></td>
     </tr>
-    } *@
+    }
 </table>

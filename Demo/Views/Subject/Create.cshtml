@@ -9,14 +9,24 @@
         <table width="100%">
             
             <tr>
-                <td><label for="name">Subject Name:</label> </td>
-                <td><input name="name" ID="name" type="text" maxlength="100" /></td>
+                <td><label asp-for="Name">Subject Name:</label> </td>
+                <td><input asp-for="Name" name="name" ID="name" type="text" maxlength="100" /></td>
+            </tr>
+            <tr>
+                <td><label asp-for="Fees">Subject Fees:</label></td>
+                <td>
+                    <select asp-for="Fees" name="Fees" id="Fees">
+                        <option value="300.00">RM 300</option>
+                        <option value="400.00">RM 400</option>
+                        <option value="500.00">RM 500</option>
+                    </select>
+                </td>
             </tr>
 
-            <tr>
-                <td><label for="dayOfWeek">Day of Week</label> </td>
+            @* <tr>
+                <td><label asp-for="DayOfWeek">Day of Week</label> </td>
                 <td>
-                    <select name="dayOfWeek" id="dayOfWeek">
+                    <select asp-for="DayOfWeek" name="DayOfWeek" id="DayOfWeek">
                         <option value="Monday">Monday</option>
                         <option value="Tuesday">Tuesday</option>
                         <option value="Wednesday">Wednesday</option>
@@ -26,19 +36,19 @@
                 </td>
             </tr>
             <tr>
-                <td><label for="startTime">Start Time:</label></td>
-                <td><input type="time" id="startTime" name="startTime" min="08:00" max="17:00" value="08:00"></td>
+                <td><label asp-for="StartTime">Start Time:</label></td>
+                <td><input type="time" asp-for="StartTime" id="startTime" name="startTime" min="08:00" max="17:00" value="08:00"></td>
             </tr>
 
             <tr>
-                <td><label for="duration">Duration:</label> </td>
+                <td><label asp-for="Duration">Duration:</label> </td>
                 <td>
-                    <select name="duration" id="duration">
+                    <select asp-for ="Duration" name="duration" id="duration">
                         <option value="1">1</option>
                         <option value="2">2</option>
                     </select>
                 </td>
-            </tr>
+            </tr> *@
 
             <tr>
                 <td><label asp-for="TutorId">Tutor Names:</label> </td>
@@ -48,7 +58,14 @@
                     </select>
                 </td>
             </tr>
-
+            @* <tr>
+                <td><label asp-for="ClassId">Class Names:</label> </td>
+                <td>
+                    <select asp-for="ClassId" id="ClassId" asp-items="ViewBag.ClassList">
+                        <option value="">- Select One -</option>
+                    </select>
+                </td>
+            </tr> *@
             <tr>
                 <td></td>
                 <td>
