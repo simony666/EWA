@@ -42,7 +42,7 @@ namespace Demo.Controllers
             {
                 vm.Id = NextId();
                 TempData["Info"] = $"Class {vm.Id}.";
-                vm.Capacity = db.Students.Count(c => c.ClassesId == vm.Id);
+                vm.Capacity = db.ClassesSubjects.Count(c => c.ClassesId == vm.Id);
 
                 if (vm.Capacity > 20)
                 {
@@ -125,7 +125,7 @@ namespace Demo.Controllers
             return View(vm);
         }
 
-        // POST: Teacher/Delete
+        // POST: Classes/Delete
         [HttpPost]
         public IActionResult Delete(string? id)
         {
@@ -134,7 +134,7 @@ namespace Demo.Controllers
             if (c != null)
             {
                 // Check if any students are associated with this class
-                var studentsWithClass = db.Students.Any(s => s.ClassesId.Contains(id));
+                var studentsWithClass = db.ClassesSubjects.Any(s => s.ClassesId.Contains(id));
 
                 if (!studentsWithClass)
                 {
