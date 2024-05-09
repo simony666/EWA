@@ -150,7 +150,7 @@ namespace Demo.Controllers
                 }
                 else
                 {
-                    TempData["Error"] = $"Cannot delete subject {s.Id} because there are students associated with it.";
+                    TempData["Info"] = $"Cannot delete subject {s.Id} because there are students associated with it.";
                 }
             }
 

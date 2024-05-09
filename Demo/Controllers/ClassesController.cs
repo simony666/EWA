@@ -144,7 +144,7 @@ namespace Demo.Controllers
                 }
                 else
                 {
-                    TempData["Error"] = $"Cannot delete class {c.Id} because there are students associated with it.";
+                    TempData["Info"] = $"Cannot delete class {c.Id} because there are students associated with it.";
                 }
             }
 
