@@ -1,0 +1,47 @@
+﻿@model UpdateSubjectsVM
+
+@{
+    ViewBag.Title = "Subject | Update Subjects";
+    //IEnumerable<Tutors> tutors = ViewBag.Tutors;
+}
+<form method="post" class="form">
+    <div>
+        <table width="100%">
+            <tr>
+                <td>
+                    <label asp-for="Id">Subject Id:</label>
+                </td>
+                <td><b>@Model.Id</b></td>
+            
+            </tr>
+            <tr>
+                <td><label asp-for="Name">Subject Name:</label> </td>
+                <td><input asp-for="Name" name="name" ID="name" type="text" maxlength="100" /></td>
+            </tr>
+            <tr>
+                <td><label asp-for="Fees">Subject Fees:</label></td>
+                <td>
+                    <select asp-for="Fees" name="Fees" id="Fees">
+                        <option value="300.00">RM 300</option>
+                        <option value="400.00">RM 400</option>
+                        <option value="500.00">RM 500</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label asp-for="TutorId">Tutor Names:</label> </td>
+                <td>
+                    <select asp-for="TutorId" id="TutorId" asp-items="ViewBag.TutorList">
+                        <option value="">- Select One -</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="Insert" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
