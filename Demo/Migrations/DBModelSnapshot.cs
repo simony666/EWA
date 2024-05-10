@@ -73,7 +73,6 @@ namespace Demo.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("StudentsId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("SubjectsId")
@@ -237,9 +236,7 @@ namespace Demo.Migrations
 
                     b.HasOne("Demo.Models.Students", "Students")
                         .WithMany("ClassesSubjects")
-                        .HasForeignKey("StudentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StudentsId");
 
                     b.HasOne("Demo.Models.Subjects", "Subjects")
                         .WithMany("ClassesSubjects")

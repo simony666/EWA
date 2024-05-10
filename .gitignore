@@ -2,6 +2,4 @@
 /Demo/bin/*
 /Demo/obj/*
 /Demo/obj
-Demo/DB_log.ldf
 Demo/Demo.csproj
-Demo/DB.mdf
