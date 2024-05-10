@@ -82,6 +82,10 @@ public class ResetPasswordVM
     public string Email { get; set; }
 }
 
+//--------------------------------------------------------------
+//                     Leong Zhi Yen
+//--------------------------------------------------------------
+
 // create Subjects
 public class CreateSubjectsVM
 {
@@ -93,15 +97,22 @@ public class CreateSubjectsVM
     [Precision(6, 2)]
     public decimal Fees { get; set; }
 
-    [Display(Name = "Start Time"), DataType(DataType.Time)]
-    public DateTime StartTime { get; set; }
+    [Display(Name = "Tutor Name")]
+    public string TutorId { get; set; }
 
-    [Display(Name = "End Time"), DataType(DataType.Time)]
-    public DateTime EndTime { get; set; }
+    //[Display(Name = "Classes Name")]
+    //public string ClassId { get; set; }
+}
 
-    public int Duration { get; set; }
+public class UpdateSubjectsVM
+{
+    public string? Id { get; set; }
+
     [StringLength(100)]
-    public string DayOfWeek { get; set; }
+    public string Name { get; set; }
+
+    [Precision(6, 2)]
+    public decimal Fees { get; set; }
 
     [Display(Name = "Tutor Name")]
     public string TutorId { get; set; }
@@ -127,4 +138,74 @@ public class UpdateClassesVM
     [StringLength(100)]
     [Required(ErrorMessage = "Name is required")]
     public string Name { get; set; }
+
+    [Range(1, 20)]
+    public int? Capacity { get; set; }
+}
+
+public class TutorClassVM
+{
+    public string Id { get; set; }
+
+    public string Name { get; set; }
+
+    public string ClassId { get; set; }
+}
+
+// students
+public class StudentsVM
+{
+    public string? Id { get; set; }
+
+    [StringLength(100)]
+    public string Name { get; set; }
+
+    [StringLength(1)]
+    public string Gender { get; set; }
+
+    public string? PhotoURL { get; set; }
+
+    public IFormFile? Photo { get; set; }
+
+}
+
+// students
+public class TutorsVM
+{
+    public string? Id { get; set; }
+
+    [StringLength(100)]
+    public string Name { get; set; }
+
+    [StringLength(1)]
+    public string Gender { get; set; }
+
+    public string? PhotoURL { get; set; }
+
+    public IFormFile? Photo { get; set; }
+
+    public int Age { get; set; }
+
+}
+
+// subject Class
+public class SubjectsClassVM 
+{ 
+    //public string Id { get; set; }
+
+    [Display(Name = "Start Time"), DataType(DataType.Time)]
+    public DateTime StartTime { get; set; }
+
+    [Display(Name = "End Time"), DataType(DataType.Time)]
+    public DateTime EndTime { get; set; }
+
+    public int Duration { get; set; }
+    [StringLength(100)]
+    public string DayOfWeek { get; set; }
+
+    public string SubjectsId { get; set; }
+
+    public string? StudentsId { get; set; }
+
+    public string ClassesId { get; set; }
 }
