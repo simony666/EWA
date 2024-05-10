@@ -1,0 +1,27 @@
+﻿<nav>
+    <a href="/">Index</a>
+    <a href="/Product/Index">Product</a>
+    <a href="/Product/ShoppingCart">Shopping Cart</a>
+    @if (User.IsInRole("Member"))
+    {
+        <a href="/Product/Order">Order</a>
+    }
+
+    <div></div>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a href="/Account/Logout">Logout</a>
+        <a href="/Account/UpdatePassword">Update Password</a>
+    }
+    else
+    {
+        <a href="/Account/Login">Login</a>
+        <a href="/Account/Register">Register</a>
+        <a href="/Account/ResetPassword">Reset Password</a>
+    }
+    @if (User.IsInRole("Member"))
+    {
+        <a href="/Account/UpdateProfile">Update Profile</a>
+    }
+</nav>
