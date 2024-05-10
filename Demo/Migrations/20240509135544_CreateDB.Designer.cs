@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demo.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20240504140423_CreateRelationship")]
-    partial class CreateRelationship
+    [Migration("20240509135544_CreateDB")]
+    partial class CreateDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,51 +39,26 @@ namespace Demo.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("TutorId")
+                        .HasColumnType("nvarchar(100)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TutorId");
 
                     b.ToTable("Classes");
                 });
 
-            modelBuilder.Entity("Demo.Models.Students", b =>
+            modelBuilder.Entity("Demo.Models.ClassesSubjects", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClassesId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("SubjectsId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TutorsId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassesId");
-
-                    b.HasIndex("TutorsId");
-
-                    b.ToTable("Students");
-                });
-
-            modelBuilder.Entity("Demo.Models.Subjects", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("DayOfWeek")
@@ -97,6 +72,60 @@ namespace Demo.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StudentsId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("SubjectsId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassesId");
+
+                    b.HasIndex("StudentsId");
+
+                    b.HasIndex("SubjectsId");
+
+                    b.ToTable("ClassesSubjects");
+                });
+
+            modelBuilder.Entity("Demo.Models.Students", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PhotoURL")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("Demo.Models.Subjects", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<decimal>("Fees")
                         .HasPrecision(6, 2)
                         .HasColumnType("decimal(6,2)");
@@ -106,22 +135,13 @@ namespace Demo.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("StudentsId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("TutorsId")
+                    b.Property<string>("TutorId")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StudentsId");
-
-                    b.HasIndex("TutorsId");
+                    b.HasIndex("TutorId");
 
                     b.ToTable("Subjects");
                 });
@@ -135,7 +155,7 @@ namespace Demo.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<string>("ClassesId")
+                    b.Property<string>("ClassId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -201,40 +221,71 @@ namespace Demo.Migrations
                     b.HasDiscriminator().HasValue("Admin");
                 });
 
-            modelBuilder.Entity("Demo.Models.Students", b =>
+            modelBuilder.Entity("Demo.Models.Classes", b =>
+                {
+                    b.HasOne("Demo.Models.Tutors", "Tutor")
+                        .WithMany()
+                        .HasForeignKey("TutorId");
+
+                    b.Navigation("Tutor");
+                });
+
+            modelBuilder.Entity("Demo.Models.ClassesSubjects", b =>
                 {
                     b.HasOne("Demo.Models.Classes", "Classes")
-                        .WithMany()
+                        .WithMany("ClassesSubjects")
                         .HasForeignKey("ClassesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Demo.Models.Tutors", "Tutors")
-                        .WithMany()
-                        .HasForeignKey("TutorsId");
-
-                    b.Navigation("Classes");
-
-                    b.Navigation("Tutors");
-                });
-
-            modelBuilder.Entity("Demo.Models.Subjects", b =>
-                {
-                    b.HasOne("Demo.Models.Tutors", "Students")
-                        .WithMany()
+                    b.HasOne("Demo.Models.Students", "Students")
+                        .WithMany("ClassesSubjects")
                         .HasForeignKey("StudentsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Demo.Models.Tutors", "Tutors")
-                        .WithMany()
-                        .HasForeignKey("TutorsId")
+                    b.HasOne("Demo.Models.Subjects", "Subjects")
+                        .WithMany("ClassesSubjects")
+                        .HasForeignKey("SubjectsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Classes");
+
                     b.Navigation("Students");
 
-                    b.Navigation("Tutors");
+                    b.Navigation("Subjects");
+                });
+
+            modelBuilder.Entity("Demo.Models.Subjects", b =>
+                {
+                    b.HasOne("Demo.Models.Tutors", "Tutor")
+                        .WithMany("Subjects")
+                        .HasForeignKey("TutorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tutor");
+                });
+
+            modelBuilder.Entity("Demo.Models.Classes", b =>
+                {
+                    b.Navigation("ClassesSubjects");
+                });
+
+            modelBuilder.Entity("Demo.Models.Students", b =>
+                {
+                    b.Navigation("ClassesSubjects");
+                });
+
+            modelBuilder.Entity("Demo.Models.Subjects", b =>
+                {
+                    b.Navigation("ClassesSubjects");
+                });
+
+            modelBuilder.Entity("Demo.Models.Tutors", b =>
+                {
+                    b.Navigation("Subjects");
                 });
 #pragma warning restore 612, 618
         }
