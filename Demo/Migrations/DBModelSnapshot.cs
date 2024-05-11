@@ -22,6 +22,29 @@ namespace Demo.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Demo.Models.Attendances", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAttend")
+                        .HasMaxLength(1)
+                        .HasColumnType("bit");
+
+                    b.Property<string>("StudentId")
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Attendences");
+                });
+
             modelBuilder.Entity("Demo.Models.Classes", b =>
                 {
                     b.Property<string>("Id")
@@ -31,17 +54,17 @@ namespace Demo.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 
+                    b.Property<string>("ClassType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("TutorId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("classType")
-                        .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
@@ -114,35 +137,6 @@ namespace Demo.Migrations
                     b.ToTable("StudentClasses");
                 });
 
-            modelBuilder.Entity("Demo.Models.Students", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("PhotoURL")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Students");
-                });
-
             modelBuilder.Entity("Demo.Models.Subjects", b =>
                 {
                     b.Property<string>("Id")
@@ -169,48 +163,30 @@ namespace Demo.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("Demo.Models.Tutors", b =>
+            modelBuilder.Entity("Demo.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Age")
+                        .HasMaxLength(100)
                         .HasColumnType("int");
-
-                    b.Property<string>("ClassId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("PhotoURL")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tutors");
-                });
-
-            modelBuilder.Entity("Demo.Models.User", b =>
-                {
-                    b.Property<string>("Email")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
 
                     b.Property<string>("Hash")
                         .IsRequired()
@@ -227,7 +203,7 @@ namespace Demo.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Email");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
 
@@ -241,6 +217,32 @@ namespace Demo.Migrations
                     b.HasBaseType("Demo.Models.User");
 
                     b.HasDiscriminator().HasValue("Admin");
+                });
+
+            modelBuilder.Entity("Demo.Models.Students", b =>
+                {
+                    b.HasBaseType("Demo.Models.User");
+
+                    b.HasDiscriminator().HasValue("Students");
+                });
+
+            modelBuilder.Entity("Demo.Models.Tutors", b =>
+                {
+                    b.HasBaseType("Demo.Models.User");
+
+                    b.Property<string>("ClassId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Tutors");
+                });
+
+            modelBuilder.Entity("Demo.Models.Attendances", b =>
+                {
+                    b.HasOne("Demo.Models.Students", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Demo.Models.Classes", b =>
@@ -311,14 +313,14 @@ namespace Demo.Migrations
                     b.Navigation("StudentClasses");
                 });
 
-            modelBuilder.Entity("Demo.Models.Students", b =>
-                {
-                    b.Navigation("StudentClasses");
-                });
-
             modelBuilder.Entity("Demo.Models.Subjects", b =>
                 {
                     b.Navigation("ClassesSubjects");
+                });
+
+            modelBuilder.Entity("Demo.Models.Students", b =>
+                {
+                    b.Navigation("StudentClasses");
                 });
 
             modelBuilder.Entity("Demo.Models.Tutors", b =>

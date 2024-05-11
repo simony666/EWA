@@ -14,6 +14,7 @@ public class DB : DbContext
     public DbSet<Subjects> Subjects { get; set; }
     public DbSet<Tutors> Tutors { get; set; }
     public DbSet<Students> Students { get; set; }
+    public DbSet<Attendances> Attendences { get; set; }
     public DbSet<Classes> Classes { get; set; }
     public DbSet<ClassesSubjects> ClassesSubjects { get; set; }
     public DbSet<StudentClasses> StudentClasses { get; set; }
@@ -27,13 +28,25 @@ public class DB : DbContext
 public class User
 {
     [Key, MaxLength(100)]
+    public string Id { get; set; }
+
+    [MaxLength(100)]
     public string Email { get; set; }
+
     [MaxLength(100)]
     public string Hash { get; set; }
+
     [MaxLength(100)]
     public string Name { get; set; }
+
+    [MaxLength(1)]
+    public string Gender { get; set; }
+
     [MaxLength(100)]
     public string PhotoURL { get; set; }
+
+    [MaxLength(100)]
+    public int Age { get; set; }
 
     [NotMapped]
     public string Role => GetType().Name;
@@ -43,6 +56,30 @@ public class User
 public class Admin : User
 {
 
+}
+
+public class Tutors : User
+{
+
+    // Navigation properties
+    public List<Subjects> Subjects { get; set; }
+    public string? ClassId { get; set; } // Reference to the class the tutor handles
+}
+
+public class Parents : User
+{
+
+    // Navigation properties
+    public List<Subjects> Subjects { get; set; }
+    public string? ClassId { get; set; } // Reference to the class the tutor handles
+}
+
+public class Students : User
+{
+
+
+    // Navigation properties
+    public List<StudentClasses> StudentClasses { get; set; } = new();
 }
 
 public class Subjects
@@ -62,39 +99,16 @@ public class Subjects
     public List<ClassesSubjects> ClassesSubjects { get; set; } = new();
 }
 
-public class Tutors
+public class Attendances
 {
     [Key, MaxLength(100)]
     public string Id { get; set; }
-    [MaxLength(100)]
-    public string Name { get; set; }
-    [MaxLength(100)]
-    public string Gender { get; set; }
-    [MaxLength(100)]
-    public string PhotoURL { get; set; }
-
-    public int Age { get; set; }
-
-    // Navigation properties
-    public List<Subjects> Subjects { get; set; }
-    public string? ClassId { get; set; } // Reference to the class the tutor handles
-}
-
-public class Students
-{
-    [Key, MaxLength(100)]
-    public string Id { get; set; }
-    [MaxLength(100)]
-    public string Name { get; set; }
     [MaxLength(1)]
-    public string Gender { get; set; }
+    public bool IsAttend { get; set; }
+    public DateTime DateTime { get; set; } = DateTime.Now;
 
-    public int Age { get; set; }
-    [MaxLength(100)]
-    public string PhotoURL { get; set; }
 
-    // Navigation properties
-    public List<StudentClasses> StudentClasses { get; set; } = new();
+    public Students Student { get; set; }
 }
 
 public class Classes
@@ -105,7 +119,7 @@ public class Classes
     public string Name { get; set; }
 
     [MaxLength(100)]
-    public string classType { get; set; }
+    public string ClassType { get; set; }
 
     public int Capacity { get; set; }
 
