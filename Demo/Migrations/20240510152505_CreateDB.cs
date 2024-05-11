@@ -17,7 +17,8 @@ namespace Demo.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
+                    Age = table.Column<int>(type: "int", nullable: false),
                     PhotoURL = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
@@ -34,7 +35,7 @@ namespace Demo.Migrations
                     Gender = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     PhotoURL = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
-                    ClassId = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ClassId = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -62,6 +63,7 @@ namespace Demo.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    classType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Capacity = table.Column<int>(type: "int", nullable: false),
                     TutorId = table.Column<string>(type: "nvarchar(100)", nullable: true)
                 },
@@ -101,12 +103,11 @@ namespace Demo.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StartTime = table.Column<TimeSpan>(type: "Time", nullable: false),
+                    EndTime = table.Column<TimeSpan>(type: "Time", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
                     DayOfWeek = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     SubjectsId = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    StudentsId = table.Column<string>(type: "nvarchar(100)", nullable: true),
                     ClassesId = table.Column<string>(type: "nvarchar(100)", nullable: false)
                 },
                 constraints: table =>
@@ -119,15 +120,35 @@ namespace Demo.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ClassesSubjects_Students_StudentsId",
-                        column: x => x.StudentsId,
-                        principalTable: "Students",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_ClassesSubjects_Subjects_SubjectsId",
                         column: x => x.SubjectsId,
                         principalTable: "Subjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentClasses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StudentId = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    ClassSubjectId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentClasses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentClasses_ClassesSubjects_ClassSubjectId",
+                        column: x => x.ClassSubjectId,
+                        principalTable: "ClassesSubjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StudentClasses_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -143,14 +164,19 @@ namespace Demo.Migrations
                 column: "ClassesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassesSubjects_StudentsId",
-                table: "ClassesSubjects",
-                column: "StudentsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ClassesSubjects_SubjectsId",
                 table: "ClassesSubjects",
                 column: "SubjectsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentClasses_ClassSubjectId",
+                table: "StudentClasses",
+                column: "ClassSubjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentClasses_StudentId",
+                table: "StudentClasses",
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Subjects_TutorId",
@@ -162,16 +188,19 @@ namespace Demo.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ClassesSubjects");
+                name: "StudentClasses");
 
             migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Classes");
+                name: "ClassesSubjects");
 
             migrationBuilder.DropTable(
                 name: "Students");
+
+            migrationBuilder.DropTable(
+                name: "Classes");
 
             migrationBuilder.DropTable(
                 name: "Subjects");

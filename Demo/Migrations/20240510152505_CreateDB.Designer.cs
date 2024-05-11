@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demo.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20240510084221_CreateDB")]
+    [Migration("20240510152505_CreateDB")]
     partial class CreateDB
     {
         /// <inheritdoc />
@@ -42,6 +42,11 @@ namespace Demo.Migrations
                     b.Property<string>("TutorId")
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("classType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TutorId");
@@ -69,14 +74,11 @@ namespace Demo.Migrations
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("Time");
 
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("StudentsId")
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("Time");
 
                     b.Property<string>("SubjectsId")
                         .IsRequired()
@@ -86,11 +88,33 @@ namespace Demo.Migrations
 
                     b.HasIndex("ClassesId");
 
-                    b.HasIndex("StudentsId");
-
                     b.HasIndex("SubjectsId");
 
                     b.ToTable("ClassesSubjects");
+                });
+
+            modelBuilder.Entity("Demo.Models.StudentClasses", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClassSubjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassSubjectId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentClasses");
                 });
 
             modelBuilder.Entity("Demo.Models.Students", b =>
@@ -99,10 +123,13 @@ namespace Demo.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
                     b.Property<string>("Gender")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -155,7 +182,6 @@ namespace Demo.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ClassId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
@@ -237,10 +263,6 @@ namespace Demo.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Demo.Models.Students", "Students")
-                        .WithMany("ClassesSubjects")
-                        .HasForeignKey("StudentsId");
-
                     b.HasOne("Demo.Models.Subjects", "Subjects")
                         .WithMany("ClassesSubjects")
                         .HasForeignKey("SubjectsId")
@@ -249,9 +271,26 @@ namespace Demo.Migrations
 
                     b.Navigation("Classes");
 
-                    b.Navigation("Students");
-
                     b.Navigation("Subjects");
+                });
+
+            modelBuilder.Entity("Demo.Models.StudentClasses", b =>
+                {
+                    b.HasOne("Demo.Models.ClassesSubjects", "ClassSubject")
+                        .WithMany("StudentClasses")
+                        .HasForeignKey("ClassSubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Demo.Models.Students", "Student")
+                        .WithMany("StudentClasses")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ClassSubject");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Demo.Models.Subjects", b =>
@@ -270,9 +309,14 @@ namespace Demo.Migrations
                     b.Navigation("ClassesSubjects");
                 });
 
+            modelBuilder.Entity("Demo.Models.ClassesSubjects", b =>
+                {
+                    b.Navigation("StudentClasses");
+                });
+
             modelBuilder.Entity("Demo.Models.Students", b =>
                 {
-                    b.Navigation("ClassesSubjects");
+                    b.Navigation("StudentClasses");
                 });
 
             modelBuilder.Entity("Demo.Models.Subjects", b =>
