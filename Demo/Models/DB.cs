@@ -16,6 +16,7 @@ public class DB : DbContext
     public DbSet<Students> Students { get; set; }
     public DbSet<Classes> Classes { get; set; }
     public DbSet<ClassesSubjects> ClassesSubjects { get; set; }
+    public DbSet<StudentClasses> StudentClasses { get; set; }
 
 }
 
@@ -75,8 +76,8 @@ public class Tutors
     public int Age { get; set; }
 
     // Navigation properties
-    public ICollection<Subjects> Subjects { get; set; }
-    public string ClassId { get; set; } // Reference to the class the tutor handles
+    public List<Subjects> Subjects { get; set; }
+    public string? ClassId { get; set; } // Reference to the class the tutor handles
 }
 
 public class Students
@@ -85,13 +86,15 @@ public class Students
     public string Id { get; set; }
     [MaxLength(100)]
     public string Name { get; set; }
-    [MaxLength(100)]
+    [MaxLength(1)]
     public string Gender { get; set; }
+
+    public int Age { get; set; }
     [MaxLength(100)]
     public string PhotoURL { get; set; }
 
     // Navigation properties
-    public List<ClassesSubjects> ClassesSubjects { get; set; } = new();
+    public List<StudentClasses> StudentClasses { get; set; } = new();
 }
 
 public class Classes
@@ -100,6 +103,9 @@ public class Classes
     public string Id { get; set; }
     [MaxLength(100)]
     public string Name { get; set; }
+
+    [MaxLength(100)]
+    public string classType { get; set; }
 
     public int Capacity { get; set; }
 
@@ -112,8 +118,10 @@ public class ClassesSubjects
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
+    [Column(TypeName = "Time")]
+    public TimeSpan StartTime { get; set; }
+    [Column(TypeName = "Time")]
+    public TimeSpan EndTime { get; set; }
     public int Duration { get; set; }
 
     [MaxLength(100)]
@@ -121,10 +129,22 @@ public class ClassesSubjects
 
     // FK
     public string SubjectsId { get; set; }
-    public string? StudentsId { get; set; }
     public string ClassesId { get; set; }
 
+    // navigation properties
     public Subjects Subjects { get; set; }
-    public Students Students { get; set; }
     public Classes Classes { get; set; }
+    public List<StudentClasses> StudentClasses { get; set; } = new();
+}
+
+public class StudentClasses { 
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+   
+    // FK
+    public string StudentId { get; set; }
+
+    public int ClassSubjectId { get; set; }
+    public Students Student { get; set; }
+    public ClassesSubjects ClassSubject { get; set; }
 }
