@@ -3,3 +3,4 @@
 /Demo/obj/*
 /Demo/obj
 Demo/Demo.csproj
+Demo/DB_log.ldf
