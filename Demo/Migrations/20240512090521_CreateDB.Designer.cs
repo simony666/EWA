@@ -12,8 +12,16 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demo.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20240511143534_UpdateDB")]
-    partial class UpdateDB
+<<<<<<<< HEAD:Demo/Migrations/20240512062920_CreateDB.Designer.cs
+<<<<<<<< HEAD:Demo/Migrations/20240512062920_CreateDB.Designer.cs
+    [Migration("20240512062920_CreateDB")]
+========
+    [Migration("20240511065721_CreateDB")]
+>>>>>>>> 710f673af1f9a331a2d8c4bde98c8d47474b029c:Demo/Migrations/20240511065721_CreateDB.Designer.cs
+========
+    [Migration("20240512090521_CreateDB")]
+>>>>>>>> main:Demo/Migrations/20240512090521_CreateDB.Designer.cs
+    partial class CreateDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +33,7 @@ namespace Demo.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Demo.Models.Attendances", b =>
+            modelBuilder.Entity("Demo.Models.Attendance", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -45,10 +53,10 @@ namespace Demo.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Attendences");
+                    b.ToTable("Attendances");
                 });
 
-            modelBuilder.Entity("Demo.Models.Classes", b =>
+            modelBuilder.Entity("Demo.Models.Class", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -58,26 +66,33 @@ namespace Demo.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ClassType")
+<<<<<<<< HEAD:Demo/Migrations/20240512062920_CreateDB.Designer.cs
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
+========
+>>>>>>>> main:Demo/Migrations/20240512090521_CreateDB.Designer.cs
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+<<<<<<<< HEAD:Demo/Migrations/20240512062920_CreateDB.Designer.cs
                     b.Property<string>("TutorId")
+========
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+>>>>>>>> main:Demo/Migrations/20240512090521_CreateDB.Designer.cs
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TutorId");
-
                     b.ToTable("Classes");
                 });
 
-            modelBuilder.Entity("Demo.Models.ClassesSubjects", b =>
+            modelBuilder.Entity("Demo.Models.ClassSubject", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -85,9 +100,13 @@ namespace Demo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ClassesId")
+                    b.Property<string>("ClassId")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ClassestId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DayOfWeek")
                         .IsRequired()
@@ -103,44 +122,61 @@ namespace Demo.Migrations
                     b.Property<TimeSpan>("StartTime")
                         .HasColumnType("Time");
 
-                    b.Property<string>("SubjectsId")
+                    b.Property<string>("StudentId")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubjectId")
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("ClassesSubjects");
+                });
+
+<<<<<<<< HEAD:Demo/Migrations/20240512062920_CreateDB.Designer.cs
+            modelBuilder.Entity("Demo.Models.Students", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClassesId")
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PhotoURL")
+                        .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ClassesId");
 
-                    b.HasIndex("SubjectsId");
-
-                    b.ToTable("ClassesSubjects");
-                });
-
-            modelBuilder.Entity("Demo.Models.StudentClasses", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClassSubjectId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassSubjectId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentClasses");
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("Demo.Models.Subjects", b =>
+========
+            modelBuilder.Entity("Demo.Models.Subject", b =>
+>>>>>>>> main:Demo/Migrations/20240512090521_CreateDB.Designer.cs
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -222,82 +258,76 @@ namespace Demo.Migrations
                     b.HasDiscriminator().HasValue("Admin");
                 });
 
-            modelBuilder.Entity("Demo.Models.Students", b =>
+            modelBuilder.Entity("Demo.Models.Parent", b =>
                 {
                     b.HasBaseType("Demo.Models.User");
 
-                    b.HasDiscriminator().HasValue("Students");
+                    b.HasDiscriminator().HasValue("Parent");
                 });
 
-            modelBuilder.Entity("Demo.Models.Tutors", b =>
+            modelBuilder.Entity("Demo.Models.Student", b =>
                 {
                     b.HasBaseType("Demo.Models.User");
 
                     b.Property<string>("ClassId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ClassesId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("Tutors");
+                    b.HasIndex("ClassId");
+
+                    b.HasDiscriminator().HasValue("Student");
                 });
 
-            modelBuilder.Entity("Demo.Models.Attendances", b =>
+<<<<<<<< HEAD:Demo/Migrations/20240512062920_CreateDB.Designer.cs
+            modelBuilder.Entity("Demo.Models.Students", b =>
                 {
-                    b.HasOne("Demo.Models.Students", "Student")
-                        .WithMany()
+                    b.HasOne("Demo.Models.Classes", "Classes")
+                        .WithMany("Students")
+                        .HasForeignKey("ClassesId");
+
+                    b.Navigation("Classes");
+========
+            modelBuilder.Entity("Demo.Models.Tutor", b =>
+                {
+                    b.HasBaseType("Demo.Models.User");
+
+                    b.HasDiscriminator().HasValue("Tutor");
+                });
+
+            modelBuilder.Entity("Demo.Models.Attendance", b =>
+                {
+                    b.HasOne("Demo.Models.Student", "Student")
+                        .WithMany("Attendances")
                         .HasForeignKey("StudentId");
 
                     b.Navigation("Student");
+>>>>>>>> main:Demo/Migrations/20240512090521_CreateDB.Designer.cs
                 });
 
-            modelBuilder.Entity("Demo.Models.Classes", b =>
+            modelBuilder.Entity("Demo.Models.ClassSubject", b =>
                 {
-                    b.HasOne("Demo.Models.Tutors", "Tutor")
-                        .WithMany()
-                        .HasForeignKey("TutorId");
+                    b.HasOne("Demo.Models.Class", "Class")
+                        .WithMany("ClassSubjects")
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Tutor");
-                });
-
-            modelBuilder.Entity("Demo.Models.ClassesSubjects", b =>
-                {
-                    b.HasOne("Demo.Models.Classes", "Classes")
+                    b.HasOne("Demo.Models.Subject", "Subject")
                         .WithMany("ClassesSubjects")
-                        .HasForeignKey("ClassesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SubjectId");
 
-                    b.HasOne("Demo.Models.Subjects", "Subjects")
-                        .WithMany("ClassesSubjects")
-                        .HasForeignKey("SubjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Class");
 
-                    b.Navigation("Classes");
-
-                    b.Navigation("Subjects");
+                    b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("Demo.Models.StudentClasses", b =>
+            modelBuilder.Entity("Demo.Models.Subject", b =>
                 {
-                    b.HasOne("Demo.Models.ClassesSubjects", "ClassSubject")
-                        .WithMany("StudentClasses")
-                        .HasForeignKey("ClassSubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Demo.Models.Students", "Student")
-                        .WithMany("StudentClasses")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ClassSubject");
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("Demo.Models.Subjects", b =>
-                {
-                    b.HasOne("Demo.Models.Tutors", "Tutor")
+                    b.HasOne("Demo.Models.Tutor", "Tutor")
                         .WithMany("Subjects")
                         .HasForeignKey("TutorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -306,14 +336,30 @@ namespace Demo.Migrations
                     b.Navigation("Tutor");
                 });
 
-            modelBuilder.Entity("Demo.Models.Classes", b =>
+            modelBuilder.Entity("Demo.Models.Student", b =>
                 {
-                    b.Navigation("ClassesSubjects");
+                    b.HasOne("Demo.Models.Class", "Class")
+                        .WithMany("Students")
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Class");
                 });
 
-            modelBuilder.Entity("Demo.Models.ClassesSubjects", b =>
+            modelBuilder.Entity("Demo.Models.Class", b =>
                 {
-                    b.Navigation("StudentClasses");
+                    b.Navigation("ClassSubjects");
+
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("Demo.Models.Subject", b =>
+                {
+                    b.Navigation("ClassesSubjects");
+
+<<<<<<<< HEAD:Demo/Migrations/20240512062920_CreateDB.Designer.cs
+                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("Demo.Models.Subjects", b =>
@@ -321,12 +367,15 @@ namespace Demo.Migrations
                     b.Navigation("ClassesSubjects");
                 });
 
-            modelBuilder.Entity("Demo.Models.Students", b =>
+            modelBuilder.Entity("Demo.Models.Tutors", b =>
+========
+            modelBuilder.Entity("Demo.Models.Student", b =>
                 {
-                    b.Navigation("StudentClasses");
+                    b.Navigation("Attendances");
                 });
 
-            modelBuilder.Entity("Demo.Models.Tutors", b =>
+            modelBuilder.Entity("Demo.Models.Tutor", b =>
+>>>>>>>> main:Demo/Migrations/20240512090521_CreateDB.Designer.cs
                 {
                     b.Navigation("Subjects");
                 });

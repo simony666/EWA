@@ -22,7 +22,30 @@ namespace Demo.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Demo.Models.Classes", b =>
+            modelBuilder.Entity("Demo.Models.Attendance", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAttend")
+                        .HasMaxLength(1)
+                        .HasColumnType("bit");
+
+                    b.Property<string>("StudentId")
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Attendances");
+                });
+
+            modelBuilder.Entity("Demo.Models.Class", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -41,17 +64,12 @@ namespace Demo.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("TutorId")
-                        .HasColumnType("nvarchar(100)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TutorId");
 
                     b.ToTable("Classes");
                 });
 
-            modelBuilder.Entity("Demo.Models.ClassesSubjects", b =>
+            modelBuilder.Entity("Demo.Models.ClassSubject", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,9 +77,13 @@ namespace Demo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ClassesId")
+                    b.Property<string>("ClassId")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ClassestId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DayOfWeek")
                         .IsRequired()
@@ -77,54 +99,23 @@ namespace Demo.Migrations
                     b.Property<TimeSpan>("StartTime")
                         .HasColumnType("Time");
 
-                    b.Property<string>("SubjectsId")
+                    b.Property<string>("StudentId")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubjectId")
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassesId");
+                    b.HasIndex("ClassId");
 
-                    b.HasIndex("SubjectsId");
+                    b.HasIndex("SubjectId");
 
                     b.ToTable("ClassesSubjects");
                 });
 
-            modelBuilder.Entity("Demo.Models.Students", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ClassesId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("PhotoURL")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassesId");
-
-                    b.ToTable("Students");
-                });
-
-            modelBuilder.Entity("Demo.Models.Subjects", b =>
+            modelBuilder.Entity("Demo.Models.Subject", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -150,48 +141,30 @@ namespace Demo.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("Demo.Models.Tutors", b =>
+            modelBuilder.Entity("Demo.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Age")
+                        .HasMaxLength(100)
                         .HasColumnType("int");
-
-                    b.Property<string>("ClassId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("PhotoURL")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tutors");
-                });
-
-            modelBuilder.Entity("Demo.Models.User", b =>
-                {
-                    b.Property<string>("Email")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
 
                     b.Property<string>("Hash")
                         .IsRequired()
@@ -208,7 +181,7 @@ namespace Demo.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Email");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
 
@@ -224,46 +197,66 @@ namespace Demo.Migrations
                     b.HasDiscriminator().HasValue("Admin");
                 });
 
-            modelBuilder.Entity("Demo.Models.Classes", b =>
+            modelBuilder.Entity("Demo.Models.Parent", b =>
                 {
-                    b.HasOne("Demo.Models.Tutors", "Tutor")
-                        .WithMany()
-                        .HasForeignKey("TutorId");
+                    b.HasBaseType("Demo.Models.User");
 
-                    b.Navigation("Tutor");
+                    b.HasDiscriminator().HasValue("Parent");
                 });
 
-            modelBuilder.Entity("Demo.Models.ClassesSubjects", b =>
+            modelBuilder.Entity("Demo.Models.Student", b =>
                 {
-                    b.HasOne("Demo.Models.Classes", "Classes")
-                        .WithMany("ClassesSubjects")
-                        .HasForeignKey("ClassesId")
+                    b.HasBaseType("Demo.Models.User");
+
+                    b.Property<string>("ClassId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ClassesId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasDiscriminator().HasValue("Student");
+                });
+
+            modelBuilder.Entity("Demo.Models.Tutor", b =>
+                {
+                    b.HasBaseType("Demo.Models.User");
+
+                    b.HasDiscriminator().HasValue("Tutor");
+                });
+
+            modelBuilder.Entity("Demo.Models.Attendance", b =>
+                {
+                    b.HasOne("Demo.Models.Student", "Student")
+                        .WithMany("Attendances")
+                        .HasForeignKey("StudentId");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("Demo.Models.ClassSubject", b =>
+                {
+                    b.HasOne("Demo.Models.Class", "Class")
+                        .WithMany("ClassSubjects")
+                        .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Demo.Models.Subjects", "Subjects")
+                    b.HasOne("Demo.Models.Subject", "Subject")
                         .WithMany("ClassesSubjects")
-                        .HasForeignKey("SubjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SubjectId");
 
-                    b.Navigation("Classes");
+                    b.Navigation("Class");
 
-                    b.Navigation("Subjects");
+                    b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("Demo.Models.Students", b =>
+            modelBuilder.Entity("Demo.Models.Subject", b =>
                 {
-                    b.HasOne("Demo.Models.Classes", "Classes")
-                        .WithMany("Students")
-                        .HasForeignKey("ClassesId");
-
-                    b.Navigation("Classes");
-                });
-
-            modelBuilder.Entity("Demo.Models.Subjects", b =>
-                {
-                    b.HasOne("Demo.Models.Tutors", "Tutor")
+                    b.HasOne("Demo.Models.Tutor", "Tutor")
                         .WithMany("Subjects")
                         .HasForeignKey("TutorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -272,19 +265,35 @@ namespace Demo.Migrations
                     b.Navigation("Tutor");
                 });
 
-            modelBuilder.Entity("Demo.Models.Classes", b =>
+            modelBuilder.Entity("Demo.Models.Student", b =>
                 {
-                    b.Navigation("ClassesSubjects");
+                    b.HasOne("Demo.Models.Class", "Class")
+                        .WithMany("Students")
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Class");
+                });
+
+            modelBuilder.Entity("Demo.Models.Class", b =>
+                {
+                    b.Navigation("ClassSubjects");
 
                     b.Navigation("Students");
                 });
 
-            modelBuilder.Entity("Demo.Models.Subjects", b =>
+            modelBuilder.Entity("Demo.Models.Subject", b =>
                 {
                     b.Navigation("ClassesSubjects");
                 });
 
-            modelBuilder.Entity("Demo.Models.Tutors", b =>
+            modelBuilder.Entity("Demo.Models.Student", b =>
+                {
+                    b.Navigation("Attendances");
+                });
+
+            modelBuilder.Entity("Demo.Models.Tutor", b =>
                 {
                     b.Navigation("Subjects");
                 });

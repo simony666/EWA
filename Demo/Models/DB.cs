@@ -1,50 +1,76 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Claims;
 
 namespace Demo.Models;
-
 public class DB : DbContext
 {
     public DB(DbContextOptions<DB> options) : base(options) { }
 
-    // DB Sets
     public DbSet<User> Users { get; set; }
+    public DbSet<Student> Students { get; set; }
+    public DbSet<Parent> Parents { get; set; }
     public DbSet<Admin> Admins { get; set; }
-    public DbSet<Subjects> Subjects { get; set; }
-    public DbSet<Tutors> Tutors { get; set; }
-    public DbSet<Students> Students { get; set; }
-    public DbSet<Classes> Classes { get; set; }
-    public DbSet<ClassesSubjects> ClassesSubjects { get; set; }
+    public DbSet<Tutor> Tutors { get; set; }
+    public DbSet<Subject> Subjects { get; set; }
+    public DbSet<Attendance> Attendances { get; set; }
+    public DbSet<Class> Classes { get; set; }
+    public DbSet<ClassSubject> ClassesSubjects { get; set; }
 
 }
-
-// Entity Classes
-
-#nullable disable warnings
 
 public class User
 {
     [Key, MaxLength(100)]
+    public string Id { get; set; }
+
+    [MaxLength(100)]
     public string Email { get; set; }
+
     [MaxLength(100)]
     public string Hash { get; set; }
+
     [MaxLength(100)]
     public string Name { get; set; }
+
+    [MaxLength(1)]
+    public string Gender { get; set; }
+
     [MaxLength(100)]
     public string PhotoURL { get; set; }
+
+    [MaxLength(100)]
+    public int Age { get; set; }
 
     [NotMapped]
     public string Role => GetType().Name;
 }
 
+public class Student : User
+{
+
+    public string ClassesId { get; set; }
+    public Class Class { get; set; }
+    public List<Attendance> Attendances { get; set; } // Navigation property for the Attendances
+}
+
+public class Parent : User
+{
+    // Define any specific properties for Parent here
+}
 
 public class Admin : User
 {
-
+    // Define any specific properties for Admin here
 }
 
-public class Subjects
+public class Tutor : User
+{
+    public List<Subject> Subjects { get; set; } // Navigation property for the Subjects
+}
+
+public class Subject
 {
     [Key, MaxLength(100)]
     public string Id { get; set; }
@@ -52,54 +78,23 @@ public class Subjects
     public string Name { get; set; }
     [Precision(6, 2)]
     public decimal Fees { get; set; }
-    
 
-    // Navigation properties
     public string TutorId { get; set; }
-    public Tutors Tutor { get; set; }
-
-    public List<ClassesSubjects> ClassesSubjects { get; set; } = new();
+    public Tutor Tutor { get; set; }
+    public List<ClassSubject> ClassesSubjects { get; set; } // Navigation property for the ClassSubjects
 }
 
-public class Tutors
+public class Attendance
 {
     [Key, MaxLength(100)]
     public string Id { get; set; }
-    [MaxLength(100)]
-    public string Name { get; set; }
-    [MaxLength(100)]
-    public string Gender { get; set; }
-    [MaxLength(100)]
-    public string PhotoURL { get; set; }
-
-    public int Age { get; set; }
-
-    // Navigation properties
-    public List<Subjects> Subjects { get; set; }
-    public string? ClassId { get; set; } // Reference to the class the tutor handles
-}
-
-public class Students
-{
-    [Key, MaxLength(100)]
-    public string Id { get; set; }
-    [MaxLength(100)]
-    public string Name { get; set; }
     [MaxLength(1)]
-    public string Gender { get; set; }
-
-    public int Age { get; set; }
-    [MaxLength(100)]
-    public string PhotoURL { get; set; }
-
-    // FK
-    public string? ClassesId { get; set; }
-
-    // Navigation properties
-    public Classes Classes { get; set; }
+    public bool IsAttend { get; set; }
+    public DateTime DateTime { get; set; } = DateTime.Now;
+    public Student Student { get; set; }
 }
 
-public class Classes
+public class Class
 {
     [Key, MaxLength(100)]
     public string Id { get; set; }
@@ -108,16 +103,13 @@ public class Classes
 
     [MaxLength(100)]
     public string ClassType { get; set; }
+
     public int Capacity { get; set; }
-
-    // Navigation properties
-    public List<ClassesSubjects> ClassesSubjects { get; set; } = new();
-    public Tutors Tutor { get; set; } // Each class is handled by one tutor
-
-    public List<Students> Students { get; set; } = [];
+    public List<Student> Students { get; set; } // Navigation property for the Students
+    public List<ClassSubject> ClassSubjects { get; set; } // Navigation property for the ClassSubjects
 }
 
-public class ClassesSubjects
+public class ClassSubject
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
@@ -130,13 +122,11 @@ public class ClassesSubjects
     [MaxLength(100)]
     public string DayOfWeek { get; set; }
 
-    // FK
-    public string SubjectsId { get; set; }
-    public string ClassesId { get; set; }
+    public string StudentId { get; set; }
+    public string ClassestId { get; set; }
 
-    // navigation properties
-    public Subjects Subjects { get; set; }
-    public Classes Classes { get; set; }
-   
+
+    public Class Class { get; set; } // Navigation property for the Class
+    public Subject Subject { get; set; } // Navigation property for the Subject
 }
 

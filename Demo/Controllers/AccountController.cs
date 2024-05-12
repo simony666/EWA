@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿/*using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mail;
 
@@ -276,3 +276,4 @@ public class AccountController : Controller
         hp.SendEmail(mail);
     }
 }
+*/
