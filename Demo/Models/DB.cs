@@ -20,6 +20,8 @@ public class DB : DbContext
 
 }
 
+#nullable disable warnings
+
 public class User
 {
     [Key, MaxLength(100)]
@@ -38,10 +40,13 @@ public class User
     public string Gender { get; set; }
 
     [MaxLength(100)]
-    public string PhotoURL { get; set; }
+    public string? PhotoURL { get; set; }
 
     [MaxLength(100)]
     public int Age { get; set; }
+
+    [MaxLength(11)]
+    public string Phone { get; set; }
 
     [NotMapped]
     public string Role => GetType().Name;
@@ -50,6 +55,12 @@ public class User
 public class Student : User
 {
 
+    [MaxLength(100)]
+    public new string? Email { get; set; }
+
+    [MaxLength(100)]
+    public new string? Hash { get; set; }
+
     public string ClassesId { get; set; }
     public Class Class { get; set; }
     public List<Attendance> Attendances { get; set; } // Navigation property for the Attendances
@@ -57,12 +68,12 @@ public class Student : User
 
 public class Parent : User
 {
-    // Define any specific properties for Parent here
+
 }
 
 public class Admin : User
 {
-    // Define any specific properties for Admin here
+
 }
 
 public class Tutor : User
@@ -86,8 +97,8 @@ public class Subject
 
 public class Attendance
 {
-    [Key, MaxLength(100)]
-    public string Id { get; set; }
+    [Key, MaxLength(100), DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
     [MaxLength(1)]
     public bool IsAttend { get; set; }
     public DateTime DateTime { get; set; } = DateTime.Now;
@@ -122,7 +133,7 @@ public class ClassSubject
     [MaxLength(100)]
     public string DayOfWeek { get; set; }
 
-    public string StudentId { get; set; }
+    public string SubjectId { get; set; }
     public string ClassestId { get; set; }
 
 
@@ -130,3 +141,26 @@ public class ClassSubject
     public Subject Subject { get; set; } // Navigation property for the Subject
 }
 
+public class ResetToken
+{
+    [MaxLength(100)]
+    public string UserId { get; set; }
+    [MaxLength(6)]
+    public string Token { get; set; }
+    public DateTime Expire { get; set; }
+
+
+    public User User { get; set; }
+}
+
+public class ActiveToken
+{
+    [MaxLength(100)]
+    public string UserId { get; set; }
+    [MaxLength(6)]
+    public string Token { get; set; }
+    public DateTime Expire { get; set; }
+
+
+    public User User { get; set; }
+}
