@@ -24,9 +24,12 @@ namespace Demo.Migrations
 
             modelBuilder.Entity("Demo.Models.Attendance", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
@@ -99,11 +102,8 @@ namespace Demo.Migrations
                     b.Property<TimeSpan>("StartTime")
                         .HasColumnType("Time");
 
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SubjectId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
@@ -176,8 +176,12 @@ namespace Demo.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("PhotoURL")
+                    b.Property<string>("Phone")
                         .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
+
+                    b.Property<string>("PhotoURL")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -247,7 +251,9 @@ namespace Demo.Migrations
 
                     b.HasOne("Demo.Models.Subject", "Subject")
                         .WithMany("ClassesSubjects")
-                        .HasForeignKey("SubjectId");
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Class");
 
