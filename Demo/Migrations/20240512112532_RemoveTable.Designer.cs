@@ -4,6 +4,7 @@ using Demo.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demo.Migrations
 {
     [DbContext(typeof(DB))]
-    partial class DBModelSnapshot : ModelSnapshot
+    [Migration("20240512112532_RemoveTable")]
+    partial class RemoveTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,32 +24,6 @@ namespace Demo.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Demo.Models.Attendance", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(100)
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsAttend")
-                        .HasMaxLength(1)
-                        .HasColumnType("bit");
-
-                    b.Property<string>("StudentId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Attendances");
-                });
 
             modelBuilder.Entity("Demo.Models.Class", b =>
                 {
@@ -232,15 +209,6 @@ namespace Demo.Migrations
                     b.HasDiscriminator().HasValue("Tutor");
                 });
 
-            modelBuilder.Entity("Demo.Models.Attendance", b =>
-                {
-                    b.HasOne("Demo.Models.Student", "Student")
-                        .WithMany("Attendances")
-                        .HasForeignKey("StudentId");
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("Demo.Models.ClassSubject", b =>
                 {
                     b.HasOne("Demo.Models.Class", "Class")
@@ -292,11 +260,6 @@ namespace Demo.Migrations
             modelBuilder.Entity("Demo.Models.Subject", b =>
                 {
                     b.Navigation("ClassesSubjects");
-                });
-
-            modelBuilder.Entity("Demo.Models.Student", b =>
-                {
-                    b.Navigation("Attendances");
                 });
 
             modelBuilder.Entity("Demo.Models.Tutor", b =>

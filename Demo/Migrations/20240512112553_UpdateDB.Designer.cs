@@ -4,6 +4,7 @@ using Demo.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,24 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demo.Migrations
 {
     [DbContext(typeof(DB))]
-    partial class DBModelSnapshot : ModelSnapshot
+<<<<<<<< HEAD:Demo/Migrations/20240512090521_CreateDB.Designer.cs
+<<<<<<<< HEAD:Demo/Migrations/20240512062920_CreateDB.Designer.cs
+<<<<<<<< HEAD:Demo/Migrations/20240512062920_CreateDB.Designer.cs
+    [Migration("20240512062920_CreateDB")]
+========
+    [Migration("20240511065721_CreateDB")]
+>>>>>>>> 710f673af1f9a331a2d8c4bde98c8d47474b029c:Demo/Migrations/20240511065721_CreateDB.Designer.cs
+========
+    [Migration("20240512090521_CreateDB")]
+>>>>>>>> main:Demo/Migrations/20240512090521_CreateDB.Designer.cs
+    partial class CreateDB
+========
+    [Migration("20240512112553_UpdateDB")]
+    partial class UpdateDB
+>>>>>>>> main:Demo/Migrations/20240512112553_UpdateDB.Designer.cs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,15 +74,30 @@ namespace Demo.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ClassType")
+<<<<<<<< HEAD:Demo/Migrations/20240512062920_CreateDB.Designer.cs
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
+========
+>>>>>>>> main:Demo/Migrations/20240512090521_CreateDB.Designer.cs
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+<<<<<<<< HEAD:Demo/Migrations/20240512090521_CreateDB.Designer.cs
+<<<<<<<< HEAD:Demo/Migrations/20240512062920_CreateDB.Designer.cs
+                    b.Property<string>("TutorId")
+========
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+>>>>>>>> main:Demo/Migrations/20240512090521_CreateDB.Designer.cs
+                        .HasColumnType("nvarchar(100)");
+
+========
+>>>>>>>> main:Demo/Migrations/20240512112553_UpdateDB.Designer.cs
                     b.HasKey("Id");
 
                     b.ToTable("Classes");
@@ -102,8 +133,15 @@ namespace Demo.Migrations
                     b.Property<TimeSpan>("StartTime")
                         .HasColumnType("Time");
 
+<<<<<<<< HEAD:Demo/Migrations/20240512090521_CreateDB.Designer.cs
+                    b.Property<string>("StudentId")
+========
                     b.Property<string>("SubjectId")
+>>>>>>>> main:Demo/Migrations/20240512112553_UpdateDB.Designer.cs
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubjectId")
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
@@ -115,7 +153,54 @@ namespace Demo.Migrations
                     b.ToTable("ClassesSubjects");
                 });
 
+<<<<<<<< HEAD:Demo/Migrations/20240512062920_CreateDB.Designer.cs
+            modelBuilder.Entity("Demo.Models.Students", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClassesId")
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PhotoURL")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+<<<<<<<< HEAD:Demo/Migrations/20240512090521_CreateDB.Designer.cs
+                    b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("Demo.Models.Subjects", b =>
+========
             modelBuilder.Entity("Demo.Models.Subject", b =>
+>>>>>>>> main:Demo/Migrations/20240512090521_CreateDB.Designer.cs
+========
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("ClassesSubjects");
+                });
+
+            modelBuilder.Entity("Demo.Models.Subject", b =>
+>>>>>>>> main:Demo/Migrations/20240512112553_UpdateDB.Designer.cs
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -225,8 +310,22 @@ namespace Demo.Migrations
                     b.HasDiscriminator().HasValue("Student");
                 });
 
+<<<<<<<< HEAD:Demo/Migrations/20240512090521_CreateDB.Designer.cs
+<<<<<<<< HEAD:Demo/Migrations/20240512062920_CreateDB.Designer.cs
+            modelBuilder.Entity("Demo.Models.Students", b =>
+                {
+                    b.HasOne("Demo.Models.Classes", "Classes")
+                        .WithMany("Students")
+                        .HasForeignKey("ClassesId");
+
+                    b.Navigation("Classes");
+========
             modelBuilder.Entity("Demo.Models.Tutor", b =>
                 {
+========
+            modelBuilder.Entity("Demo.Models.Tutor", b =>
+                {
+>>>>>>>> main:Demo/Migrations/20240512112553_UpdateDB.Designer.cs
                     b.HasBaseType("Demo.Models.User");
 
                     b.HasDiscriminator().HasValue("Tutor");
@@ -239,6 +338,7 @@ namespace Demo.Migrations
                         .HasForeignKey("StudentId");
 
                     b.Navigation("Student");
+>>>>>>>> main:Demo/Migrations/20240512090521_CreateDB.Designer.cs
                 });
 
             modelBuilder.Entity("Demo.Models.ClassSubject", b =>
@@ -251,9 +351,13 @@ namespace Demo.Migrations
 
                     b.HasOne("Demo.Models.Subject", "Subject")
                         .WithMany("ClassesSubjects")
+<<<<<<<< HEAD:Demo/Migrations/20240512090521_CreateDB.Designer.cs
+                        .HasForeignKey("SubjectId");
+========
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+>>>>>>>> main:Demo/Migrations/20240512112553_UpdateDB.Designer.cs
 
                     b.Navigation("Class");
 
@@ -272,6 +376,8 @@ namespace Demo.Migrations
                 });
 
             modelBuilder.Entity("Demo.Models.Student", b =>
+<<<<<<<< HEAD:Demo/Migrations/20240512090521_CreateDB.Designer.cs
+========
                 {
                     b.HasOne("Demo.Models.Class", "Class")
                         .WithMany("Students")
@@ -290,16 +396,55 @@ namespace Demo.Migrations
                 });
 
             modelBuilder.Entity("Demo.Models.Subject", b =>
+>>>>>>>> main:Demo/Migrations/20240512112553_UpdateDB.Designer.cs
+                {
+                    b.HasOne("Demo.Models.Class", "Class")
+                        .WithMany("Students")
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Class");
+                });
+
+<<<<<<<< HEAD:Demo/Migrations/20240512090521_CreateDB.Designer.cs
+            modelBuilder.Entity("Demo.Models.Class", b =>
+                {
+                    b.Navigation("ClassSubjects");
+
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("Demo.Models.Subject", b =>
+                {
+                    b.Navigation("ClassesSubjects");
+
+<<<<<<<< HEAD:Demo/Migrations/20240512062920_CreateDB.Designer.cs
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("Demo.Models.Subjects", b =>
                 {
                     b.Navigation("ClassesSubjects");
                 });
 
+            modelBuilder.Entity("Demo.Models.Tutors", b =>
+========
             modelBuilder.Entity("Demo.Models.Student", b =>
                 {
                     b.Navigation("Attendances");
                 });
 
             modelBuilder.Entity("Demo.Models.Tutor", b =>
+>>>>>>>> main:Demo/Migrations/20240512090521_CreateDB.Designer.cs
+========
+            modelBuilder.Entity("Demo.Models.Student", b =>
+                {
+                    b.Navigation("Attendances");
+                });
+
+            modelBuilder.Entity("Demo.Models.Tutor", b =>
+>>>>>>>> main:Demo/Migrations/20240512112553_UpdateDB.Designer.cs
                 {
                     b.Navigation("Subjects");
                 });
