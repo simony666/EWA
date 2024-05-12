@@ -12,7 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demo.Migrations
 {
     [DbContext(typeof(DB))]
+<<<<<<<< HEAD:Demo/Migrations/20240512062920_CreateDB.Designer.cs
     [Migration("20240512062920_CreateDB")]
+========
+    [Migration("20240511065721_CreateDB")]
+>>>>>>>> 710f673af1f9a331a2d8c4bde98c8d47474b029c:Demo/Migrations/20240511065721_CreateDB.Designer.cs
     partial class CreateDB
     {
         /// <inheritdoc />
