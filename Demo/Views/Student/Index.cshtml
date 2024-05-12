@@ -1,0 +1,38 @@
+﻿@model StudentsVM
+
+@{
+    ViewBag.Title = "Students | View Students";
+    IEnumerable<Students> students = ViewBag.studentList;
+}
+
+<p>@students.Count() record(s)</p> 
+
+<table class="table">
+    <tr>
+        <th>Student Id</th>
+        <th>Student Name</th>
+        <th>Gender</th>
+        <th>Classes</th>
+        <th>Assign Classes</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    @foreach (var s in students)
+    {
+        <tr>
+            <td>@s.Id</td>
+            <td>@s.Name</td>
+            <td>@s.Gender</td>
+            <td>@s.ClassesId</td>
+            <td>
+                <button data-get="/Student/AssignClass/@s.Id">Assign Class</button>
+            </td>
+            <td>
+                <button data-post="/Classes/Update/@s.Id">Update</button>
+            </td>
+            <td>
+                <button data-post="/Classes/Delete/@s.Id">Delete</button>
+            </td>
+        </tr>
+    }
+</table>

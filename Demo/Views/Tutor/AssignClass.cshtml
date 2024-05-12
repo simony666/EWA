@@ -1,0 +1,30 @@
+﻿@model TutorsVM
+
+@{
+    ViewBag.Title = "Tutors | View Tutors";
+    IEnumerable<Tutors> tutors = ViewBag.Tutors;
+}
+
+<p>@tutors.Count() record(s)</p>
+
+<table class="table">
+    <tr>
+        <th>Tutor Id</th>
+        <th>Tutors Name</th>
+        <th>Gender</th>
+        <th>Age</th>
+        <th>View Classes</th>
+    </tr>
+    @foreach (var t in tutors)
+    {
+        <tr>
+            <td>@t.Id</td>
+            <td>@t.Name</td>
+            <td>@t.Gender</td>
+            <td>@t.Age</td>
+            <td>
+                <button data-post="/Tutor/ViewClass/@t.Id">View Timetable</button>
+            </td>
+        </tr>
+    }
+</table>

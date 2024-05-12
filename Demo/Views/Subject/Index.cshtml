@@ -1,37 +1,47 @@
-﻿@model CreateSubjectsVM
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@model IPagedList<Subjects>
 
 @{
     ViewBag.Title = "Subject | Index";
-    IEnumerable<Subjects> subjects = ViewBag.Subjects;
     var tutors = ViewBag.Tutors;
-
+    string[] fields = { "Id", "Name", "Fees", "Tutor" };
 }
 
-<form method="post" class="form">
-    <div asp-validation-summary="ModelOnly"></div>
-
-    <label asp-for="Name"></label>
-    <input asp-for="Name" autofocus>
-    <span asp-validation-for="Name"></span>
-
-    <section>
-        <button>Insert</button>
-        <button type="reset">Reset</button>
-    </section>
+<form>
+    @Html.TextBox("name", null, new { autofocus = "" })
+    @*(string)ViewBag.Sort*@
+    @Html.Hidden("sort")
+    @Html.Hidden("dir")
 </form>
 
-<p>@subjects.Count() record(s)</p> 
+<p>
+    @Model.Count() of @Model.TotalItemCount record(s) |
+    Page @Model.PageNumber of  @Model.PageCount
+</p>
 
 <table class="table">
     <tr>
-        <th>Subjects Id</th>
-        <th>Subjects Name</th>
-        <th>Subjects Fees</th>  
-        <th>Tutors</th>
-        <th>Edit</th>
+        @foreach (var f in fields)
+        {
+            string d = "asc";
+            string c = "";
+
+            if (f == ViewBag.Sort)
+            {
+                d = ViewBag.Dir == "des" ? "asc" : "des";
+                c = ViewBag.Dir;
+            }
+
+            <th>
+                <a href="?name=@ViewBag.Name&sort=@f&dir=@d" class="@c">@f</a>
+            </th>
+        }
+        <th>Update</th>
         <th>Delete</th>
     </tr>
-    @foreach (var s in subjects)
+    @foreach (var s in Model)
     {
         var tutorName = tutors.ContainsKey(s.TutorId) ? tutors[s.TutorId] : "Unknown";
     <tr>
@@ -44,3 +54,19 @@
     </tr>
     }
 </table>
+
+@{
+    var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+    options.LinkToFirstPageFormat = "First";
+    options.LinkToLastPageFormat = "Last";
+    options.LinkToPreviousPageFormat = "Previous";
+    options.LinkToNextPageFormat = "Next";
+}
+
+@*p = pageNumber, string= page
+    Everything must send to server or else server will forget the previous settings
+*@
+@Html.PagedListPager(
+        Model,
+        p => $"?name={ViewBag.Name}&sort={ViewBag.Sort}&dir={ViewBag.Dir}&page={p}",
+        options)

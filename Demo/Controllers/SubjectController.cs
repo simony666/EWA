@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using X.PagedList;
 
 namespace Demo.Controllers
 {
@@ -20,19 +21,58 @@ namespace Demo.Controllers
         }
 
         // GET: Subject/Index
-        public ActionResult Index()
+        public ActionResult Index(string? name, string? sort, string? dir, int page = 1)
         {
-            ViewBag.Subjects = db.Subjects;
+            // (1) Searching ------------------------
+            ViewBag.Name = name = name?.Trim() ?? "";
+
+            var searched = db.Subjects.Where(s => s.Name.Contains(name));
+
+            // (2) Sorting --------------------------
+            ViewBag.Sort = sort;
+            ViewBag.Dir = dir;
+
+            Func<Subjects, object> fn = sort switch
+            {
+                "Id" => s => s.Id,
+                "Name" => s => s.Name,
+                "Fees" => s => s.Fees,
+                "Tutor" => s => s.TutorId,
+                _ => s => s.Id,
+            };
+
+            var sorted = dir == "des" ?
+                     searched.OrderByDescending(fn) :
+                     searched.OrderBy(fn);
+
+            // (3) Paging ---------------------------
+            if (page < 1)
+            {
+                // null = return to the same page
+                // parameter = new {page = 1} 
+                // return Redirect(?page=1) same as return RedirectToAction(null, new {page = 1});
+                return RedirectToAction(null, new { name, sort, dir, page = 1 });
+            }
+
+            var model = sorted.ToPagedList(page, 10);
+
+            if (page > model.PageCount && model.PageCount > 0)
+            {
+                // null = return to the same page
+                return RedirectToAction(null, new { name, sort, dir, page = model.PageCount });
+            }
+
+            //ViewBag.Subjects = db.Subjects;
             ViewBag.Tutors = db.Tutors.ToDictionary(t => t.Id, t => t.Name);
-            return View();
+            return View(model);
         }
 
         // POST: Subject/Create
         public ActionResult Create()
         {
-            //dropdown list for room type
+            //dropdown list for tutor list
             ViewBag.TutorList = new SelectList(db.Tutors.OrderBy(t => t.Id), "Id", "Name");
-            //ViewBag.ClassList = new SelectList(db.Classes.OrderBy(c => c.Id), "Id", "Name");
+            
             return View();
         }
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3fa985b51b7942429ffcfdb93c5f4c6c" Name="Diagram1">
+        <EntityTypeShape EntityType="DBModel.C__EFMigrationsHistory" Width="1.5" PointX="0.875" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.Class" Width="1.5" PointX="1.25" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.ClassesSubject" Width="1.5" PointX="4.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.Student" Width="1.5" PointX="0.5" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.Subject" Width="1.5" PointX="6.25" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.Tutor" Width="1.5" PointX="3.625" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.User" Width="1.5" PointX="8.625" PointY="3.25" IsExpanded="true" />
+        <AssociationConnector Association="DBModel.FK_Classes_Tutors_TutorId" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModel.FK_ClassesSubjects_Classes_ClassesId" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModel.FK_Students_Classes_ClassesId" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModel.FK_ClassesSubjects_Subjects_SubjectsId" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModel.FK_Subjects_Tutors_TutorId" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

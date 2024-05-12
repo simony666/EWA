@@ -1,0 +1,28 @@
+﻿@model Students
+
+@{
+    ViewBag.Title = "Students | Assign Classes";
+}
+
+<form method="post" class="form">
+    <div asp-validation-summary="ModelOnly"></div>
+    <label asp-for="Id">Student ID</label>
+    <b>@Model.Id</b>
+    <br>
+
+    <label asp-for="Name">Student Name</label>
+    <b>@Model.Name</b>
+    <br>
+
+
+    <label asp-for="ClassesId">Classes Name</label>
+    <div>
+        <partial name="_RadioButtonList"
+                 model='("classes",ViewBag.ClassList,true)' />
+    </div>
+    <br>
+
+    <section>
+        <button>Assign</button>
+    </section>
+</form>

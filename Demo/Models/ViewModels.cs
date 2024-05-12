@@ -125,6 +125,8 @@ public class ClassesVM
 
     [StringLength(100)]
     public string Name { get; set; }
+    [StringLength(100)]
+    public string ClassType { get; set; }
 
     [Range(1, 20)]
     public int? Capacity { get; set; }
@@ -163,13 +165,17 @@ public class StudentsVM
     [StringLength(1)]
     public string Gender { get; set; }
 
+    public int Age { get; set; }
+
     public string? PhotoURL { get; set; }
 
     public IFormFile? Photo { get; set; }
 
+    public string ClassesId { get; set; }
+
 }
 
-// students
+// tutors
 public class TutorsVM
 {
     public string? Id { get; set; }

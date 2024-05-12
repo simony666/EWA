@@ -1,0 +1,58 @@
+﻿@model SubjectsClassVM
+
+@{
+    ViewBag.Title = "Classes | Class-Subject Allocation (include tutor-Classes)";
+    
+}
+
+<form method="post" class="form" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly"></div>
+    <table width="100%" class="table">
+        <tr>
+            <th><label asp-for="DayOfWeek">Day of Week</label> </th>
+            <td>
+                <select asp-for="DayOfWeek" name="DayOfWeek" id="DayOfWeek">
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label asp-for="StartTime">Start Time:</label></th>
+            <td><input type="time" asp-for="StartTime" id="startTime" name="startTime" min="08:00" max="17:00" value="08:00"></td>
+        </tr>
+
+        <tr>
+            <th><label asp-for="Duration">Duration:</label> </th>
+            <td>
+                <select asp-for="Duration" name="duration" id="duration">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label asp-for="SubjectsId">Available Subjects:</label> </th>
+            <td>
+                <select asp-for="SubjectsId" id="SubjectsId" asp-items="ViewBag.SubjectsList">
+                    <option value="">- Select One -</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label asp-for="ClassesId">Available Classes:</label> </th>
+            <td>
+                <select asp-for="ClassesId" id="ClassesId" asp-items="ViewBag.ClassesList">
+                    <option value="">- Select One -</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><button>Assign</button></td>
+        </tr>
+    </table>
+</form>

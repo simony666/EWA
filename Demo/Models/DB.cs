@@ -16,7 +16,6 @@ public class DB : DbContext
     public DbSet<Students> Students { get; set; }
     public DbSet<Classes> Classes { get; set; }
     public DbSet<ClassesSubjects> ClassesSubjects { get; set; }
-    public DbSet<StudentClasses> StudentClasses { get; set; }
 
 }
 
@@ -93,8 +92,11 @@ public class Students
     [MaxLength(100)]
     public string PhotoURL { get; set; }
 
+    // FK
+    public string? ClassesId { get; set; }
+
     // Navigation properties
-    public List<StudentClasses> StudentClasses { get; set; } = new();
+    public Classes Classes { get; set; }
 }
 
 public class Classes
@@ -105,13 +107,14 @@ public class Classes
     public string Name { get; set; }
 
     [MaxLength(100)]
-    public string classType { get; set; }
-
+    public string ClassType { get; set; }
     public int Capacity { get; set; }
 
     // Navigation properties
     public List<ClassesSubjects> ClassesSubjects { get; set; } = new();
     public Tutors Tutor { get; set; } // Each class is handled by one tutor
+
+    public List<Students> Students { get; set; } = [];
 }
 
 public class ClassesSubjects
@@ -134,17 +137,6 @@ public class ClassesSubjects
     // navigation properties
     public Subjects Subjects { get; set; }
     public Classes Classes { get; set; }
-    public List<StudentClasses> StudentClasses { get; set; } = new();
-}
-
-public class StudentClasses { 
-    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
    
-    // FK
-    public string StudentId { get; set; }
-
-    public int ClassSubjectId { get; set; }
-    public Students Student { get; set; }
-    public ClassesSubjects ClassSubject { get; set; }
 }
+
