@@ -194,10 +194,10 @@ public class SubjectsClassVM
     //public string Id { get; set; }
 
     [Display(Name = "Start Time"), DataType(DataType.Time)]
-    public DateTime StartTime { get; set; }
+    public TimeSpan StartTime { get; set; }
 
     [Display(Name = "End Time"), DataType(DataType.Time)]
-    public DateTime EndTime { get; set; }
+    public TimeSpan EndTime { get; set; }
 
     public int Duration { get; set; }
     [StringLength(100)]
@@ -209,3 +209,4 @@ public class SubjectsClassVM
 
     public string ClassesId { get; set; }
 }
+
