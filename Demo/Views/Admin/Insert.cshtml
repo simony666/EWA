@@ -15,8 +15,12 @@
     <span asp-validation-for="Email"></span>
 
     <label asp-for="Password"></label>
-    <input asp-for="Password" autofocus />
-    <span asp-validation-for="Password"></span>
+    <input asp-for="Hash" autofocus />
+    <span asp-validation-for="Hash"></span>
+
+    <label asp-for="Confirm"></label>
+    <input asp-for="Confirm" autofocus />
+    <span asp-validation-for="Confirm"></span>
 
     <h1>Admin Information</h1>
 
@@ -35,9 +39,9 @@
     </div>
     <span asp-validation-for="Gender"></span>
 
-    <label asp-for="Contact Number"></label>
-    <input asp-for="ContactNumber" autofocus />
-    <span asp-validation-for="ContactNumber"></span>
+    <label asp-for="ContactNo"></label>
+    <input asp-for="ContactNo" autofocus />
+    <span asp-validation-for="ContactNo"></span>
 
     <label>Photo</label>
     <div>
@@ -47,12 +51,6 @@
         </label>
     </div>
     @Html.ValidationMessage("photo")
-
-    <!--<label asp-for="ProgramId"></label>
-    <select asp-for="ProgramId" asp-items="ViewBag.ProgramList">
-        <option value="">- Select One -</option>
-    </select>
-    <span asp-validation-for="ProgramId"></span>-->
     
 
     <section>

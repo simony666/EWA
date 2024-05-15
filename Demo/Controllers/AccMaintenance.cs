@@ -8,10 +8,14 @@ namespace Demo.Controllers
     public class AccMaintenance : Controller
     {
         private readonly DB db;
+        private readonly IWebHostEnvironment en;
+        private readonly Helper hp;
 
-        public AccMaintenance(DB db)
+        public AccMaintenance(DB db, IWebHostEnvironment en, Helper hp)
         {
             this.db = db;
+            this.en = en;
+            this.hp = hp;
         }
 
         // GET: Home/Insert
@@ -23,7 +27,9 @@ namespace Demo.Controllers
 
         // POST: Home/Insert
         [HttpPost]
-        public IActionResult Insert(AdminVM vm, InsertVm am)
+        [RequestSizeLimit(100 * 1024 * 1024)] // 100MB
+        [RequestFormLimits(MultipartBodyLengthLimit = 100 * 1024 * 1024)] // 100MB
+        public IActionResult Insert(AdminVM vm, IFormFile photo)
         {
             if (ModelState.IsValid("email") &&
                 db.Admins.Any(a => a.Email == vm.Email))
@@ -35,14 +41,22 @@ namespace Demo.Controllers
             {
                 ModelState.AddModelError("Id", "Duplicated Id.");
             }
-            if (ModelState.IsValid("contactNo")&&
-                db.Admins.Any(a => a.ContactNo ==  vm.ContactNo))
+            if (ModelState.IsValid("contactNo") &&
+                db.Admins.Any(a => a.ContactNo == vm.ContactNo))
             {
                 ModelState.AddModelError("ContactNo", "Duplicated Contact No.");
+            }
+            if (ModelState.IsValid("photo"))
+            {
+                // TODO
+                var e = hp.ValidatePhoto(photo);
+                if (e != "") ModelState.AddModelError("photo", e);
             }
 
             if (ModelState.IsValid)
             {
+                hp.SavePhoto(photo);
+
                 db.Admins.Add(new()
                 {
                     Email = vm.Email,
@@ -51,6 +65,7 @@ namespace Demo.Controllers
                     Name = vm.Name,
                     Gender = vm.Gender,
                     ContactNo = vm.ContactNo,
+                    PhotoURL = photo,
                 });
                 db.SaveChanges();
 
@@ -69,12 +84,6 @@ namespace Demo.Controllers
             return !db.Students.Any(s => id == s.Id);
         }
 
-
-        // GET: Home/CheckProgramId
-        public bool CheckProgramId(string programId)
-        {
-            return db.Programs.Any(p => p.Id == programId);
-        }
 
     }
 }

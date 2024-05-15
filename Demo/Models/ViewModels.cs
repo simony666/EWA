@@ -152,6 +152,78 @@ public class TutorClassVM
     public string ClassId { get; set; }
 }
 
+
+
+
+
+// subject Class
+public class SubjectsClassVM 
+{ 
+    //public string Id { get; set; }
+
+    [Display(Name = "Start Time"), DataType(DataType.Time)]
+    public TimeSpan StartTime { get; set; }
+
+    [Display(Name = "End Time"), DataType(DataType.Time)]
+    public TimeSpan EndTime { get; set; }
+
+    public int Duration { get; set; }
+    [StringLength(100)]
+    public string DayOfWeek { get; set; }
+
+    public string SubjectsId { get; set; }
+
+    public string? StudentsId { get; set; }
+
+    public string ClassesId { get; set; }
+}
+
+//--------------------------------------------------------------
+//                     Goh Qin Long
+//--------------------------------------------------------------
+
+//User
+public class UserVM
+{
+    [StringLength(100)]
+    [EmailAddress]
+    [Remote("CheckEmail", "Account", ErrorMessage = "Duplicated {0}.")]
+    public string Email { get; set; }
+
+    [StringLength(100, MinimumLength = 5, ErrorMessage = "{0} must be {2}-{1} characters long.")]
+    [DataType(DataType.Password)]
+    public string Hash { get; set; }
+
+    [StringLength(100, MinimumLength = 5, ErrorMessage = "{0} must be {2}-{1} characters long.")]
+    [Compare("Hash")]
+    [DataType(DataType.Password)]
+    [Display(Name = "Confirm Password")]
+    public string Confirm { get; set; }
+
+    [StringLength(100)]
+    public string Name { get; set; }
+
+    [StringLength(1)]
+    [RegularExpression(@"[FM]", ErrorMessage = "Invalid {0}! This is Malaysia no America")]
+    public string Gender { get; set; }
+
+    [StringLength(12)]
+    [RegularExpression(@"^(\+?6?01)[0-9]{8,9}$", ErrorMessage = "Invalid {0}! Follow the Contact Number Format.")]
+    public int ContactNo { get; set; }
+
+}
+
+//Admin
+public class AdminVM : UserVM
+{
+    [StringLength(10)]
+    [RegularExpression(@"[A]\d{5}", ErrorMessage = "Invalid {0}! First Alphabet must be <A>. (A00000)")]
+    [Remote("CheckId", "Home", ErrorMessage = "Deplicated {0}.")]
+    public string Id { get; set; }
+
+
+}
+
 // students
 public class StudentsVM
 {
@@ -187,26 +259,3 @@ public class TutorsVM
     public int Age { get; set; }
 
 }
-
-// subject Class
-public class SubjectsClassVM 
-{ 
-    //public string Id { get; set; }
-
-    [Display(Name = "Start Time"), DataType(DataType.Time)]
-    public TimeSpan StartTime { get; set; }
-
-    [Display(Name = "End Time"), DataType(DataType.Time)]
-    public TimeSpan EndTime { get; set; }
-
-    public int Duration { get; set; }
-    [StringLength(100)]
-    public string DayOfWeek { get; set; }
-
-    public string SubjectsId { get; set; }
-
-    public string? StudentsId { get; set; }
-
-    public string ClassesId { get; set; }
-}
-
