@@ -4,3 +4,5 @@
 /Demo/obj
 Demo/Demo.csproj
 Demo/DB_log.ldf
+/Demo/Views/Attendance/Create.cshtml
+/Demo/Views/Attendance/Update.cshtml
