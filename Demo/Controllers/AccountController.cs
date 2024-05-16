@@ -1,4 +1,5 @@
-﻿/*using Microsoft.AspNetCore.Authorization;
+﻿using Demo.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mail;
 
@@ -17,6 +18,23 @@ public class AccountController : Controller
         this.hp = hp;
     }
 
+    public IActionResult DB()
+    {
+        db.Tutors.Add(new Tutor()
+        {
+            Id = "T004",
+            Name = "Tutor 3",
+            Email = "wangsy-wm22@student.tarc.edu.my",
+            Hash = hp.HashPassword("12345"),
+            Gender = "M",
+            Age = 40,
+            PhotoURL = "xxx.jpg"
+            
+        });
+        db.SaveChanges();
+        return RedirectToAction("Index");
+    }
+
     // GET: Account/Login
     public IActionResult Login()
     {
@@ -27,8 +45,8 @@ public class AccountController : Controller
     [HttpPost]
     public IActionResult Login(LoginVM vm, string? returnURL)
     {
-        var u = db.Users.Find(vm.Email);
-        
+        var u = db.Users.FirstOrDefault(u => u.Email == vm.Email);
+
         if (u == null || !hp.VerifyPassword(u.Hash, vm.Password))
         {
             ModelState.AddModelError("", "Login credentials not matched.");
@@ -40,9 +58,9 @@ public class AccountController : Controller
 
             hp.SignIn(u!.Email, u.Role, vm.RememberMe);
 
-            if (u is Admin m)
+            if (u is Parent p)
             {
-                HttpContext.Session.SetString("PhotoURL", m.PhotoURL);
+                HttpContext.Session.SetString("PhotoURL", p.PhotoURL);
             }
 
             if (string.IsNullOrEmpty(returnURL))
@@ -50,7 +68,7 @@ public class AccountController : Controller
                 return RedirectToAction("Index", "Home");
             }
         }
-        
+
         return View(vm);
     }
 
@@ -104,14 +122,17 @@ public class AccountController : Controller
             var err = hp.ValidatePhoto(vm.Photo);
             if (err != "") ModelState.AddModelError("Photo", err);
         }
-        
+
         if (ModelState.IsValid)
         {
-            db.Admins.Add(new()
+            
+            db.Parents.Add(new()
             {
+                Id = NextId(),
                 Email = vm.Email,
                 Hash = hp.HashPassword(vm.Password),
                 Name = vm.Name,
+                Gender = vm.Gender,
                 PhotoURL = hp.SavePhoto(vm.Photo)
             });
             db.SaveChanges();
@@ -122,12 +143,19 @@ public class AccountController : Controller
 
         return View();
     }
+    // Manually generate next id
+    private string NextId()
+    {
+        string max = db.Parents.Max(p => p.Id) ?? "P000";
+        int n = int.Parse(max[1..]);
+        return (n + 1).ToString("'P'000");
+    }
 
     // GET: Account/UpdateProfile
     [Authorize(Roles = "Member")]
     public IActionResult UpdateProfile()
     {
-        var m = db.Admins.Find(User.Identity!.Name);
+        var m = db.Users.Find(User.Identity!.Name);
         if (m == null) return RedirectToAction("Index", "Home");
 
         var vm = new UpdateProfileVM
@@ -145,7 +173,7 @@ public class AccountController : Controller
     [HttpPost]
     public IActionResult UpdateProfile(UpdateProfileVM vm)
     {
-        var m = db.Admins.Find(User.Identity!.Name);
+        var m = db.Users.Find(User.Identity!.Name);
         if (m == null) return RedirectToAction("Index", "Home");
 
         if (vm.Photo != null)
@@ -218,7 +246,7 @@ public class AccountController : Controller
     [HttpPost]
     public IActionResult ResetPassword(ResetPasswordVM vm)
     {
-        var u = db.Users.Find(vm.Email);
+        var u = db.Users.FirstOrDefault(u => u.Email == vm.Email);
 
         if (u == null)
         {
@@ -252,9 +280,9 @@ public class AccountController : Controller
 
         var path = u switch
         {
-            Admin    => Path.Combine(en.WebRootPath, "images", "admin.png"),
-            //Member m => Path.Combine(en.WebRootPath, "photos", m.PhotoURL),
-            _        => ""
+            Admin => Path.Combine(en.WebRootPath, "images", "admin.png"),
+            User p => Path.Combine(en.WebRootPath, "photos", p.PhotoURL),
+            _ => ""
         };
 
         var att = new Attachment(path);
@@ -276,4 +304,6 @@ public class AccountController : Controller
         hp.SendEmail(mail);
     }
 }
-*/
+
+
+
