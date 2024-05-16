@@ -1,0 +1,41 @@
+﻿@model IEnumerable<UserViewModel>
+
+@{
+    ViewBag.Title = "User List";
+}
+
+<h1>User List</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Phone</th>
+            <th>Age</th>
+            <th>Role</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@u.Id</td>
+                <td>@u.Email</td>
+                <td>@u.Name</td>
+                <td>@u.Gender</td>
+                <td>@u.Phone</td>
+                <td>@u.Age</td>
+                <td>@u.Role</td>
+                <td>
+                    <button data-get="/AccountMaintenance/Detail/@u.Id">Detail</button>
+                    <button data-get="/AccountMaintenance/UpdateProfile/@u.Id">Update</button>
+                    <button data-post="/AccountMaintenance/Delete/@u.Id">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

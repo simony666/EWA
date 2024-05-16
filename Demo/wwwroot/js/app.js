@@ -108,3 +108,5 @@ $('.upload input').change(e => {
     // Trigger input validation
     $(e.target).valid();
 });
+
+
