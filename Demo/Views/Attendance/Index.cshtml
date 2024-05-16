@@ -1,7 +1,7 @@
 ﻿@model ClassesVM
 
 @{
-    ViewBag.Title = "Classes | View Classes";
+    ViewBag.Title = "Attendance | Dashboard";
     IEnumerable<Class> classes = ViewBag.Classes;
 }
 
@@ -11,21 +11,17 @@
     <tr>
         <th>Classes Id</th>
         <th>Classes Name</th>
-        <th>Capacity</th>
-        <th>Edit</th>
-        <th>Delete</th>
+        <th>Attendance</th>
+        <th>View</th>
     </tr>
     @foreach (var c in classes)
     {
         <tr>
             <td>@c.Id</td>
             <td>@c.Name</td>
-            <td>@c.Capacity</td>
+            <td>Attendance</td>
             <td>
-                <button data-post="/Classes/Update/@c.Id">Update</button>
-            </td>
-            <td>
-                <button data-post="/Classes/Delete/@c.Id">Delete</button>
+                <button data-post="/Attendance/Detail/@c.Id">View</button>
             </td>
         </tr>
     }

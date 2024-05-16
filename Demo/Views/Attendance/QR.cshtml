@@ -1,0 +1,16 @@
+﻿@inject Helper hp
+
+@{
+    ViewBag.Title = "Classes | View Classes";
+    IEnumerable<Class> classes = ViewBag.Classes;
+}
+
+@if (User.Identity!.IsAuthenticated) {
+    if (User.IsInRole("Tutor")) { 
+        <p>Tutor</p>
+    }
+    if (User.IsInRole("Student"))
+    {
+        <p>Student</p>
+    }
+}
