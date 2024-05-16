@@ -41,6 +41,8 @@ public class RegisterVM
     [StringLength(100)]
     public string Name { get; set; }
 
+    public string Gender { get; set; }
+
     public IFormFile Photo { get; set; }
 }
 
