@@ -23,6 +23,16 @@
     <input asp-for="Name">
     <span asp-validation-for="Name"></span>
 
+    <label>Gender</label>
+    <div>
+        <input type="radio" id="Male" name="Gender" value="M" asp-for="Gender" />
+        <label for="Male">Male</label>
+
+        <input type="radio" id="Female" name="Gender" value="F" asp-for="Gender" />
+        <label for="Female">Female</label>
+    </div>
+    <span asp-validation-for="Gender"></span>
+
     <label asp-for="Photo"></label>
     <div>
         <label class="upload">
