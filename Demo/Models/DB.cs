@@ -78,6 +78,7 @@ public class Admin : User
 
 public class Tutor : User
 {
+    public Class Class { get; set; } // Navigation property for the Class
     public List<Subject> Subjects { get; set; } // Navigation property for the Subjects
 }
 

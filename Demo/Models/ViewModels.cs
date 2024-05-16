@@ -85,6 +85,12 @@ public class ResetPasswordVM
 //--------------------------------------------------------------
 //                     Leong Zhi Yen
 //--------------------------------------------------------------
+// create Tutors
+public class CreateTutorsVM 
+{
+    
+}
+
 
 // create Subjects
 public class CreateSubjectsVM

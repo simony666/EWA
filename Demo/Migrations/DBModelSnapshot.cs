@@ -222,12 +222,24 @@ namespace Demo.Migrations
 
                     b.HasIndex("ClassId");
 
+                    b.ToTable("Users", t =>
+                        {
+                            t.Property("ClassId")
+                                .HasColumnName("Student_ClassId");
+                        });
+
                     b.HasDiscriminator().HasValue("Student");
                 });
 
             modelBuilder.Entity("Demo.Models.Tutor", b =>
                 {
                     b.HasBaseType("Demo.Models.User");
+
+                    b.Property<string>("ClassId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasIndex("ClassId");
 
                     b.HasDiscriminator().HasValue("Tutor");
                 });
@@ -275,6 +287,17 @@ namespace Demo.Migrations
                 {
                     b.HasOne("Demo.Models.Class", "Class")
                         .WithMany("Students")
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Class");
+                });
+
+            modelBuilder.Entity("Demo.Models.Tutor", b =>
+                {
+                    b.HasOne("Demo.Models.Class", "Class")
+                        .WithMany()
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
