@@ -1,4 +1,4 @@
-﻿/*using Demo.Models;
+﻿using Demo.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -25,18 +25,26 @@ namespace Demo.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.Classes = db.Classes;
-            return View();
+            var classes = db.Classes.ToList();
+            var classViewModels = classes.Select(c => new ClassViewModel
+            {
+                Id = c.Id,
+                Name = c.Name,
+                ClassType = c.ClassType,
+                Capacity = db.Students.Count(s => s.ClassId == c.Id) // Count students with matching ClassesId
+            }).ToList();
+
+            return View(classViewModels);
         }
+
 
         // GET: Classes/Create
         public ActionResult Create()
-        {
+        {   
             return View();
         }
 
         // POST: Classes/Create
-
         [HttpPost]
         public ActionResult Create(ClassesVM vm)
         {
@@ -44,29 +52,24 @@ namespace Demo.Controllers
             {
                 // Generate ID
                 vm.Id = NextId();
-                //vm.ClassType = AssignType();
-                //if(vm.ClassType == "null")
-                //{
-                //    TempData["Info"] = "No students is under 3-6 years old";
-                //    return RedirectToAction("Index");
-                //}
 
                 // Create a new class object
-                var classes = new Classes
+                var classes = new Class
                 {
                     Id = vm.Id,
                     Name = vm.Name,
-                    ClassType = vm.ClassType
+                    ClassType = vm.ClassType,
                 };
 
+
                 // Count the number of students enrolled in the class
-                classes.Capacity = db.ClassesSubjects.Count(c => c.ClassesId == classes.Id);
+                classes.Capacity = db.Classes.Count(c => c.Id == classes.Id);
 
                 // Check if the capacity exceeds the limit
                 if (classes.Capacity > 20)
                 {
                     TempData["Info"] = $"Class {vm.Id} is fully occupied.";
-                    return RedirectToAction("Index");
+                    //return RedirectToAction("Index");
                 }
 
                 // Add the class object to the context and save changes
@@ -78,11 +81,11 @@ namespace Demo.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Classes = db.Classes;
             return View(vm);
         }
 
-        
+
+
 
         // Manually generate next id
         private string NextId()
@@ -151,7 +154,7 @@ namespace Demo.Controllers
             if (c != null)
             {
                 // Check if any students are associated with this class
-                var studentsWithClass = db.ClassesSubjects.Any(s => s.ClassesId.Contains(id));
+                var studentsWithClass = db.ClassesSubjects.Any(s => s.Class.Id.Contains(id));
 
                 if (!studentsWithClass)
                 {
@@ -169,53 +172,6 @@ namespace Demo.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: Classes/TutorClass
-        public IActionResult TutorClass(string? id)
-        {
-            var t = db.Tutors.Find(id);
-
-            if (t != null)
-            {
-                var classesWithoutTutor = db.Classes.Where(c => !db.ClassesSubjects.Any(cs => cs.ClassesId == c.Id))
-                                                    .OrderBy(c => c.Id)
-                                                    .ToList();
-                ViewBag.ClassesList = new SelectList(classesWithoutTutor, "Id", "Name");
-
-                var vm = new TutorClassVM
-                {
-                    Id = t.Id,
-                    Name = t.Name
-                };
-
-                return View(vm);
-            }
-            else
-            {
-                return RedirectToAction("Index");
-            }
-        }
-
-        // POST: Classes/TutorClass
-        [HttpPost]
-        public IActionResult TutorClass(TutorClassVM vm)
-        {
-            if (ModelState.IsValid)
-            {
-                var t = db.Tutors.Find(vm.Id);
-                if (t != null)
-                {
-                    t.Id = vm.Id;
-                    t.ClassId = vm.ClassId;
-                    db.SaveChanges();
-                    TempData["Info"] = "Class updated.";
-                }
-                else
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-            }
-            return View(vm);
-        }
 
         // GET: Classes/ClassSubject
         public IActionResult ClassSubject()
@@ -236,7 +192,7 @@ namespace Demo.Controllers
                 vm.EndTime = vm.StartTime + duration;
 
                 // Check if the class already has a subject assigned at the same time
-                if (db.ClassesSubjects.Any(cs => cs.ClassesId == vm.ClassesId &&
+                if (db.ClassesSubjects.Any(cs => cs.ClassId == vm.ClassesId &&
                                                   cs.DayOfWeek == vm.DayOfWeek &&
                                                   cs.StartTime <= vm.EndTime &&
                                                   cs.EndTime >= vm.StartTime))
@@ -246,14 +202,14 @@ namespace Demo.Controllers
                 }
 
                 // Retrieve the class
-                var classSubject = new ClassesSubjects
+                var classSubject = new ClassSubject
                 {
                     StartTime = vm.StartTime,
                     EndTime = vm.EndTime,
                     Duration = vm.Duration,
                     DayOfWeek = vm.DayOfWeek,
-                    SubjectsId = vm.SubjectsId,
-                    ClassesId = vm.ClassesId
+                    SubjectId = vm.SubjectsId,
+                    ClassId = vm.ClassesId
                 };
 
                 // Retrieve students based on age range
@@ -285,86 +241,5 @@ namespace Demo.Controllers
             return View(vm);
         }
 
-        // GET: /Classes/StudentClass
-        public IActionResult StudentClass(string id)
-        {
-            var classes = db.Classes.Include(s => s.Students)
-                                    .FirstOrDefault(c => c.Id == id);
-
-            if (classes == null)
-            {
-                return RedirectToAction("index");
-            }
-
-            // each of the subject display the selected id
-            var selected = classes.Students.Select(s => s.Id);
-
-            // Id as value hidden inside the checkbox, Name for display 
-            ViewBag.StudentList = new MultiSelectList(db.Students, "Id", "Name", selected);
-            return View(classes);
-        }
-
-        [HttpPost]
-        public IActionResult StudentClass(string id, string[] students)
-        {
-            var classes = db.Classes.FirstOrDefault(c => c.Id == id);
-
-            if (classes == null)
-            {
-                return RedirectToAction("Index");
-            }
-
-            // Update the ClassesId for selected students with null ClassesId
-            foreach (var studentId in students)
-            {
-                var student = db.Students.FirstOrDefault(s => s.Id == studentId);
-
-                if (student != null)
-                {
-                    // Update ClassesId only if it's null
-                    if (student.ClassesId == null)
-                    {
-                        student.ClassesId = classes.Id;
-                    }
-                }
-                else
-                {
-                    // Student not found
-                    TempData["Info"] = $"Student {studentId} not found.";
-                    return RedirectToAction("Index");
-                }
-            }
-
-            // Save changes outside of loop
-            db.SaveChanges();
-
-            TempData["Info"] = "Student(s) assigned.";
-            return RedirectToAction("Index");
-        }
-
-
-
-        // assign classType for classes based on student's age
-        private string AssignType(int age)
-        {
-            if (age == 3 || age == 4)
-            {
-                return "K1";
-            }
-            else if (age == 5)
-            {
-                return "K2";
-            }
-            else if (age == 6)
-            {
-                return "K3";
-            }
-            else
-            {
-                return null;
-            }
-        }
-
     }
 }
-*/

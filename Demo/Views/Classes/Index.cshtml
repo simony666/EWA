@@ -1,11 +1,11 @@
-﻿@model ClassesVM
+﻿@model IEnumerable<ClassViewModel>
 
 @{
     ViewBag.Title = "Classes | View Classes";
-    IEnumerable<Class> classes = ViewBag.Classes;
+    //IEnumerable<Class> classes = ViewBag.Classes;
 }
 
- <p>@classes.Count() record(s)</p> 
+ <p>@Model.Count() record(s)</p> 
 
 <table class="table">
     <tr>
@@ -13,20 +13,16 @@
         <th>Classes Name</th>
         <th>Class Types</th>
         <th>Capacity</th>
-        <th>Assign Students</th>
         <th>Edit</th>
         <th>Delete</th>
     </tr>
-    @foreach (var c in classes)
+    @foreach (var c in Model)
     {
         <tr>
             <td>@c.Id</td>
             <td>@c.Name</td>
             <td>@c.ClassType</td>
             <td>@c.Capacity</td>
-            <td>
-                <button data-get="/Classes/StudentClass/@c.Id">Assign Students</button>
-            </td>
             <td>
                 <button data-post="/Classes/Update/@c.Id">Update</button>
             </td>
