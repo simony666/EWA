@@ -20,4 +20,13 @@ public class HomeController : Controller
     {
         return View();
     }
+
+    // GET: Home/Index
+    public IActionResult Chat()
+    {
+        // Obtain user name --> ViewBag.Name
+        ViewBag.Name = db.Users.Find(User.Identity!.Name)?.Name;
+
+        return View();
+    }
 }

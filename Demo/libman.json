@@ -26,6 +26,12 @@
       "files": [
         "jquery.validate.unobtrusive.min.js"
       ]
+    },
+    {
+      "library": "microsoft-signalr@8.0.0",
+      "files": [
+        "signalr.min.js"
+      ]
     }
   ]
 }
