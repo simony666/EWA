@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "Chart | Leong Zhi Yen - Count students by class";
+}
+
+<div id="chart" style="width: 600px; height: 400px"></div>
+
+<p>
+    <a href="#" id="reload">Reload</a>|
+    <a href="#" id="toggle">Toggle Orientation</a>
+</p>
+
+<p>
+    [ <a href="Data1" target="data">Data</a> ]
+</p>
+
+@section foot {
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(init);
+
+        let dt, opt, cht;
+
+        function init() {
+            dt = new google.visualization.DataTable();
+            dt.addColumn('string', 'Program');
+            dt.addColumn('number', 'Student Count');
+
+            const style = { bold: true, italic: false, fontSize: 20, color: 'purple' };
+
+            opt = {
+                title: 'Student Count By Program',
+                fontName: 'Roboto',
+                fontSize: 16,
+                titleTextStyle: { fontSize: 20 },
+                chartArea: {
+                    width: '80%',
+                    height: '70%',
+                    top: 60,
+                    left: 80
+                },
+                colors: ['purple'],
+                // TODO: legend, vAxis, hAxis, animation, orientation
+                legend: 'none',
+                vAxis: {
+                    title: 'Student Count',
+                    titleTextStyle: style,
+                    minValue: 0,
+                    maxValue: 50,
+                },
+                hAxis: {
+                    title: 'Classes',
+                    titleTextStyle: style,
+                },
+                animation: {
+                    duration: 500,
+                    startup: true,
+                },
+                orientation: 'horizontal', // vertical
+            };
+
+            cht = new google.visualization.ColumnChart($('#chart')[0]);
+
+            $('#reload').click();
+        }
+
+        $('#reload').click(function (e) {
+            e.preventDefault();
+
+            const url = 'Data1';
+            const param = {};
+
+            $.getJSON(url, param, data => {
+                dt.removeRows(0, dt.getNumberOfRows());
+                dt.addRows(data);
+                cht.draw(dt, opt);
+            });
+        });
+
+        $('#toggle').click(e => {
+            e.preventDefault();
+
+            // TODO: Toggle orientation (horizontal <--> vertical)
+            //       Toggle axis (vAxis <--> hAxis)
+            opt.orientation = opt.orientation == 'vertical' ?
+                'horizontal' :
+                'vertical';
+
+            [opt.vAxis, opt.hAxis] = [opt.hAxis, opt.vAxis];
+
+            cht.draw(dt, opt);
+        });
+    </script>
+}
