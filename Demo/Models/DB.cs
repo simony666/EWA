@@ -61,7 +61,7 @@ public class Student : User
     [MaxLength(100)]
     public new string? Hash { get; set; }
 
-    public string ClassesId { get; set; }
+    public string ClassId { get; set; }
     public Class Class { get; set; }
     public List<Attendance> Attendances { get; set; } // Navigation property for the Attendances
 }
@@ -135,7 +135,7 @@ public class ClassSubject
     public string DayOfWeek { get; set; }
 
     public string SubjectId { get; set; }
-    public string ClassestId { get; set; }
+    public string ClassId { get; set; }
 
 
     public Class Class { get; set; } // Navigation property for the Class

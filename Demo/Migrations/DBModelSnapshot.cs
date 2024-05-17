@@ -84,10 +84,6 @@ namespace Demo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("ClassestId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("DayOfWeek")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -215,10 +211,6 @@ namespace Demo.Migrations
                     b.Property<string>("ClassId")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("ClassesId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasIndex("ClassId");
 

@@ -38,7 +38,6 @@ namespace Demo.Migrations
                     Age = table.Column<int>(type: "int", maxLength: 100, nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
-                    ClassesId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Student_ClassId = table.Column<string>(type: "nvarchar(100)", nullable: true),
                     ClassId = table.Column<string>(type: "nvarchar(100)", nullable: true)
                 },
@@ -110,7 +109,6 @@ namespace Demo.Migrations
                     Duration = table.Column<int>(type: "int", nullable: false),
                     DayOfWeek = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     SubjectId = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    ClassestId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ClassId = table.Column<string>(type: "nvarchar(100)", nullable: false)
                 },
                 constraints: table =>

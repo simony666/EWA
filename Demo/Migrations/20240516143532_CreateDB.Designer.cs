@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demo.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20240516033740_CreateDB")]
+    [Migration("20240516143532_CreateDB")]
     partial class CreateDB
     {
         /// <inheritdoc />
@@ -86,10 +86,6 @@ namespace Demo.Migrations
                     b.Property<string>("ClassId")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("ClassestId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DayOfWeek")
                         .IsRequired()
@@ -218,10 +214,6 @@ namespace Demo.Migrations
                     b.Property<string>("ClassId")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("ClassesId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasIndex("ClassId");
 
