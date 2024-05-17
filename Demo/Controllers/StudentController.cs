@@ -33,6 +33,34 @@ namespace Demo.Controllers
             return View();
         }
 
+        // POST: Student/Create
+        [HttpPost]
+        public ActionResult Create(CreateStudentsVM vm)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Tutors.Add(new()
+                {
+                    Id = vm.Id,
+                    Email = vm.Email,
+                    Hash = vm.Hash,
+                    Name = vm.Name,
+                    Gender = vm.Gender,
+                    PhotoURL = vm.PhotoURL,
+                    Age = vm.Age,
+                    Phone = vm.Phone,
+                    //ClassesId = AssignType(vm.Age),
+
+                });
+                db.SaveChanges();
+                TempData["Info"] = $"Student inserted.";
+                //return RedirectToAction("Index");
+            }
+
+            ViewBag.Tutors = db.Tutors;
+            return View(vm);
+        }
+
         // GET: Student/AssignClass
         public IActionResult AssignClass(string? id)
         {
@@ -44,70 +72,25 @@ namespace Demo.Controllers
             }
 
 
-            ViewBag.ClassList = new SelectList(db.Classes, "Id", "Name");
+            //dropdown list for class list
+            ViewBag.ClassList = new SelectList(db.Classes.OrderBy(c => c.Id), "Id", "Name");
             return View(s);
         }
 
 
-        // POST: Student/AssignClass
-
-        //[HttpPost]
-        //public ActionResult AssignClass(Students student)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var classType = AssignType(student.Age);
-        //        // If no suitable class is found for the student's age, return an error
-        //        if (classType == null)
-        //        {
-        //            TempData["Info"] = "No suitable class found for this student's age.";
-        //            return RedirectToAction("Index");
-        //        }
-
-        //        // Get the class based on the classType
-        //        var classes = db.Classes.FirstOrDefault(c => c.ClassType == classType);
-
-        //        // If class is not found, return an error
-        //        if (classes == null)
-        //        {
-        //            TempData["Info"] = "No suitable class found for this student's age.";
-        //            return RedirectToAction("Index");
-        //        }
-
-        //        // Check if the class has reached its capacity
-        //        if (classes.Students.Count >= classes.Capacity)
-        //        {
-        //            TempData["Info"] = $"Class {classes.Name} is fully occupied.";
-        //            return RedirectToAction("Index");
-        //        }
-
-        //        // Assign the student to the class
-        //        //student.ClassId = classes.Id;
-        //        student.Classes = classes;
-
-        //        db.Students.Add(student);
-        //        db.SaveChanges();
-
-        //        TempData["Info"] = $"Student {student.Name} added to Class {classes.Name}.";
-
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(student);
-        //}
-
         [HttpPost]
-        public IActionResult AssignClass(string id, string classesId)
+        public IActionResult AssignClass(string id, string classId)
         {
-            var student = db.Students.FirstOrDefault(s => s.Id == id);
+            var s = db.Students.Find(id);
 
-            if (student == null)
+            if (s == null)
             {
                 TempData["Info"] = $"Student {id} not found.";
                 return RedirectToAction("Index");
             }
 
-            // Update ClassesId for the student
-            student.ClassesId = classesId;
+            // Update ClassId for the student
+            s.ClassId = classId;
 
             // Save changes
             db.SaveChanges();
@@ -116,27 +99,24 @@ namespace Demo.Controllers
             return RedirectToAction("Index");
         }
 
-
-
-        // assign classType for classes based on student's age
-        private string AssignType(int age)
+        // GET: Student/ViewTimetable
+        public IActionResult ViewTimetable(string id)
         {
-            if (age == 3 || age == 4)
+            var student = db.Students
+                            .Include(s => s.Class)
+                                .ThenInclude(cs => cs.ClassSubjects)
+                                    .ThenInclude(c => c.Subject)
+                                        .ThenInclude(t => t.Tutor)
+                            .FirstOrDefault(s => s.Id == id);
+
+            if (student == null)
             {
-                return "K1";
+                return RedirectToAction("Index");
             }
-            else if (age == 5)
-            {
-                return "K2";
-            }
-            else if (age == 6)
-            {
-                return "K3";
-            }
-            else
-            {
-                return null;
-            }
+
+            return View(student);
         }
+
     }
 }
+

@@ -1,4 +1,4 @@
-﻿@model Students
+﻿@model Student
 
 @{
     ViewBag.Title = "Students | Assign Classes";
@@ -15,11 +15,11 @@
     <br>
 
 
-    <label asp-for="ClassesId">Classes Name</label>
-    <div>
-        <partial name="_RadioButtonList"
-                 model='("classes",ViewBag.ClassList,true)' />
-    </div>
+   <label asp-for="ClassId">Classes Names:</label> 
+   <select asp-for="ClassId" id="ClassId" asp-items="ViewBag.ClassList">
+       <option value="">- Select One -</option>
+   </select>
+       
     <br>
 
     <section>
