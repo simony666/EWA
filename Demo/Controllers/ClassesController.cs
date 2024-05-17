@@ -129,8 +129,11 @@ namespace Demo.Controllers
                 if (c != null)
                 {
                     c.Name = vm.Name;
+                    c.ClassType = vm.ClassType;
                     db.SaveChanges();
                     TempData["Info"] = "Class updated.";
+                    return RedirectToAction("index");
+
                 }
                 else
                 {

@@ -6,15 +6,34 @@
 
 <form method="post" class="form" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly"></div>
+    <table class="table">
+        <tr>
+            <th><label asp-for="Id">Classes Id</label></th>
+            <td> <b>@Model.Id</b></td>
+        </tr>
+        <tr>
+            <th><label asp-for="Name">Classes Name:</label></th>
+            <td>
+                <input asp-for="Name" name="Name" type="text" maxlength="100" />
+                <span asp-validation-for="Name"></span>
 
-    <label asp-for="Id">Classes Id</label>
-    <b>@Model.Id</b>
-    <br />
-
-    <label asp-for="Name">Classes Name:</label>
-    <input asp-for="Name" name="Name" type="text" maxlength="100" />
-    <span asp-validation-for="Name"></span>
-    <br />
-    <button>Update</button>
-
+            </td>
+        </tr>
+        <tr>
+            <th><label asp-for="ClassType">Class Types:</label></th>
+            <td>
+                <select asp-for="ClassType" name="ClassType" id="ClassType">
+                    <option value="K1">K1</option>
+                    <option value="K2">K2</option>
+                    <option value="K3">K3</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button>Update</button>
+            </td>
+        </tr>
+    </table>
 </form>
