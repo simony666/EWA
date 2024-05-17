@@ -1,4 +1,4 @@
-﻿/*using Demo.Models;
+﻿using Demo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +32,7 @@ namespace Demo.Controllers
             ViewBag.Sort = sort;
             ViewBag.Dir = dir;
 
-            Func<Subjects, object> fn = sort switch
+            Func<Subject, object> fn = sort switch
             {
                 "Id" => s => s.Id,
                 "Name" => s => s.Name,
@@ -72,7 +72,7 @@ namespace Demo.Controllers
         {
             //dropdown list for tutor list
             ViewBag.TutorList = new SelectList(db.Tutors.OrderBy(t => t.Id), "Id", "Name");
-            
+
             return View();
         }
 
@@ -82,8 +82,6 @@ namespace Demo.Controllers
             if (ModelState.IsValid)
             {
                 vm.Id = NextId();
-                // Calculate end time based on start time and duration
-                //vm.EndTime = vm.StartTime.AddHours(vm.Duration);
 
                 db.Subjects.Add(new()
                 {
@@ -180,7 +178,7 @@ namespace Demo.Controllers
             if (s != null)
             {
                 // Check if any students are associated with this class
-                var studentsWithSubjects = db.ClassesSubjects.Any(s => s.SubjectsId.Contains(id));
+                var studentsWithSubjects = db.ClassesSubjects.Any(s => s.SubjectId.Contains(id));
 
                 if (!studentsWithSubjects)
                 {
@@ -198,4 +196,3 @@ namespace Demo.Controllers
         }
     }
 }
-*/
