@@ -22,6 +22,39 @@ namespace Demo.Controllers
             this.hp = hp;
         }
 
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+
+            // POST: Tutor/Create
+            [HttpPost]
+        public ActionResult Create(CreateTutorsVM vm)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Tutors.Add(new()
+                {
+                    Id = vm.Id,
+                    Email = vm.Email,
+                    Hash = vm.Hash,
+                    Name = vm.Name,
+                    Gender =vm.Gender,
+                    PhotoURL = vm.PhotoURL,
+                    Age = vm.Age,
+                    Phone = vm.Phone,
+                   
+                });
+                db.SaveChanges();
+                TempData["Info"] = $"Tutors inserted.";
+                //return RedirectToAction("Index");
+            }
+
+            ViewBag.Tutors = db.Tutors;
+            return View(vm);
+        }
+
         // GET: Tutor/AssignClass
         public IActionResult AssignClass()
         {
@@ -29,13 +62,13 @@ namespace Demo.Controllers
             return View();
         }
 
-            // GET: Tutor/ViewClass
-        public IActionResult ViewClass(string id)
+        // GET: Tutor/ViewTimetable
+        public IActionResult ViewTimetable(string id)
         {
             var tutorClasses = db.Tutors
                       .Include(t => t.Subjects)
                           .ThenInclude(cs => cs.ClassesSubjects)
-                              .ThenInclude(c => c.Classes)
+                              .ThenInclude(c => c.Class)
                       .FirstOrDefault(t => t.Id == id);
 
             if (tutorClasses == null)
