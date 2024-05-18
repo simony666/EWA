@@ -1,0 +1,65 @@
+﻿@model TutorVM
+
+@{
+    ViewBag.Title = "Home | Tutor Insert";
+}
+
+
+<h1>Register Tutor Account</h1>
+<br />
+<form method="post" class="form" enctype="multipart/form-data">
+
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <label asp-for="Email"></label>
+    <input asp-for="Email" autofocus />
+    <span asp-validation-for="Email"></span>
+
+    <label asp-for="Hash"></label>
+    <input asp-for="Hash" autofocus />
+    <span asp-validation-for="Hash"></span>
+
+    <label asp-for="Confirm"></label>
+    <input asp-for="Confirm" autofocus />
+    <span asp-validation-for="Confirm"></span>
+
+    @* <h1>Admin Information</h1><br />
+    <label asp-for="Id"></label>
+    <input asp-for="Id" autofocus data-upper />
+    <span asp-validation-for="Id"></span>  *@
+
+    <label asp-for="Name"></label>
+    <input asp-for="Name" autofocus data-upper />
+    <span asp-validation-for="Name"></span>
+
+    <label asp-for="Age"></label>
+    <input type="number" asp-for="Age" autofocus data-upper />
+    <span asp-validation-for="Age"></span>
+
+    <label asp-for="Gender"></label>
+    <div>
+        <label><input type="radio" asp-for="Gender" value="F" />Female</label>
+        <label><input type="radio" asp-for="Gender" value="M" />Male</label>
+    </div>
+    <span asp-validation-for="Gender"></span>
+
+    <label asp-for="Phone"></label>
+    <input asp-for="Phone" autofocus />
+    <span asp-validation-for="Phone"></span>
+
+    <label asp-for="Photo"></label>
+    <div>
+        <label class="upload">
+            <small>Select Photo...</small>
+            <input asp-for="Photo" accept="image/jpeg,image/png" hidden>
+            <img src="/images/photo.jpg">
+        </label>
+    </div>
+    <span asp-validation-for="Photo"></span>
+
+
+    <section>
+        <button type="submit">Submit</button>
+        <button type="reset">Reset</button>
+    </section>
+</form>

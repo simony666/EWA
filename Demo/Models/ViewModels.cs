@@ -154,41 +154,9 @@ public class TutorClassVM
     public string ClassId { get; set; }
 }
 
-// students
-public class StudentsVM
-{
-    public string? Id { get; set; }
 
-    [StringLength(100)]
-    public string Name { get; set; }
 
-    [StringLength(1)]
-    public string Gender { get; set; }
 
-    public string? PhotoURL { get; set; }
-
-    public IFormFile? Photo { get; set; }
-
-}
-
-// students
-public class TutorsVM
-{
-    public string? Id { get; set; }
-
-    [StringLength(100)]
-    public string Name { get; set; }
-
-    [StringLength(1)]
-    public string Gender { get; set; }
-
-    public string? PhotoURL { get; set; }
-
-    public IFormFile? Photo { get; set; }
-
-    public int Age { get; set; }
-
-}
 
 // subject Class
 public class SubjectsClassVM 
@@ -212,6 +180,9 @@ public class SubjectsClassVM
     public string ClassesId { get; set; }
 }
 
+//--------------------------------------------------------------
+//                     Yong Choy Mun
+//--------------------------------------------------------------
 public class AttendanceVM
 {
     public int Id { get; set; }
@@ -245,3 +216,173 @@ public class StudentAttendanceVM
     public string Name { get; set; }
     public double Percentage { get; set; }
 }
+//--------------------------------------------------------------
+//                     Goh Qin Long
+//--------------------------------------------------------------
+
+//User
+public class UserVM
+{
+    [StringLength(100)]
+    [EmailAddress]
+    [Remote("CheckEmail", "AccountMaintenance", ErrorMessage = "Duplicated {0}.")]
+    public string Email { get; set; }
+
+    [StringLength(100, MinimumLength = 5, ErrorMessage = "{0} must be {2}-{1} characters long.")]
+    [DataType(DataType.Password)]
+    [Display(Name = "Password")]
+    public string Hash { get; set; }
+
+    [StringLength(100, MinimumLength = 5, ErrorMessage = "{0} must be {2}-{1} characters long.")]
+    [Compare("Hash", ErrorMessage = "The password and confirmation password do not match.")]
+    [DataType(DataType.Password)]
+    [Display(Name = "Confirm Password")]
+    public string Confirm { get; set; }
+
+    [StringLength(100)]
+    public string Name { get; set; }
+
+    [Range(0, 120, ErrorMessage = "{0} must be between 0 and 120.")]
+    public int Age { get; set; }
+
+    [StringLength(1)]
+    [RegularExpression(@"[FM]", ErrorMessage = "Invalid {0}! This is Malaysia no America")]
+    public string Gender { get; set; }
+
+    [StringLength(12)]
+    [RegularExpression(@"^(\+?6?01)[0-9]{8,9}$", ErrorMessage = "Invalid {0}! Follow the format: +601XXXXXXXX.")]
+    [Remote("CheckPhone", "AccountMaintenance", ErrorMessage = "Duplicated {0}.")]
+    [Display(Name = "Contact Number")]
+    public string Phone { get; set; }
+
+    public IFormFile Photo { get; set; }
+
+}
+
+//Admin
+public class AdminVM : UserVM
+{
+    /*[StringLength(10)]
+    [RegularExpression(@"[A]\d{5}", ErrorMessage = "Invalid {0}! First Alphabet must be <A>. (A00000)")]
+    [Remote("CheckId", "AccountMaintenance", ErrorMessage = "Duplicated {0}.")]*/
+    /*public string Id { get; set; }*/
+}
+
+public class TutorVM : UserVM
+{
+    /*[StringLength(10)]
+    [RegularExpression(@"[T]\d{5}", ErrorMessage = "Invalid ID! Format: T followed by 5 digits (e.g., T00000).")]
+    [Remote("CheckId", "Home", ErrorMessage = "Duplicated ID.")]
+    public string Id { get; set; }*/
+}
+
+public class ParentVM : UserVM
+{
+    /*[StringLength(10)]
+    [RegularExpression(@"[P]\d{5}", ErrorMessage = "Invalid ID! Format: P followed by 5 digits (e.g., P00000).")]
+    [Remote("CheckId", "Home", ErrorMessage = "Duplicated ID.")]
+    public string Id { get; set; }*/
+}
+
+// students
+/*public class StudentsVM
+{
+    //public string? Id { get; set; }
+
+    [StringLength(100)]
+    public string Name { get; set; }
+
+    [StringLength(1)]
+    [Range(4, 6, ErrorMessage = "{0} must be between 4 and 6.")]
+    public int Age { get; set; }
+
+    [StringLength(1)]
+    [RegularExpression(@"[FM]", ErrorMessage = "Invalid {0}! This is Malaysia no America")]
+    public string Gender { get; set; }
+
+    public string? PhotoURL { get; set; }
+
+    public IFormFile? Photo { get; set; }
+
+    //public Parent Parent { get; set; }
+    public string ParentName { get; set; }
+
+}*/
+
+public class StudentsVM
+{
+    [StringLength(100)]
+    public string Name { get; set; }
+
+    [Range(4, 6, ErrorMessage = "{0} must be between 4 and 6.")]
+    public int Age { get; set; }
+
+    [StringLength(1)]
+    [RegularExpression(@"[FM]", ErrorMessage = "Invalid {0}! This is Malaysia no America")]
+    public string Gender { get; set; }
+
+    public string? PhotoURL { get; set; }
+
+    public IFormFile? Photo { get; set; }
+
+    public string ParentId { get; set; } 
+}
+
+// students
+/*public class TutorsVM
+{
+    public string? Id { get; set; }
+
+    [StringLength(100)]
+    public string Name { get; set; }
+
+    [StringLength(1)]
+    public string Gender { get; set; }
+
+    public string? PhotoURL { get; set; }
+
+    public IFormFile? Photo { get; set; }
+
+    public int Age { get; set; }
+
+}*/
+
+public class UpdateProfileByAdminVM
+{
+    public string? Email { get; set; }
+    public string? Id { get; set; }
+    /*public string? Hash { get; set; }
+    public string? Confirm { get; set; }*/
+
+    [StringLength(100)]
+    public string? Name { get; set; }
+
+    [Range(0, 120, ErrorMessage = "{0} must be between 0 and 120.")]
+    public int Age { get; set; }
+
+    [StringLength(1)]
+    [RegularExpression(@"[FM]", ErrorMessage = "Invalid {0}! This is Malaysia no America")]
+    public string? Gender {  get; set; }
+
+    [StringLength(12)]
+    [RegularExpression(@"^(\+?6?01)[0-9]{8,9}$", ErrorMessage = "Invalid {0}! Follow the format: 01XXXXXXXX.")]
+    public string? Phone { get; set; }
+    public string? PhotoURL { get; set; }
+
+    public IFormFile? Photo { get; set; }
+    public string? Role { get; set; }
+}
+
+public class UserViewModel
+{
+    public string Id { get; set; }
+    public string Email { get; set; }
+    public string Name { get; set; }
+    public string Gender { get; set; }
+    public string Phone { get; set; }
+    public int Age { get; set; }
+    public string Role { get; set; }
+    public string? PhotoURL { get; set; }
+    public IFormFile Photo { get; set; }
+}
+

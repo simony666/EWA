@@ -12,8 +12,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demo.Migrations
 {
     [DbContext(typeof(DB))]
+<<<<<<<< HEAD:Demo/Migrations/20240517162320_CreateDB.Designer.cs
     [Migration("20240517162320_CreateDB")]
     partial class CreateDB
+========
+    [Migration("20240517171348_EWA")]
+    partial class EWA
+>>>>>>>> User_Acc:Demo/Migrations/20240517171348_EWA.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,10 +38,13 @@ namespace Demo.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+<<<<<<<< HEAD:Demo/Migrations/20240517162320_CreateDB.Designer.cs
 
                     b.Property<string>("ClassId")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
+========
+>>>>>>>> User_Acc:Demo/Migrations/20240517171348_EWA.Designer.cs
 
                     b.Property<int?>("ClassSubjectId")
                         .HasColumnType("int");
@@ -250,8 +258,18 @@ namespace Demo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
+<<<<<<<< HEAD:Demo/Migrations/20240517162320_CreateDB.Designer.cs
                     b.HasIndex("ClassId");
 
+========
+                    b.Property<string>("ParentId")
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("ParentId");
+
+>>>>>>>> User_Acc:Demo/Migrations/20240517171348_EWA.Designer.cs
                     b.ToTable("Users", t =>
                         {
                             t.Property("ClassId")
@@ -344,6 +362,13 @@ namespace Demo.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+<<<<<<<< HEAD:Demo/Migrations/20240517162320_CreateDB.Designer.cs
+========
+                    b.HasOne("Demo.Models.Parent", null)
+                        .WithMany("Students")
+                        .HasForeignKey("ParentId");
+
+>>>>>>>> User_Acc:Demo/Migrations/20240517171348_EWA.Designer.cs
                     b.Navigation("Class");
                 });
 
@@ -373,6 +398,11 @@ namespace Demo.Migrations
             modelBuilder.Entity("Demo.Models.Subject", b =>
                 {
                     b.Navigation("ClassesSubjects");
+                });
+
+            modelBuilder.Entity("Demo.Models.Parent", b =>
+                {
+                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("Demo.Models.Student", b =>

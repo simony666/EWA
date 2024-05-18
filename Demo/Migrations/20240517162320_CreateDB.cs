@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Demo.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDB : Migration
+    public partial class EWA : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -59,6 +59,10 @@ namespace Demo.Migrations
                     Phone = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: true),
                     Discriminator = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
                     Student_ClassId = table.Column<string>(type: "nvarchar(100)", nullable: true),
+<<<<<<<< HEAD:Demo/Migrations/20240517162320_CreateDB.cs
+========
+                    ParentId = table.Column<string>(type: "nvarchar(100)", nullable: true),
+>>>>>>>> User_Acc:Demo/Migrations/20240517171348_EWA.cs
                     ClassId = table.Column<string>(type: "nvarchar(100)", nullable: true)
                 },
                 constraints: table =>
@@ -70,6 +74,35 @@ namespace Demo.Migrations
                         principalTable: "Classes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+<<<<<<<< HEAD:Demo/Migrations/20240517162320_CreateDB.cs
+========
+                    table.ForeignKey(
+                        name: "FK_Users_Classes_Student_ClassId",
+                        column: x => x.Student_ClassId,
+                        principalTable: "Classes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Users_Users_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Attendances",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", maxLength: 100, nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IsAttend = table.Column<bool>(type: "bit", maxLength: 1, nullable: false),
+                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StudentId = table.Column<string>(type: "nvarchar(100)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Attendances", x => x.Id);
+>>>>>>>> User_Acc:Demo/Migrations/20240517171348_EWA.cs
                     table.ForeignKey(
                         name: "FK_Users_Classes_Student_ClassId",
                         column: x => x.Student_ClassId,
@@ -126,6 +159,7 @@ namespace Demo.Migrations
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+<<<<<<<< HEAD:Demo/Migrations/20240517162320_CreateDB.cs
                 });
 
             migrationBuilder.CreateTable(
@@ -160,6 +194,8 @@ namespace Demo.Migrations
                         column: x => x.StudentId,
                         principalTable: "Users",
                         principalColumn: "Id");
+========
+>>>>>>>> User_Acc:Demo/Migrations/20240517171348_EWA.cs
                 });
 
             migrationBuilder.CreateIndex(
@@ -203,6 +239,14 @@ namespace Demo.Migrations
                 column: "ClassId");
 
             migrationBuilder.CreateIndex(
+<<<<<<<< HEAD:Demo/Migrations/20240517162320_CreateDB.cs
+========
+                name: "IX_Users_ParentId",
+                table: "Users",
+                column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+>>>>>>>> User_Acc:Demo/Migrations/20240517171348_EWA.cs
                 name: "IX_Users_Student_ClassId",
                 table: "Users",
                 column: "Student_ClassId");

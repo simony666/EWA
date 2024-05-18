@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Claims;
@@ -86,7 +86,7 @@ public class Student : User
 
 public class Parent : User
 {
-
+    public List<Student> Students { get; set; }
 }
 
 public class Admin : User
@@ -180,8 +180,6 @@ public class ResetToken
 
 public class ActiveToken
 {
-    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
     [MaxLength(100)]
     public string UserId { get; set; }
     [MaxLength(6)]
