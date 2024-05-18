@@ -18,6 +18,21 @@ public class DB : DbContext
     public DbSet<Class> Classes { get; set; }
     public DbSet<ClassSubject> ClassesSubjects { get; set; }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Student>()
+            .HasOne(s => s.Class)
+            .WithMany(c => c.Students)
+            .HasForeignKey(s => s.ClassId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<ClassSubject>()
+            .HasOne(cs => cs.Subject)
+            .WithMany(s => s.ClassesSubjects)
+            .HasForeignKey(cs => cs.SubjectId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
+
 }
 
 #nullable disable warnings
@@ -46,7 +61,7 @@ public class User
     public int Age { get; set; }
 
     [MaxLength(11)]
-    public string Phone { get; set; }
+    public string? Phone { get; set; }
 
     [NotMapped]
     public string Role => GetType().Name;
@@ -61,6 +76,9 @@ public class Student : User
     [MaxLength(100)]
     public new string? Hash { get; set; } = "123";
 
+    [MaxLength(11)]
+    public new string? Phone { get; set; } = "0123456789";
+
     public string ClassId { get; set; }
     public Class Class { get; set; }
     public List<Attendance> Attendances { get; set; } // Navigation property for the Attendances
@@ -68,7 +86,7 @@ public class Student : User
 
 public class Parent : User
 {
-
+    public List<Student> Students { get; set; }
 }
 
 public class Admin : User

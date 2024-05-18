@@ -8,9 +8,12 @@
 <form class="form" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly"></div>
 
+    @if (@Model.Role != "Student")
+    {
     <label asp-for="Email"></label>
     <b>@Model.Email</b>
     <br>
+     }
 
     <label asp-for="Id"></label>
     <b>@Model.Id</b>
@@ -31,9 +34,12 @@
     </div>
     <span asp-validation-for="Gender"></span>
 
-    <label asp-for="Phone"></label>
-    <input asp-for="Phone" />
-    <span asp-validation-for="Phone"></span>
+    @if (@Model.Role != "Student")
+    {
+        <label asp-for="Phone"></label>
+        <input asp-for="Phone" />
+        <span asp-validation-for="Phone"></span>
+    }
 
     <label asp-for="Photo"></label>
     <div>

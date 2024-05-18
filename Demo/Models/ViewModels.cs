@@ -240,41 +240,60 @@ public class TutorVM : UserVM
     public string Id { get; set; }*/
 }
 
-/*public class StudentVM : UserVM
-{
-    [StringLength(10)]
-    [RegularExpression(@"[S]\d{5}", ErrorMessage = "Invalid ID! Format: S followed by 5 digits (e.g., S00000).")]
-    [Remote("CheckId", "Home", ErrorMessage = "Duplicated ID.")]
-    public string Id { get; set; }
-}
-
 public class ParentVM : UserVM
 {
-    [StringLength(10)]
+    /*[StringLength(10)]
     [RegularExpression(@"[P]\d{5}", ErrorMessage = "Invalid ID! Format: P followed by 5 digits (e.g., P00000).")]
     [Remote("CheckId", "Home", ErrorMessage = "Duplicated ID.")]
-    public string Id { get; set; }
-}*/
+    public string Id { get; set; }*/
+}
 
 // students
-public class StudentsVM
+/*public class StudentsVM
 {
-    public string? Id { get; set; }
+    //public string? Id { get; set; }
 
     [StringLength(100)]
     public string Name { get; set; }
 
     [StringLength(1)]
+    [Range(4, 6, ErrorMessage = "{0} must be between 4 and 6.")]
+    public int Age { get; set; }
+
+    [StringLength(1)]
+    [RegularExpression(@"[FM]", ErrorMessage = "Invalid {0}! This is Malaysia no America")]
     public string Gender { get; set; }
 
     public string? PhotoURL { get; set; }
 
     public IFormFile? Photo { get; set; }
 
+    //public Parent Parent { get; set; }
+    public string ParentName { get; set; }
+
+}*/
+
+public class StudentsVM
+{
+    [StringLength(100)]
+    public string Name { get; set; }
+
+    [Range(4, 6, ErrorMessage = "{0} must be between 4 and 6.")]
+    public int Age { get; set; }
+
+    [StringLength(1)]
+    [RegularExpression(@"[FM]", ErrorMessage = "Invalid {0}! This is Malaysia no America")]
+    public string Gender { get; set; }
+
+    public string? PhotoURL { get; set; }
+
+    public IFormFile? Photo { get; set; }
+
+    public string ParentId { get; set; } 
 }
 
 // students
-public class TutorsVM
+/*public class TutorsVM
 {
     public string? Id { get; set; }
 
@@ -290,7 +309,7 @@ public class TutorsVM
 
     public int Age { get; set; }
 
-}
+}*/
 
 public class UpdateProfileByAdminVM
 {
@@ -301,13 +320,21 @@ public class UpdateProfileByAdminVM
 
     [StringLength(100)]
     public string? Name { get; set; }
-    public int Age { get; set; }   
-    public string? Gender {  get; set; }
-    public string? Phone { get; set; }
 
+    [Range(0, 120, ErrorMessage = "{0} must be between 0 and 120.")]
+    public int Age { get; set; }
+
+    [StringLength(1)]
+    [RegularExpression(@"[FM]", ErrorMessage = "Invalid {0}! This is Malaysia no America")]
+    public string? Gender {  get; set; }
+
+    [StringLength(12)]
+    [RegularExpression(@"^(\+?6?01)[0-9]{8,9}$", ErrorMessage = "Invalid {0}! Follow the format: 01XXXXXXXX.")]
+    public string? Phone { get; set; }
     public string? PhotoURL { get; set; }
 
     public IFormFile? Photo { get; set; }
+    public string? Role { get; set; }
 }
 
 public class UserViewModel

@@ -12,8 +12,11 @@
         <td>@Model.Id</td>
     </tr>
     <tr>
+        @if (@Model.Role == "Student"){}
+        else{
         <th>Email</th>
         <td>@Model.Email</td>
+        }
     </tr>
     <tr>
         <th>Name</th>
@@ -24,8 +27,11 @@
         <td>@Model.Gender</td>
     </tr>
     <tr>
+        @if (@Model.Role == "Student"){}
+        else{
         <th>Phone</th>
         <td>@Model.Phone</td>
+        }
     </tr>
     <tr>
         <th>Age</th>

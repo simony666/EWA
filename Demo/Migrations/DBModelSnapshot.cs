@@ -171,7 +171,6 @@ namespace Demo.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
@@ -210,7 +209,12 @@ namespace Demo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("ParentId")
+                        .HasColumnType("nvarchar(100)");
+
                     b.HasIndex("ClassId");
+
+                    b.HasIndex("ParentId");
 
                     b.ToTable("Users", t =>
                         {
@@ -254,7 +258,7 @@ namespace Demo.Migrations
                     b.HasOne("Demo.Models.Subject", "Subject")
                         .WithMany("ClassesSubjects")
                         .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Class");
@@ -278,8 +282,12 @@ namespace Demo.Migrations
                     b.HasOne("Demo.Models.Class", "Class")
                         .WithMany("Students")
                         .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Demo.Models.Parent", null)
+                        .WithMany("Students")
+                        .HasForeignKey("ParentId");
 
                     b.Navigation("Class");
                 });
@@ -305,6 +313,11 @@ namespace Demo.Migrations
             modelBuilder.Entity("Demo.Models.Subject", b =>
                 {
                     b.Navigation("ClassesSubjects");
+                });
+
+            modelBuilder.Entity("Demo.Models.Parent", b =>
+                {
+                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("Demo.Models.Student", b =>
