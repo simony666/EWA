@@ -31,6 +31,13 @@ namespace Demo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ClassId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("ClassSubjectId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
@@ -38,10 +45,17 @@ namespace Demo.Migrations
                         .HasMaxLength(1)
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("MarkTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("StudentId")
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("ClassSubjectId");
 
                     b.HasIndex("StudentId");
 
@@ -195,7 +209,6 @@ namespace Demo.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
@@ -260,9 +273,21 @@ namespace Demo.Migrations
 
             modelBuilder.Entity("Demo.Models.Attendance", b =>
                 {
+                    b.HasOne("Demo.Models.Class", "Class")
+                        .WithMany()
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Demo.Models.ClassSubject", null)
+                        .WithMany("Attendances")
+                        .HasForeignKey("ClassSubjectId");
+
                     b.HasOne("Demo.Models.Student", "Student")
                         .WithMany("Attendances")
                         .HasForeignKey("StudentId");
+
+                    b.Navigation("Class");
 
                     b.Navigation("Student");
                 });
@@ -289,7 +314,7 @@ namespace Demo.Migrations
                     b.HasOne("Demo.Models.Subject", "Subject")
                         .WithMany("ClassesSubjects")
                         .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Class");
@@ -313,7 +338,7 @@ namespace Demo.Migrations
                     b.HasOne("Demo.Models.Class", "Class")
                         .WithMany("Students")
                         .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Class");
@@ -335,6 +360,11 @@ namespace Demo.Migrations
                     b.Navigation("ClassSubjects");
 
                     b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("Demo.Models.ClassSubject", b =>
+                {
+                    b.Navigation("Attendances");
                 });
 
             modelBuilder.Entity("Demo.Models.Subject", b =>

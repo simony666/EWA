@@ -19,6 +19,20 @@ public class DB : DbContext
     public DbSet<ClassSubject> ClassesSubjects { get; set; }
     public DbSet<AttendanceCode> AttendanceCodes {  get; set; }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Student>()
+            .HasOne(s => s.Class)
+            .WithMany(c => c.Students)
+            .HasForeignKey(s => s.ClassId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<ClassSubject>()
+            .HasOne(cs => cs.Subject)
+            .WithMany(s => s.ClassesSubjects)
+            .HasForeignKey(cs => cs.SubjectId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 }
 
 #nullable disable warnings
@@ -47,7 +61,7 @@ public class User
     public int Age { get; set; }
 
     [MaxLength(11)]
-    public string Phone { get; set; }
+    public string? Phone { get; set; }
 
     [NotMapped]
     public string Role => GetType().Name;
@@ -61,6 +75,9 @@ public class Student : User
 
     [MaxLength(100)]
     public new string? Hash { get; set; } = "123";
+
+    [MaxLength(11)]
+    public new string? Phone { get; set; } = "0123456789";
 
     public string ClassId { get; set; }
     public Class Class { get; set; }
@@ -103,8 +120,13 @@ public class Attendance
     public int Id { get; set; }
     [MaxLength(1)]
     public bool IsAttend { get; set; }
-    public DateTime DateTime { get; set; } = DateTime.Now;
+    public DateTime MarkTime { get; set; } = DateTime.Now;
+    public DateTime DateTime { get; set; }
+
+    public string ClassId { get; set; }
+    
     public Student Student { get; set; }
+    public Class Class { get; set; }
 }
 
 public class Class
@@ -141,6 +163,7 @@ public class ClassSubject
 
     public Class Class { get; set; } // Navigation property for the Class
     public Subject Subject { get; set; } // Navigation property for the Subject
+    public List<Attendance> Attendances { get; set; }
 }
 
 public class ResetToken
@@ -157,6 +180,8 @@ public class ResetToken
 
 public class ActiveToken
 {
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
     [MaxLength(100)]
     public string UserId { get; set; }
     [MaxLength(6)]
