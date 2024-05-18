@@ -1,0 +1,63 @@
+﻿@model ClassSubject
+
+@{
+    ViewBag.Title = "Attendance | Detail";
+    List<Attendance> attList = ViewBag.Attendance;
+    string date = ViewBag.Date;
+    IEnumerable<Student> studentList = ViewBag.StudentList;
+}
+
+<span>@date - @Model.DayOfWeek</span>
+<span>@Model.Subject.Name - @Model.Class.Name</span>
+
+<form method="post" action="/Attendance/MarkMany" id="f">
+    <input type="hidden" name="Date" value="@date" />
+    @Html.Hidden("id", Model.Id)
+    </form>
+<p>
+    <button data-check="ids">Check All</button>
+    <button data-uncheck="ids">Uncheck All</button>
+</p>
+
+<table class="table" id="target">
+    <tr>
+        <th>Student Id</th>
+        <th>Name</th>
+        <th>Attendance</th>
+    </tr>
+    @foreach (var s in studentList)
+    {
+        <tr date-checkable>
+            <td>@s.Id</td>
+            <td>@s.Name</td>
+            <td>
+                @if (attList.Any(a => a.Student.Id == s.Id && a.IsAttend == true))
+                {
+                    <input class="mark" type="checkbox" name="ids" value="@s.Id" form="f" checked>
+                }
+                else
+                {
+                    <input class="mark" type="checkbox" name="ids" value="@s.Id" form="f">
+                }
+            </td>
+        </tr>
+    }
+</table>
+<br/>
+<button data-get="/Attendance/Index/@DateTime.Today.ToString("yyyy-MM-dd")">Today's Attendance</button>
+<button data-get="/Attendance/Index/">Overall Attendance</button>
+
+@section foot {
+    <script>
+        $('input.mark').change(e => {
+            var date = '@date';
+            var classId = '@Model.Id';
+            console.log(date);
+            console.log(e.target);
+            console.log(e.target.checked);
+            $.post(`https://${window.location.host}/Attendance/Mark/`, { id: e.target.value, date: date, classId: classId, ischecked: e.target.checked }, (res) => {
+                //console.log(res);
+            });
+        });
+    </script>
+}

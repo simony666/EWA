@@ -212,3 +212,36 @@ public class SubjectsClassVM
     public string ClassesId { get; set; }
 }
 
+public class AttendanceVM
+{
+    public int Id { get; set; }
+
+    [Display(Name = "Start Time"), DataType(DataType.Time)]
+    public TimeSpan StartTime { get; set; }
+
+    [Display(Name = "End Time"), DataType(DataType.Time)]
+    public TimeSpan EndTime { get; set; }
+
+    public int Duration { get; set; }
+    [StringLength(100)]
+    public string DayOfWeek { get; set; }
+
+    public string SubjectsId { get; set; }
+
+    public string? StudentsId { get; set; }
+
+    public Subject Subject { get; set; }
+
+    public Class Class {  get; set; }
+
+    public string ClassesId { get; set; }
+
+    public string Date {  get; set; }
+}
+
+public class StudentAttendanceVM
+{
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public double Percentage { get; set; }
+}

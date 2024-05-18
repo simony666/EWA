@@ -1,40 +1,54 @@
-﻿@model SubjectsClassVM
+﻿@model List<StudentAttendanceVM>
 
 @{
     ViewBag.Title = "Attendance | Dashboard";
-    IEnumerable<ClassSubject> SubjectClass = ViewBag.SubjectClass;
     string min = DateTime.Today.AddDays(-30).ToString("yyyy-MM-dd");
     string max = DateTime.Today.ToString("yyyy-MM-dd");
     string default_date = ViewBag.date ?? null;
+}
+
+@section head{
+    <style>
+        td.warning{
+            background: #ffa500;
+        }
+
+        td.pass {
+            background: #00ff00;
+        }
+
+    </style>
 }
 
 @Html.TextBox("date", default_date, new { type = "date", min = min, max = max})
 <br />
 <table class="table">
     <tr>
-        <th>Subject</th>
-        <th>Classes Name</th>
-        <th>Day Of Week</th>
-        <th>Time</th>
-        <th>View</th>
+        <th>Student ID</th>
+        <th>Student Name</th>
+        <th>Percentage</th>
+        <th>Warning Letter</th>
     </tr>
-    @foreach (var sc in SubjectClass)
+    @foreach (var s in Model)
     {
         <tr>
-            <td>@sc.Subject.Name</td>
-            <td>@sc.Class.Name</td>
-            <td>@sc.DayOfWeek</td>
-            <td>@sc.StartTime - @sc.EndTime</td>
-            <td>
-                @{
-                    DateTime date = default_date == null ? DateTime.Parse(max) : DateTime.Parse(default_date);
-                    while (date.DayOfWeek.ToString() != sc.DayOfWeek)
-                    {
-                        date = date.AddDays(-1);
-                    }
-                }
-                <button data-post="/Attendance/Detail/@sc.Id?date=@date.ToString("yyyy-MM-dd")">View</button>
-            </td>
+            <td>@s.Id</td>
+            <td>@s.Name</td>
+            @if (s.Percentage >= 80) {
+                <td class="pass">@s.Percentage.ToString("0.00")%</td>
+                <td>
+                    <button disabled>Send</button>
+                </td>
+            }else
+            {
+                <td class="warning">@s.Percentage.ToString("0.00")%</td>
+                <td>
+                    <button data-post="/Attendance/SendWarning/@s.Id?percentage=@s.Percentage">Send</button>
+                </td>
+                
+            }
+            
+            
         </tr>
     }
 </table>
