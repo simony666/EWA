@@ -1,0 +1,66 @@
+﻿@model SubjectsClassVM
+
+@{
+    ViewBag.Title = "Attendance | Dashboard";
+    IEnumerable<ClassSubject> SubjectClass = ViewBag.SubjectClass;
+    string min = DateTime.Today.AddDays(-30).ToString("yyyy-MM-dd");
+    string max = DateTime.Today.ToString("yyyy-MM-dd");
+    string default_date = ViewBag.date ?? null;
+}
+
+@Html.TextBox("date", default_date, new { type = "date", min = min, max = max})
+<br />
+<table class="table">
+    <tr>
+        <th>Subject</th>
+        <th>Classes Name</th>
+        <th>Day Of Week</th>
+        <th>Time</th>
+        <th>View</th>
+    </tr>
+    @foreach (var sc in SubjectClass)
+    {
+        <tr>
+            <td>@sc.Subject.Name</td>
+            <td>@sc.Class.Name</td>
+            <td>@sc.DayOfWeek</td>
+            <td>@sc.StartTime - @sc.EndTime</td>
+            <td>
+                @{
+                    DateTime date = default_date == null ? DateTime.Parse(max) : DateTime.Parse(default_date);
+                    while (date.DayOfWeek.ToString() != sc.DayOfWeek)
+                    {
+                        date = date.AddDays(-1);
+                    }
+                }
+                <button data-post="/Attendance/Detail/@sc.Id?date=@date.ToString("yyyy-MM-dd")">View</button>
+            </td>
+        </tr>
+    }
+</table>
+<br/>
+<button data-get="/Attendance/Index/@DateTime.Today.ToString("yyyy-MM-dd")">Today's Attendance</button>
+<button data-get="/Attendance/Index/">Overall Attendance</button>
+
+@section foot {
+    <script>
+        $('#date').change(e => { 
+            e.preventDefault();
+
+            const el = e.target;
+            if (el.value < el.min || el.value > el.max) {
+                el.value = el.max;
+            }
+
+            const id = $('#date').val();
+
+            $.get(`https://${window.location.host}/Attendance/Index/${id}`, { id: id }, (res) => {
+                //console.log(res);
+                $('.table').html($(res).find('.table').html());
+            })
+            
+            
+            
+        })
+    </script>
+}

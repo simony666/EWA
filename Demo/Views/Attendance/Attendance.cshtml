@@ -1,0 +1,80 @@
+﻿@model List<StudentAttendanceVM>
+
+@{
+    ViewBag.Title = "Attendance | Dashboard";
+    string min = DateTime.Today.AddDays(-30).ToString("yyyy-MM-dd");
+    string max = DateTime.Today.ToString("yyyy-MM-dd");
+    string default_date = ViewBag.date ?? null;
+}
+
+@section head{
+    <style>
+        td.warning{
+            background: #ffa500;
+        }
+
+        td.pass {
+            background: #00ff00;
+        }
+
+    </style>
+}
+
+@Html.TextBox("date", default_date, new { type = "date", min = min, max = max})
+<br />
+<table class="table">
+    <tr>
+        <th>Student ID</th>
+        <th>Student Name</th>
+        <th>Percentage</th>
+        <th>Warning Letter</th>
+    </tr>
+    @foreach (var s in Model)
+    {
+        <tr>
+            <td>@s.Id</td>
+            <td>@s.Name</td>
+            @if (s.Percentage >= 80) {
+                <td class="pass">@s.Percentage.ToString("0.00")%</td>
+                <td>
+                    <button disabled>Send</button>
+                </td>
+            }else
+            {
+                <td class="warning">@s.Percentage.ToString("0.00")%</td>
+                <td>
+                    <button data-post="/Attendance/SendWarning/@s.Id?percentage=@s.Percentage">Send</button>
+                </td>
+                
+            }
+            
+            
+        </tr>
+    }
+</table>
+<br/>
+<button data-get="/Attendance/Index/@DateTime.Today.ToString("yyyy-MM-dd")">Today's Attendance</button>
+<button data-get="/Attendance/Index/">Overall Attendance</button>
+
+@section foot {
+    <script>
+        $('#date').change(e => { 
+            e.preventDefault();
+
+            const el = e.target;
+            if (el.value < el.min || el.value > el.max) {
+                el.value = el.max;
+            }
+
+            const id = $('#date').val();
+
+            $.get(`https://${window.location.host}/Attendance/Index/${id}`, { id: id }, (res) => {
+                //console.log(res);
+                $('.table').html($(res).find('.table').html());
+            })
+            
+            
+            
+        })
+    </script>
+}

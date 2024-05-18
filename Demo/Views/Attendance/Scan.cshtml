@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Attendance | Scan";
+}
+
+<div class="videoElement">
+    <video class="camera" autoplay></video>
+</div>
+<button class="scan_btn">Scan</button>
+<button class="stop_btn">Stop</button>
+
+@section foot {
+    <script src="https://unpkg.com/qrcode-decoder@0.3.1/dist/index.min.js"></script>
+    <script>
+        var qr = new QrcodeDecoder();
+        var stream;
+        var intervalId;
+        var lastData = "";
+        var repeated_count = 0;
+
+        $('.scan_btn').click(e => {
+            e.preventDefault();
+
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                .then((mediaStream) => {
+                    stream = mediaStream;
+                    $('.camera')[0].srcObject = stream;
+                    $('.videoElement').show();
+
+                    intervalId = setInterval(() => {
+                        qr.decodeFromVideo($('.camera')[0]).then((res) => {
+                            if (res) {
+                                if (lastData != res.data) {
+                                    lastData = res.data;
+                                    //console.log(res.data);
+                                    $.post(`https://${window.location.host}/Attendance/Scan`, { id: res.data }, (data) => {
+                                        //console.log(data);
+                                        $('.info').text(data);
+                                        setTimeout(() => { $('.info').text("") }, 5000);
+                                    })
+                                } else {
+                                    if (repeated_count > 5) {
+                                        $('.info').text("Already Scan!");
+                                        setTimeout(() => { $('.info').text("") }, 5000);
+                                        repeated_count = 0;
+                                    }
+                                    //console.log("repeated "+ res.data);
+                                    repeated_count += 1;
+                                }
+                            }
+                        }).catch((err) => {
+                            console.error("Error decoding QR code: ", err);
+                        });
+                    }, 1000);
+                })
+                .catch((err) => {
+                    console.error("Error accessing the camera: ", err);
+                });
+        })
+
+        $('.stop_btn').click(e => {
+            e.preventDefault();
+
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                $('.videoElement').hide();
+            }
+
+            if (intervalId) {
+                clearInterval(intervalId);
+            }
+        });
+    </script>
+}
