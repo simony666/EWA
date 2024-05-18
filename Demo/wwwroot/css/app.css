@@ -142,6 +142,12 @@ main h1 {
     display: block;
 }
 
+.table td > button {
+    margin: 0 auto;
+    display: block;
+}
+
+
 /* Pager ---------------------------------------------------------------------- */
 
 .pagination a,
