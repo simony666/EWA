@@ -247,7 +247,12 @@ namespace Demo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("ParentId")
+                        .HasColumnType("nvarchar(100)");
+
                     b.HasIndex("ClassId");
+
+                    b.HasIndex("ParentId");
 
                     b.ToTable("Users", t =>
                         {
@@ -341,6 +346,10 @@ namespace Demo.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Demo.Models.Parent", null)
+                        .WithMany("Students")
+                        .HasForeignKey("ParentId");
+
                     b.Navigation("Class");
                 });
 
@@ -370,6 +379,11 @@ namespace Demo.Migrations
             modelBuilder.Entity("Demo.Models.Subject", b =>
                 {
                     b.Navigation("ClassesSubjects");
+                });
+
+            modelBuilder.Entity("Demo.Models.Parent", b =>
+                {
+                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("Demo.Models.Student", b =>

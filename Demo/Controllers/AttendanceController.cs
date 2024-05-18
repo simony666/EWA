@@ -230,14 +230,15 @@ namespace Demo.Controllers
 
         public IActionResult DB1()
         {
-            db.Students.Add(new Student()
+            Student stu1 = new Student()
             {
                 Id = "S001",
                 Name = "Student 1",
                 Gender = "M",
                 Age = 4,
                 ClassId = "C001",
-            });
+            };
+            db.Students.Add(stu1);
             db.Students.Add(new Student()
             {
                 Id = "S002",
@@ -350,6 +351,32 @@ namespace Demo.Controllers
                 Age = 5,
                 ClassId = "C006",
             });
+            Parent parent1 = new Parent()
+            {
+                Id = "P001",
+                Name = "Parent 1",
+                Email = "simonyong1079@gmail.com",
+                Hash = hp.HashPassword("123456"),
+                Gender = "M",
+                Age = 38,
+                Phone = "0912345678",
+            };
+            db.Parents.Add(parent1);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        public IActionResult DB2()
+        {
+            Parent p = db.Parents.FirstOrDefault(s => s.Id == "P001")!; 
+            Student stu = db.Students.FirstOrDefault(s => s.Id == "S001")!;
+            if (p.Students == null) // Ensure the Students collection is initialized
+            {
+                p.Students = new List<Student>();
+            }
+            if (stu != null)
+            {
+                p.Students.Add(stu);
+            }
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -459,16 +486,18 @@ namespace Demo.Controllers
         [HttpPost]
         public IActionResult SendWarning(string id, double percentage) {
             //id is student id
-            var parent = db.Parents.FirstOrDefault(p => p.StudentList.Contains(id));
+            var parent = db.Parents.FirstOrDefault(p => p.Students.Any(s => s.Id == id));
 
             var stu = db.Students.FirstOrDefault(s => s.Id == id);
-            List<StudentAttendanceVM> stuVM = new List<StudentAttendanceVM>();
-            stuVM.Add(new StudentAttendanceVM()
+            
+            StudentAttendanceVM vm = new StudentAttendanceVM()
             {
                 Id = stu.Id,
                 Name = stu.Name,
                 Percentage = percentage,
-            });
+            };
+            StudentAttendanceVM[] stuVM = new List<StudentAttendanceVM>() { vm }.ToArray();
+
             SendWarningEmail(parent, stuVM);
 
 
