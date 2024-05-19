@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Students | View Students";
     IEnumerable<Student> students = ViewBag.studentList;
+    var classes = ViewBag.ClassList;
 }
 
 <p>@students.Count() record(s)</p> 
@@ -12,17 +13,20 @@
         <th>Student Id</th>
         <th>Student Name</th>
         <th>Gender</th>
+        <th>Age</th>
         <th>Classes</th>
         <th>Assign Classes</th>
         <th>View Timetable</th>
     </tr>
     @foreach (var s in students)
     {
+        string className = s.ClassId != null && classes.ContainsKey(s.ClassId) ? classes[s.ClassId] : "Unassigned";
         <tr>
             <td>@s.Id</td>
             <td>@s.Name</td>
             <td>@s.Gender</td>
-            <td>@s.ClassId</td>
+            <td>@s.Age</td>
+            <td>@className</td>
             <td>
                 <button data-get="/Student/AssignClass/@s.Id">Assign Class</button>
             </td>
