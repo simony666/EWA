@@ -8,21 +8,49 @@
     string[] fields = { "Id", "Name", "Gender", "Age", "Role" };
 }
 
-<h1>User List</h1>
-
 <form>
     @Html.TextBox("name", null, new { autofocus = "" })
     @Html.Hidden("sort")
     @Html.Hidden("dir")
+    @Html.Hidden("role")
 </form>
 
-<p>
-    @Model.Count of @Model.TotalItemCount record(s) |
-    Page @Model.PageNumber of @Model.PageCount
-</p>
+@* <div>
+    <br />
+    <strong>Filter by Address:</strong>
+    <a data-ajax="true"
+       data-ajax-update="#target"
+       data-ajax-loading="#loader"
+       href="?">All</a>
+    @foreach (var role in ViewBag.Role)
+    {
+        <a data-ajax="true" data-ajax-update="#target" data-ajax-loading="#loader" href="?name=@role&sort=@ViewBag.Sort&dir=@ViewBag.Dir"> / @role</a>
+    }
+</div> *@
 
-<table class="table table-striped">
-    <thead>
+<div>
+    <br />
+    <strong>Filter by Role:</strong>
+    <a data-ajax="true"
+       data-ajax-update="#target"
+       data-ajax-loading="#loader"
+       href="?name=@ViewBag.Name&role=&sort=@ViewBag.Sort&dir=@ViewBag.Dir">All</a>
+    @foreach (var role in ViewBag.Roles)
+    {
+        <a data-ajax="true" 
+           data-ajax-update="#target" 
+           data-ajax-loading="#loader" 
+           href="?name=@ViewBag.Name&role=@role&sort=@ViewBag.Sort&dir=@ViewBag.Dir"> / @role</a>
+    }
+</div>
+
+<div id="target">
+    <table class="table">
+        <p>
+            @Model.Count of @Model.TotalItemCount record(s) |
+            Page @Model.PageNumber of @Model.PageCount
+        </p>
+
         <tr>
             @foreach (var f in fields)
             {
@@ -36,13 +64,13 @@
                 }
 
                 <th>
-                    <a href="?name=@ViewBag.Name&sort=@f&dir=@d" class="@c">@f</a>
+                    @* <a href="?name=@ViewBag.Name&sort=@f&dir=@d" class="@c">@f</a> *@
+                    <a href="?name=@ViewBag.Name&role=@ViewBag.Role&sort=@f&dir=@d" class="@c">@f</a>
                 </th>
             }
             <th></th>
         </tr>
-    </thead>
-    <tbody>
+
         @foreach (var u in Model)
         {
             <tr>
@@ -58,19 +86,21 @@
                 </td>
             </tr>
         }
-    </tbody>
-</table>
+    </table>
 
-@{
-    var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
-    options.LinkToFirstPageFormat = "First";
-    options.LinkToLastPageFormat = "Last";
-    options.LinkToPreviousPageFormat = "Previous";
-    options.LinkToNextPageFormat = "Next";
-}
 
-@Html.PagedListPager(
-        Model,
-        p => $"?name={ViewBag.Name}&sort={ViewBag.Sort}&dir={ViewBag.Dir}&page={p}",
-        options
-    )
+    @{
+        var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+        options.LinkToFirstPageFormat = "First";
+        options.LinkToLastPageFormat = "Last";
+        options.LinkToPreviousPageFormat = "Previous";
+        options.LinkToNextPageFormat = "Next";
+    }
+
+    @Html.PagedListPager(
+            Model,
+            p => $"?name={ViewBag.Name}&sort={ViewBag.Sort}&dir={ViewBag.Dir}&page={p}",
+            options
+            )
+</div>
+

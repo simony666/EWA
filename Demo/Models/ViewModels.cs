@@ -350,3 +350,8 @@ public class UserViewModel
     public IFormFile Photo { get; set; }
 }
 
+public class MapVM
+{
+    public string Url { get; set; }
+}
+
