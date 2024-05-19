@@ -74,4 +74,38 @@ public class ChartController : Controller
 
         return Json(result);
     }
+
+    // GET: Chart/Demo4
+    public IActionResult Chart5()
+    {
+        return View();
+    }
+
+    // GET: Chart/Data4
+    public IActionResult Data5()
+    {
+        var users = db.Users.ToList();
+
+        var dt = users
+                 .GroupBy(u => u.GetType().Name)
+                 .Select(g => new
+                 {
+                     Role = g.Key,
+                     FemaleActive = g.Count(u => u.Gender == "F" && u.IsActive),
+                     FemaleInactive = g.Count(u => u.Gender == "F" && !u.IsActive),
+                     MaleActive = g.Count(u => u.Gender == "M" && u.IsActive),
+                     MaleInactive = g.Count(u => u.Gender == "M" && !u.IsActive)
+                 })
+                 .OrderBy(x => x.Role)
+                 .ToList();
+
+        var result = dt.Select(x => new object[]
+        {
+        x.Role,
+        x.FemaleActive, x.FemaleInactive,
+        x.MaleActive, x.MaleInactive
+        });
+
+        return Json(result);
+    }
 }
