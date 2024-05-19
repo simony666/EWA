@@ -23,6 +23,7 @@ namespace Demo.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.ClassList = db.Classes.ToDictionary(c => c.Id, c => c.Name);
             ViewBag.studentList = db.Students;
             return View();
         }
@@ -49,7 +50,6 @@ namespace Demo.Controllers
                     PhotoURL = vm.PhotoURL,
                     Age = vm.Age,
                     Phone = vm.Phone,
-                    //ClassesId = AssignType(vm.Age),
 
                 });
                 db.SaveChanges();
@@ -81,16 +81,61 @@ namespace Demo.Controllers
         [HttpPost]
         public IActionResult AssignClass(string id, string classId)
         {
-            var s = db.Students.Find(id);
+            // Find the student by ID
+            var student = db.Students.Find(id);
 
-            if (s == null)
+            if (student == null)
             {
                 TempData["Info"] = $"Student {id} not found.";
                 return RedirectToAction("Index");
             }
 
+            // Find the class by classId
+            var selectedClass = db.Classes.Find(classId);
+
+            if (selectedClass == null)
+            {
+                TempData["Info"] = $"Class {classId} not found.";
+                return RedirectToAction("Index");
+            }
+
+            // Validate age for the class
+            bool isValidAge = false;
+            switch (selectedClass.ClassType)
+            {
+                case "K1":
+                    isValidAge = student.Age >= 3 && student.Age <= 4;
+                    break;
+                case "K2":
+                    isValidAge = student.Age == 5;
+                    break;
+                case "K3":
+                    isValidAge = student.Age == 6;
+                    break;
+                default:
+                    TempData["Info"] = "Invalid class type.";
+                    return RedirectToAction("Index");
+            }
+
+            // If age is not valid for the selected class, return with error message
+            if (!isValidAge)
+            {
+                TempData["Info"] = $"Student age ({student.Age} years old) is not within the allowed range for class {selectedClass.Name}.";
+                return RedirectToAction("Index");
+            }
+
+            // Check if class capacity will be exceeded (only allows 20 students in a class)
+            if (selectedClass.Capacity > 21)
+            {
+                TempData["Info"] = $"{selectedClass.Name} is fully occupied. Please select a new class or create a new class to assign students.";
+                return RedirectToAction("Index");
+            }
+
+            // Increase the class capacity by 1
+            selectedClass.Capacity += 1;
+
             // Update ClassId for the student
-            s.ClassId = classId;
+            student.ClassId = classId;
 
             // Save changes
             db.SaveChanges();
@@ -99,8 +144,9 @@ namespace Demo.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: Student/ViewTimetable
-        public IActionResult ViewTimetable(string id)
+
+            // GET: Student/ViewTimetable
+            public IActionResult ViewTimetable(string id)
         {
             var student = db.Students
                             .Include(s => s.Class)
