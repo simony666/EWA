@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Demo.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDB : Migration
+    public partial class EWA : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,26 +26,6 @@ namespace Demo.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AttendanceCodes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
-                    ClassId = table.Column<string>(type: "nvarchar(100)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AttendanceCodes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AttendanceCodes_Classes_ClassId",
-                        column: x => x.ClassId,
-                        principalTable: "Classes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -56,16 +36,11 @@ namespace Demo.Migrations
                     Gender = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
                     PhotoURL = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Age = table.Column<int>(type: "int", maxLength: 100, nullable: false),
-<<<<<<<< HEAD:Demo/Migrations/20240518232158_CreateDB.cs
                     Phone = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
                     Student_ClassId = table.Column<string>(type: "nvarchar(100)", nullable: true),
                     ParentId = table.Column<string>(type: "nvarchar(100)", nullable: true),
-========
-                    Phone = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
-                    Student_ClassId = table.Column<string>(type: "nvarchar(100)", nullable: true),
->>>>>>>> Security:Demo/Migrations/20240516064654_CreateDB.cs
                     ClassId = table.Column<string>(type: "nvarchar(100)", nullable: true)
                 },
                 constraints: table =>
@@ -76,32 +51,7 @@ namespace Demo.Migrations
                         column: x => x.ClassId,
                         principalTable: "Classes",
                         principalColumn: "Id",
-<<<<<<<< HEAD:Demo/Migrations/20240518232158_CreateDB.cs
                         onDelete: ReferentialAction.Cascade);
-========
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Users_Classes_Student_ClassId",
-                        column: x => x.Student_ClassId,
-                        principalTable: "Classes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Attendances",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", maxLength: 100, nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IsAttend = table.Column<bool>(type: "bit", maxLength: 1, nullable: false),
-                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    StudentId = table.Column<string>(type: "nvarchar(100)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Attendances", x => x.Id);
->>>>>>>> Security:Demo/Migrations/20240516064654_CreateDB.cs
                     table.ForeignKey(
                         name: "FK_Users_Classes_Student_ClassId",
                         column: x => x.Student_ClassId,
@@ -113,6 +63,27 @@ namespace Demo.Migrations
                         column: x => x.ParentId,
                         principalTable: "Users",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ActiveTokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
+                    Expire = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActiveTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ActiveTokens_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -163,7 +134,6 @@ namespace Demo.Migrations
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-<<<<<<<< HEAD:Demo/Migrations/20240518232158_CreateDB.cs
                 });
 
             migrationBuilder.CreateTable(
@@ -198,14 +168,12 @@ namespace Demo.Migrations
                         column: x => x.StudentId,
                         principalTable: "Users",
                         principalColumn: "Id");
-========
->>>>>>>> Security:Demo/Migrations/20240516064654_CreateDB.cs
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AttendanceCodes_ClassId",
-                table: "AttendanceCodes",
-                column: "ClassId");
+                name: "IX_ActiveTokens_UserId",
+                table: "ActiveTokens",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attendances_ClassId",
@@ -243,14 +211,11 @@ namespace Demo.Migrations
                 column: "ClassId");
 
             migrationBuilder.CreateIndex(
-<<<<<<<< HEAD:Demo/Migrations/20240518232158_CreateDB.cs
                 name: "IX_Users_ParentId",
                 table: "Users",
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
-========
->>>>>>>> Security:Demo/Migrations/20240516064654_CreateDB.cs
                 name: "IX_Users_Student_ClassId",
                 table: "Users",
                 column: "Student_ClassId");
@@ -260,7 +225,7 @@ namespace Demo.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AttendanceCodes");
+                name: "ActiveTokens");
 
             migrationBuilder.DropTable(
                 name: "Attendances");
