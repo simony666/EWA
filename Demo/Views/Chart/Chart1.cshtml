@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "Chart 1 | Pie Chart (1)";
+}
+
+<div id="chart" style="width: 400px; height: 300px"></div>
+
+<p>
+    <a href="#" id="reload">Reload</a> |
+    <a href="#" id="download" download="piechart.png">Download</a>
+</p>
+
+<p>
+    [ <a href="Data1" target="data">Data</a> ]
+</p>
+
+@section foot {
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(init);
+
+        let dt, opt, cht;
+
+        function init() {
+            dt = new google.visualization.DataTable();
+            dt.addColumn('string', 'Role');
+            dt.addColumn('number', 'Count');
+
+            opt = {
+                title: 'User Roles Count',
+                fontName: 'Roboto',
+                fontSize: 16,
+                titleTextStyle: {
+                    fontSize: 20,
+                },
+                chartArea: {
+                    width: '90%',
+                    height: '90%',
+                    top: 50,
+                    left: 50,
+                },
+                pieHole: 0.25,
+            };
+
+            cht = new google.visualization.PieChart(document.getElementById('chart'));
+
+            $('#reload').click();
+        }
+
+        $('#reload').click(e => {
+            e.preventDefault();
+
+            const url = 'Data1';
+            const param = {};
+
+            $.getJSON(url, param, data => {
+                dt.removeRows(0, dt.getNumberOfRows());
+                data.forEach(row => {
+                    dt.addRow([row.role, row.count]);
+                });
+                cht.draw(dt, opt);
+            });
+        });
+
+        $('#download').click(e => {
+            e.target.href = cht.getImageURI();
+            e.target.download = Date.now() + '.png';
+        });
+    </script>
+}

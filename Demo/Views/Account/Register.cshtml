@@ -4,7 +4,7 @@
     ViewBag.Title = "Account | Register";
 }
 
-<form class="form" method="post" enctype="multipart/form-data">
+<form class="form" asp-action="Register" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly"></div>
 
     <label asp-for="Email"></label>
@@ -12,11 +12,11 @@
     <span asp-validation-for="Email"></span>
 
     <label asp-for="Password"></label>
-    <input asp-for="Password">
+    <input asp-for="Password" type="password">
     <span asp-validation-for="Password"></span>
 
     <label asp-for="Confirm"></label>
-    <input asp-for="Confirm">
+    <input asp-for="Confirm" type="password">
     <span asp-validation-for="Confirm"></span>
 
     <label asp-for="Name"></label>
@@ -25,13 +25,17 @@
 
     <label>Gender</label>
     <div>
-        <input type="radio" id="Male" name="Gender" value="M" asp-for="Gender" />
+        <input type="radio" id="Male" name="Gender" value="M" />
         <label for="Male">Male</label>
 
-        <input type="radio" id="Female" name="Gender" value="F" asp-for="Gender" />
+        <input type="radio" id="Female" name="Gender" value="F" />
         <label for="Female">Female</label>
     </div>
     <span asp-validation-for="Gender"></span>
+
+    <label asp-for="Phone"></label>
+    <input asp-for="Phone">
+    <span asp-validation-for="Phone"></span>
 
     <label asp-for="Photo"></label>
     <div>
@@ -43,8 +47,12 @@
     </div>
     <span asp-validation-for="Photo"></span>
 
+    <label asp-for="Age"></label>
+    <input asp-for="Age" type="number" min="1" max="120">
+    <span asp-validation-for="Age"></span>
+
     <section>
-        <button>Register</button>
+        <button type="submit">Register</button>
         <button type="reset">Reset</button>
     </section>
 </form>

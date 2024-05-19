@@ -189,14 +189,3 @@ public class ActiveToken
 
     public User User { get; set; }
 }
-
-public class AttendanceCode
-{
-    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
-    [MaxLength(6)]
-    public string Code { get; set; }
-    
-    public string ClassId { get; set; }
-    public Class Class { get; set; }
-}
