@@ -225,7 +225,7 @@ namespace Demo.Controllers
                 ClassId = "C001",
             });
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("DB1");
         }
 
         public IActionResult DB1()
@@ -363,7 +363,7 @@ namespace Demo.Controllers
             };
             db.Parents.Add(parent1);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("DB2");
         }
         public IActionResult DB2()
         {
