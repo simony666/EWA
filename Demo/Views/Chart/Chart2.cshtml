@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "Chart | Demo 4 - Column Chart (2)";
+}
+
+<div id="chart" style="width: 600px; height: 400px"></div>
+
+<p>
+    <a href="#" id="reload">Reload</a>
+    <label><input type="checkbox" id="stacked">Stacked</label>
+</p>
+
+<p>
+    [ <a href="Data2" target="data">Data</a> ]
+</p>
+
+@section foot {
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(init);
+
+        let dt, opt, cht;
+
+        function init() {
+            dt = new google.visualization.DataTable();
+            // Data table columns: Role, Female Active, Female Inactive, Male Active, Male Inactive
+            dt.addColumn('string', 'Role');
+            dt.addColumn('number', 'Female Active');
+            dt.addColumn('number', 'Female Inactive');
+            dt.addColumn('number', 'Male Active');
+            dt.addColumn('number', 'Male Inactive');
+
+            const style = { bold: true, italic: false, fontSize: 20, color: 'purple' };
+
+            opt = {
+                title: 'User Count By Role By Gender and Activity Status',
+                fontName: 'Roboto',
+                fontSize: 16,
+                titleTextStyle: { fontSize: 20 },
+                chartArea: { width: '65%', height: '70%', top: 60, left: 80 },
+                vAxis: { title: 'User Count', titleTextStyle: style },
+                hAxis: { title: 'Role', titleTextStyle: style },
+                animation: { duration: 500, startup: true },
+                colors: ['#dc3912', '#ff9900', '#3366cc', '#109618'],
+                isStacked: false, // true
+                focusTarget: 'datum', // category
+            };
+
+            cht = new google.visualization.ColumnChart(document.getElementById('chart'));
+
+            $('#reload').click();
+        }
+
+        $('#reload').click(e => {
+            e.preventDefault();
+
+            const url = 'Data2';
+            const param = {};
+
+            $.getJSON(url, param, data => {
+                dt.removeRows(0, dt.getNumberOfRows());
+                dt.addRows(data);
+                cht.draw(dt, opt);
+            });
+        });
+
+        $('#stacked').change(e => {
+            e.preventDefault();
+
+            // Toggle isStacked (false <--> true)
+            // Toggle focusTarget (datum <--> category)
+            opt.isStacked = e.target.checked;
+            opt.focusTarget = e.target.checked ? 'category' : 'datum';
+
+            cht.draw(dt, opt);
+        });
+    </script>
+}
