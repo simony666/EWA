@@ -17,7 +17,7 @@ public class DB : DbContext
     public DbSet<Attendance> Attendances { get; set; }
     public DbSet<Class> Classes { get; set; }
     public DbSet<ClassSubject> ClassesSubjects { get; set; }
-    public DbSet<AttendanceCode> AttendanceCodes {  get; set; }
+    public DbSet<ActiveToken> ActiveTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -62,6 +62,8 @@ public class User
 
     [MaxLength(11)]
     public string? Phone { get; set; }
+
+    public bool IsActive { get; set; }
 
     [NotMapped]
     public string Role => GetType().Name;
@@ -166,20 +168,10 @@ public class ClassSubject
     public List<Attendance> Attendances { get; set; }
 }
 
-public class ResetToken
-{
-    [MaxLength(100)]
-    public string UserId { get; set; }
-    [MaxLength(6)]
-    public string Token { get; set; }
-    public DateTime Expire { get; set; }
-
-
-    public User User { get; set; }
-}
-
 public class ActiveToken
 {
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
     [MaxLength(100)]
     public string UserId { get; set; }
     [MaxLength(6)]
