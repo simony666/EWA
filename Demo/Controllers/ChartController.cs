@@ -59,25 +59,13 @@ namespace Demo.Controllers
         // GET: Chart/Data2
         public IActionResult Data2()
         {
-            // TODO: Return student count by program by gender --> JSON
-            /*
-            var dt = db.Students
-                       .GroupBy(s => s.ProgramId)
+            var dt = db.Classes
+                       .GroupBy(c => c.ClassType)
                        .OrderBy(g => g.Key)
                        .Select(g => new object[]
                        {
-                           g.Key,
-                           g.Count(s => s.Gender == "F"),
-                           g.Count(s => s.Gender == "M")
-                       });
-            */
-
-            var dt = db.Classes
-                       .OrderBy(c => c.Id)
-                       .Select(c => new object[]
-                       {
-                           c.Name,
-                           c.ClassType.Count()
+                           g.Key,  // ClassType
+                           g.Count()  // Number of classes in each ClassType
                        });
 
             return Json(dt);
