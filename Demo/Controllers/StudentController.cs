@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using X.PagedList;
 namespace Demo.Controllers
 {
     public class StudentController : Controller
@@ -21,11 +22,51 @@ namespace Demo.Controllers
             this.hp = hp;
         }
 
-        public IActionResult Index()
+        public IActionResult StudentList(string? name, string? sort, string? dir, int page = 1)
         {
+            // (1) Searching ------------------------
+            ViewBag.Name = name = name?.Trim() ?? "";
+
+            var searched = db.Students.Where(s => s.Name.Contains(name));
+
+            // (2) Sorting --------------------------
+            ViewBag.Sort = sort;
+            ViewBag.Dir = dir;
+
+            Func<Student, object> fn = sort switch
+            {
+                "Id" => s => s.Id,
+                "Name" => s => s.Name,
+                "Gender" => s => s.Gender,
+                "Age" => s => s.Age, 
+                "Class Id" => s => s.ClassId,
+                _ => s => s.Id,
+            };
+
+            var sorted = dir == "des" ?
+                         searched.OrderByDescending(fn) :
+                         searched.OrderBy(fn);
+
+            // (3) Paging ---------------------------
+            if (page < 1)
+            {
+                return RedirectToAction(null, new { name, sort, dir, page = 1 });
+            }
+
+            var model = sorted.ToPagedList(page, 10);
+
+            if (page > model.PageCount && model.PageCount > 0)
+            {
+                return RedirectToAction(null, new { name, sort, dir, page = model.PageCount });
+            }
+
+            if (Request.IsAjax())
+            {
+                return PartialView("_StudentList", model);
+            }
+
             ViewBag.ClassList = db.Classes.ToDictionary(c => c.Id, c => c.Name);
-            ViewBag.studentList = db.Students;
-            return View();
+            return View(model);           
         }
 
         // GET: Student/Create
