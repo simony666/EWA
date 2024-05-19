@@ -16,6 +16,7 @@ using X.PagedList;
 
 using iText.Layout;
 using System.IO;
+using System.Data;
 
 namespace Demo.Controllers
 {
@@ -31,7 +32,6 @@ namespace Demo.Controllers
             this.en = en;
             this.hp = hp;
         }
-
 
         /*// GET: Index - Combined
         public IActionResult Index(string? id, string? sort, string? dir, int page = 1)
@@ -77,12 +77,24 @@ namespace Demo.Controllers
         }*/
 
         // GET: Index - Combined
-        public IActionResult Index(string? name, string? sort, string? dir, int page = 1)
+        public IActionResult Index(string? name, string? role, string? sort, string? dir, int page = 1)
         {
+
+            ViewBag.Roles = db.Users.Select(u => u.Role).Distinct().ToList();
+
             // (1) Searching ------------------------
             ViewBag.Name = name = name?.Trim() ?? "";
+            ViewBag.Role = role = role?.Trim() ?? "";
 
             var searched = db.Users.Where(u => u.Name.Contains(name));
+
+            if (!string.IsNullOrEmpty(role))
+            {
+                searched = searched.Where(u => u.Role == role);
+            }
+
+            //ViewBag.Roles = db.Users.Select(u => u.Role).Distinct().ToList();
+
 
             // (2) Sorting --------------------------
             ViewBag.Sort = sort;
@@ -105,15 +117,22 @@ namespace Demo.Controllers
             // (3) Paging ---------------------------
             if (page < 1)
             {
-                return RedirectToAction(null, new { name, sort, dir, page = 1 });
+                return RedirectToAction(null, new { name, role, sort, dir, page = 1 });
             }
 
             var model = sorted.ToPagedList(page, 10);
 
             if (page > model.PageCount && model.PageCount > 0)
             {
-                return RedirectToAction(null, new { name, sort, dir, page = model.PageCount });
+                return RedirectToAction(null, new { name, role, sort, dir, page = model.PageCount });
             }
+
+            //(4) Filtering --------------------------
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_UserList", model); 
+            }
+
 
             return View(model);
         }
@@ -145,22 +164,6 @@ namespace Demo.Controllers
         [HttpPost]
         public IActionResult InsertAdmin(AdminVM vm)
         {
-            /*if (ModelState.IsValid("Email") &&
-                db.Admins.Any(a => a.Email == vm.Email))
-            {
-                ModelState.AddModelError("Email", "Duplicated Email.");
-            }
-            if (ModelState.IsValid("Phone") &&
-                db.Admins.Any(a => a.Phone == vm.Phone))
-            {
-                ModelState.AddModelError("Phone", "Duplicated Contact No.");
-            }
-            if (ModelState.IsValid("Photo"))
-            {
-                var err = hp.ValidatePhoto(vm.Photo);
-                if (err != "") ModelState.AddModelError("Photo", err);
-            }*/
-
             ValidateCommonFields(vm.Email, vm.Phone, vm.Photo);
 
             if (ModelState.IsValid)
@@ -182,11 +185,7 @@ namespace Demo.Controllers
 
                 var m = db.Users.FirstOrDefault(a => a.Email == vm.Email);
                 SendPasswordEmail(m);
-                //SendPasswordEmail(vm.Email, vm.Hash, vm.Name);
-
-
-                //db.SaveChanges();
-
+               
                 TempData["Info"] = "Record Insered!";
                 return RedirectToAction("Index");
             }
@@ -205,22 +204,6 @@ namespace Demo.Controllers
         [HttpPost]
         public IActionResult InsertTutor(TutorVM vm)
         {
-            /*if (ModelState.IsValid("Email") &&
-                db.Admins.Any(a => a.Email == vm.Email))
-            {
-                ModelState.AddModelError("Email", "Duplicated Email.");
-            }
-            if (ModelState.IsValid("Phone") &&
-                db.Admins.Any(a => a.Phone == vm.Phone))
-            {
-                ModelState.AddModelError("Phone", "Duplicated Contact No.");
-            }
-            if (ModelState.IsValid("Photo"))
-            {
-                var err = hp.ValidatePhoto(vm.Photo);
-                if (err != "") ModelState.AddModelError("Photo", err);
-            }*/
-
             ValidateCommonFields(vm.Email, vm.Phone, vm.Photo);
 
             if (ModelState.IsValid)
@@ -241,6 +224,9 @@ namespace Demo.Controllers
 
                 db.SaveChanges();
 
+                var m = db.Users.FirstOrDefault(a => a.Email == vm.Email);
+                SendPasswordEmail(m);
+
                 TempData["Info"] = "Record Insered!";
                 return RedirectToAction("Index");
             }
@@ -259,22 +245,6 @@ namespace Demo.Controllers
         [HttpPost]
         public IActionResult InsertParent(ParentVM vm)
         {
-            /*if (ModelState.IsValid("Email") &&
-                db.Admins.Any(a => a.Email == vm.Email))
-            {
-                ModelState.AddModelError("Email", "Duplicated Email.");
-            }
-            if (ModelState.IsValid("Phone") &&
-                db.Admins.Any(a => a.Phone == vm.Phone))
-            {
-                ModelState.AddModelError("Phone", "Duplicated Contact No.");
-            }
-            if (ModelState.IsValid("Photo"))
-            {
-                var err = hp.ValidatePhoto(vm.Photo);
-                if (err != "") ModelState.AddModelError("Photo", err);
-            }*/
-
             ValidateCommonFields(vm.Email, vm.Phone, vm.Photo);
 
             if (ModelState.IsValid)
@@ -294,6 +264,9 @@ namespace Demo.Controllers
 
 
                 db.SaveChanges();
+
+                var m = db.Users.FirstOrDefault(a => a.Email == vm.Email);
+                SendPasswordEmail(m);
 
                 TempData["Info"] = "Record Insered!";
                 return RedirectToAction("Index");
@@ -341,28 +314,27 @@ namespace Demo.Controllers
                 var parent = db.Parents.FirstOrDefault(p => p.Id == vm.ParentId);
                 if (parent == null)
                 {
-                    ModelState.AddModelError("ParentId", "Parent not found."); // Use ParentId for error
-                    ViewBag.Parents = new SelectList(db.Parents, "Id", "Name"); // Populate the dropdown again
+                    ModelState.AddModelError("ParentId", "Parent not found.");
+                    ViewBag.Parents = new SelectList(db.Parents, "Id", "Name"); 
                     TempData["Info"] = "Failed to insert record. Please check the errors and try again.";
                     return View(vm);
                 }
 
-                if (parent.Students == null) // Ensure the Students collection is initialized
+                if (parent.Students == null) 
                 {
                     parent.Students = new List<Student>();
                 }
 
-                // Add student to parent's Students list
                 parent.Students.Add(student);
 
-                db.Students.Add(student); // Add student to Students table
-                db.SaveChanges(); // Save changes
+                db.Students.Add(student);
+                db.SaveChanges();
 
                 TempData["Info"] = "Record Inserted!";
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Parents = new SelectList(db.Parents, "Id", "Name"); // Populate the dropdown again
+            ViewBag.Parents = new SelectList(db.Parents, "Id", "Name"); 
             TempData["Info"] = "Failed to insert record. Please check the errors and try again.";
             return View(vm);
         }
@@ -443,12 +415,10 @@ namespace Demo.Controllers
         public IActionResult UpdateProfile(string? Id)
         {
             var m = db.Users.FirstOrDefault(a => a.Id == Id);
-            //if (m == null) return RedirectToAction("Index", "Home");
 
             var vm = new UpdateProfileByAdminVM
             {
                 Email = m.Email,
-                /*Hash = m.Hash,*/
                 Id = m.Id,
                 Name = m.Name,
                 Age = m.Age,
@@ -467,7 +437,6 @@ namespace Demo.Controllers
         public IActionResult UpdateProfile(UpdateProfileByAdminVM vm)
         {
             var m = db.Users.FirstOrDefault(a => a.Id == vm.Id);
-            //if (m == null) return RedirectToAction("Index", "Home");
 
             if (vm.Photo != null)
             {
@@ -547,49 +516,6 @@ namespace Demo.Controllers
             return View(UserViewModel);
         }
 
-        /*private void SendPasswordEmail(User m)
-        {
-            var mail = new MailMessage();
-            mail.To.Add(new MailAddress(m.Email, m.Name));
-            mail.Subject = "-.-.  Your Eden Academy Account  .-.-";
-            mail.IsBodyHtml = true;
-
-            var now = DateTime.Now;
-
-            var url = Url.Action("Login", "Account", null, "https");
-
-
-
-            var path = m switch
-            {
-                //Admin => Path.Combine(en.WebRootPath, "images", "admin.png"),
-                User u => Path.Combine(en.WebRootPath, "photos", u.PhotoURL),
-                _ => ""
-            };
-
-            var att = new Attachment(path);
-            mail.Attachments.Add(att);
-            att.ContentId = "photo";
-
-            mail.Body = $@"
-            <img src='cid:photo' style='width: 200px; height: 200px; border: 1px solid #333'>
-            <p>Dear {m.Name},<p>
-            <p>Your Eden Academy Account had been created:</p>
-            <h1 style='color: red'>{m.Email}</h1>
-            <h1 style='color: red'>{m.Hash}</h1>
-            <p>
-                Please <a href='{url}'>login</a>
-                with your email and password.
-            </p>
-            <p> 
-                Your account was created on {now.ToString("f")}.
-            </p>
-            <p>From, 🐱 Eden Academy Admin</p>
-        ";
-
-            hp.SendEmail(mail);
-        }*/
-
         private void SendPasswordEmail(User m)
         {
             var mail = new MailMessage();
@@ -619,12 +545,6 @@ namespace Demo.Controllers
             ";
 
             hp.SendEmail(mail);
-
-            // Clean up the temporary file
-            /*if (System.IO.File.Exists(pdfPath))
-            {
-                System.IO.File.Delete(pdfPath);
-            }*/
         }
 
         private void CreatePdf(string path, User user, string loginUrl, DateTime creationTime)
@@ -647,12 +567,9 @@ namespace Demo.Controllers
 
                     // Add user details
                     document.Add(new Paragraph($"Dear {user.Name},"));
-                    document.Add(new Paragraph("Your Eden Academy Account has been created:"));
                     document.Add(new Paragraph($"Email: {user.Email}").SetFontColor(ColorConstants.RED));
                     document.Add(new Paragraph($"Password: {user.Hash}").SetFontColor(ColorConstants.RED));
                     document.Add(new Paragraph($"Account created on: {creationTime.ToString("f")}"));
-                    //document.Add(new Paragraph($@"Please login with your email and password: {loginUrl}"));
-
                     document.Add(new Paragraph("From, 🐱 Eden Academy Admin"));
                 }
             }
