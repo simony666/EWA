@@ -434,7 +434,7 @@ namespace Demo.Controllers
 
             var students = id == null ? db.Students.ToList() : db.Students.Where(s => s.Id == id).ToList();
             var totalClasses = GetTotalDays(DateTime.Now.Year, DateTime.Now.Month);
-            totalClasses = 3;
+            //totalClasses = 3;
 
 
             foreach (var stu in students)
@@ -600,7 +600,8 @@ namespace Demo.Controllers
             }
             db.SaveChanges();
 
-            return RedirectToAction("Detail", new { id = Classid, date = date });
+            //return RedirectToAction("Detail", new { id = Classid, date = date });
+            return Content($"{id}'s status successfully updated!");
         }
 
         [HttpPost]

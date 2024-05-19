@@ -52,11 +52,10 @@
         $('input.mark').change(e => {
             var date = '@date';
             var classId = '@Model.Id';
-            console.log(date);
-            console.log(e.target);
-            console.log(e.target.checked);
             $.post(`https://${window.location.host}/Attendance/Mark/`, { id: e.target.value, date: date, classId: classId, ischecked: e.target.checked }, (res) => {
                 //console.log(res);
+                $('.info').text(res);
+                setTimeout(() => { $('.info').text("") }, 5000);
             });
         });
     </script>
