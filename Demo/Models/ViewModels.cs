@@ -19,6 +19,9 @@ public class LoginVM
     public string Password { get; set; }
 
     public bool RememberMe { get; set; }
+
+    public string RecaptchaResponse { get; set; }
+
 }
 
 public class RegisterVM
@@ -43,7 +46,14 @@ public class RegisterVM
 
     public string Gender { get; set; }
 
+    [StringLength(100, MinimumLength = 10, ErrorMessage = "{0} must be between 10 or 11 digits.")]
+    public string Phone { get; set; }
+
     public IFormFile Photo { get; set; }
+
+    [Range(1, 120, ErrorMessage = "Age must be between 1 and 120.")]
+    [RegularExpression("^[0-9]*$", ErrorMessage = "Age must be a number.")]
+    public int Age { get; set; } // New Age property with validation
 }
 
 public class UpdateProfileVM

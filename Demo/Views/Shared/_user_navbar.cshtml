@@ -2,9 +2,11 @@
     <a href="/">Index</a>
     <a href="/Product/Index">Product</a>
     <a href="/Product/ShoppingCart">Shopping Cart</a>
-    @if (User.IsInRole("Member"))
+    @if (User.IsInRole("Parent"))
     {
         <a href="/Product/Order">Order</a>
+        <a href="/Home/Chart1">Chart1</a>
+        <a href="/Home/Chart2">Chart2</a>
     }
 
     <div></div>
@@ -20,7 +22,7 @@
         <a href="/Account/Register">Register</a>
         <a href="/Account/ResetPassword">Reset Password</a>
     }
-    @if (User.IsInRole("Member"))
+    @if (User.IsInRole("Parent"))
     {
         <a href="/Account/UpdateProfile">Update Profile</a>
     }

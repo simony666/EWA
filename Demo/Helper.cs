@@ -1,8 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using SixLabors.Fonts;
+using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
@@ -84,6 +92,8 @@ public class Helper
 
     private readonly PasswordHasher<object> ph = new();
 
+    public object SystemFonts { get; private set; }
+
     public string HashPassword(string password)
     {
         return ph.HashPassword(0, password);
@@ -97,10 +107,10 @@ public class Helper
     public void SignIn(string email, string role, bool rememberMe)
     {
         var claims = new List<Claim>
-        {
-            new(ClaimTypes.Name, email),
-            new(ClaimTypes.Role, role)
-        };
+    {
+        new Claim(ClaimTypes.Name, email),
+        new Claim(ClaimTypes.Role, role)
+    };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -112,6 +122,20 @@ public class Helper
         };
 
         ct.HttpContext?.SignInAsync(principal, properties);
+    }
+
+    public string GenerateCaptchaCode()
+    {
+        var random = new Random();
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        return new string(Enumerable.Repeat(chars, 6)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
+
+
+    public bool VerifyCaptchaCode(string inputCode)
+    {
+        throw new NotImplementedException(); // Not needed for reCAPTCHA
     }
 
     public void SignOut()
@@ -135,14 +159,15 @@ public class Helper
     }
 
     
-    public string? GetMemberPhotoURL()
+    public string? GetUserPhotoURL()
     {
         var photoURL = ct.HttpContext?.Session.GetString("PhotoURL");
 
         if (photoURL == null)
         {
+            var name = ct.HttpContext?.User.Identity?.Name;
             photoURL = db.Users
-                         .Find(ct.HttpContext?.User.Identity?.Name)?
+                         .FirstOrDefault(u => u.Email == name)?
                          .PhotoURL;
 
             if (photoURL != null)

@@ -4,7 +4,7 @@
     ViewBag.Title = "Account | Login";
 }
 
-<form class="form" method="post">
+<form id="loginForm" class="form" method="post">
     <div asp-validation-summary="ModelOnly"></div>
 
     <label asp-for="Email"></label>
@@ -24,8 +24,12 @@
     </div>
     <br>
 
+    <div class="g-recaptcha" data-sitekey="6LedfeEpAAAAALPKXEn6QC5w4Smxu4txXrgDSJ22" data-callback="onSubmit"></div>
+    <input type="hidden" name="RecaptchaResponse" id="RecaptchaResponse" />
+    <br>
+
     <section>
-        <button>Login</button>
+        <button type="button" id="loginButton">Login</button>
         <button type="reset">Reset</button>
     </section>
 </form>
@@ -34,3 +38,20 @@
     [ <a href="/Account/Register">Register</a> |
     <a href="/Account/ResetPassword">Reset Password</a> ]
 </p>
+
+<script>
+    function onSubmit(token) {
+        document.getElementById("RecaptchaResponse").value = token;
+    }
+
+    document.getElementById("loginButton").addEventListener("click", function () {
+        var recaptchaResponse = document.getElementById("RecaptchaResponse").value;
+        if (recaptchaResponse) {
+            document.getElementById("loginForm").submit();
+        } else {
+            alert("Please complete the reCAPTCHA.");
+        }
+    });
+</script>
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>

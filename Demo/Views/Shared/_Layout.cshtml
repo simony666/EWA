@@ -22,9 +22,9 @@
         {
             <div>
                 @User.Identity.Name |
-                @if (User.IsInRole("Member"))
+                @if (User.IsInRole("Parent"))
                 {
-                    <text>Member</text>
+                    <text>Parent</text>
                 }
                 @if (User.IsInRole("Admin"))
                 {
@@ -33,9 +33,9 @@
             </div>
         }
 
-        @if (User.IsInRole("Member"))
+        @if (User.IsInRole("Parent"))
         {
-            var photoURL = hp.GetMemberPhotoURL();
+            var photoURL = hp.GetUserPhotoURL();
 
             if (photoURL != null)
             {

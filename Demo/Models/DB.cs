@@ -18,9 +18,14 @@ public class DB : DbContext
     public DbSet<Class> Classes { get; set; }
     public DbSet<ClassSubject> ClassesSubjects { get; set; }
 
+    public DbSet<ActiveToken> ActiveTokens { get; set; }
+
 }
 
 #nullable disable warnings
+
+
+
 
 public class User
 {
@@ -28,10 +33,10 @@ public class User
     public string Id { get; set; }
 
     [MaxLength(100)]
-    public string Email { get; set; }
+    public string? Email { get; set; }
 
     [MaxLength(100)]
-    public string Hash { get; set; }
+    public string? Hash { get; set; }
 
     [MaxLength(100)]
     public string Name { get; set; }
@@ -50,18 +55,21 @@ public class User
 
     [NotMapped]
     public string Role => GetType().Name;
+
+    public bool IsActive { get; set; }
+
 }
 
 public class Student : User
 {
 
     [MaxLength(100)]
-    public new string? Email { get; set; }
+    public new string? Email { get; set; } = "null@gmail.com";
 
     [MaxLength(100)]
-    public new string? Hash { get; set; }
+    public new string? Hash { get; set; } = "123";
 
-    public string ClassesId { get; set; }
+    public string ClassId { get; set; }
     public Class Class { get; set; }
     public List<Attendance> Attendances { get; set; } // Navigation property for the Attendances
 }
@@ -78,6 +86,7 @@ public class Admin : User
 
 public class Tutor : User
 {
+    public Class Class { get; set; } // Navigation property for the Class
     public List<Subject> Subjects { get; set; } // Navigation property for the Subjects
 }
 
@@ -134,7 +143,7 @@ public class ClassSubject
     public string DayOfWeek { get; set; }
 
     public string SubjectId { get; set; }
-    public string ClassestId { get; set; }
+    public string ClassId { get; set; }
 
 
     public Class Class { get; set; } // Navigation property for the Class
@@ -155,6 +164,8 @@ public class ResetToken
 
 public class ActiveToken
 {
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
     [MaxLength(100)]
     public string UserId { get; set; }
     [MaxLength(6)]
