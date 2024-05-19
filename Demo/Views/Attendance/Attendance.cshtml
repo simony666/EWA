@@ -2,9 +2,10 @@
 
 @{
     ViewBag.Title = "Attendance | Dashboard";
-    string min = DateTime.Today.AddDays(-30).ToString("yyyy-MM-dd");
-    string max = DateTime.Today.ToString("yyyy-MM-dd");
-    string default_date = ViewBag.date ?? null;
+    DateTime today = DateTime.Today;
+    string min = DateTime.Today.AddMonths(-12).ToString("yyyy-MM");    
+    string max = today.ToString("yyyy-MM");
+    string default_date = ViewBag.Date ?? null;
 }
 
 @section head{
@@ -20,7 +21,7 @@
     </style>
 }
 
-@Html.TextBox("date", default_date, new { type = "date", min = min, max = max})
+@Html.TextBox("date", default_date, new { type = "month", min = min, max = max})
 <br />
 <table class="table">
     <tr>
@@ -34,27 +35,28 @@
         <tr>
             <td>@s.Id</td>
             <td>@s.Name</td>
-            @if (s.Percentage >= 80) {
-                <td class="pass">@s.Percentage.ToString("0.00")%</td>
-                <td>
-                    <button disabled>Send</button>
-                </td>
-            }else
+            @if ((ViewBag.Date == null || (DateTime.Parse(ViewBag.Date).Month == today.Month && DateTime.Parse(ViewBag.Date).Year == today.Year)) && s.Percentage < 80)
             {
                 <td class="warning">@s.Percentage.ToString("0.00")%</td>
                 <td>
-                    <button data-post="/Attendance/SendWarning/@s.Id?percentage=@s.Percentage">Send</button>
+                    <button class="warning-btn" data-StudentID="@s.Id" data-Percentage="@s.Percentage">Send</button>
                 </td>
-                
             }
-            
+            else if (s.Percentage < 80)
+            {
+                <td class="warning">@s.Percentage.ToString("0.00")%</td>
+                <td></td>
+            }
+            else
+            {
+                <td class="pass">@s.Percentage.ToString("0.00")%</td>
+                <td><span>Attendance Pass</span></td>
+            }
+
             
         </tr>
     }
 </table>
-<br/>
-<button data-get="/Attendance/Index/@DateTime.Today.ToString("yyyy-MM-dd")">Today's Attendance</button>
-<button data-get="/Attendance/Index/">Overall Attendance</button>
 
 @section foot {
     <script>
@@ -66,15 +68,24 @@
                 el.value = el.max;
             }
 
-            const id = $('#date').val();
+            const date = $('#date').val();
 
-            $.get(`https://${window.location.host}/Attendance/Index/${id}`, { id: id }, (res) => {
+            $.get(`https://${window.location.host}/Attendance/Attendance/`, {date:date}, (res) => {
                 //console.log(res);
                 $('.table').html($(res).find('.table').html());
             })
-            
-            
-            
+        })
+
+        $("button.warning-btn").click(e => { 
+            e.preventDefault();
+            console.log(e.target.dataset);
+            var id = e.target.dataset.studentid;
+            var percentage = e.target.dataset.percentage;
+            $.get(`https://${window.location.host}/Attendance/SendWarning/${id}?percentage=${percentage}`, {}, (res) => {
+                //console.log(res);
+                $('.info').text(res);
+                setTimeout(() => { $('.info').text("") }, 5000);
+            })
         })
     </script>
 }

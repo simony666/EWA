@@ -429,11 +429,13 @@ namespace Demo.Controllers
 
         public ActionResult Attendance(string? id, string? date)
         {
+            if (date != null) { ViewBag.Date = date; }
             var model = new List<StudentAttendanceVM>();
 
             var students = id == null ? db.Students.ToList() : db.Students.Where(s => s.Id == id).ToList();
             var totalClasses = GetTotalDays(DateTime.Now.Year, DateTime.Now.Month);
-            //totalClasses = 3;
+            totalClasses = 3;
+
 
             foreach (var stu in students)
             {
@@ -462,7 +464,7 @@ namespace Demo.Controllers
                 });
                     
             }   
-                return View(model);
+            return View(model);
         }
 
         public int GetTotalDays(int year, int month)
@@ -483,7 +485,6 @@ namespace Demo.Controllers
             return workingDays;
         }
 
-        [HttpPost]
         public IActionResult SendWarning(string id, double percentage) {
             //id is student id
             var parent = db.Parents.FirstOrDefault(p => p.Students.Any(s => s.Id == id));
@@ -541,7 +542,7 @@ namespace Demo.Controllers
                 <tr>
                     <td>{u.Id}</td>
                     <td>{u.Name}</td>
-                    <td>{u.Percentage}</td>
+                    <td>{u.Percentage.ToString("0.00")}%</td>
                 </tr>";
             }
 
