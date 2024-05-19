@@ -55,8 +55,8 @@ namespace Demo.Controllers
             return View(vm);
         }
 
-        // GET: Tutor/AssignClass
-        public IActionResult AssignClass()
+        // GET: Tutor/Index
+        public IActionResult Index()
         {
             ViewBag.Tutors = db.Tutors;
             return View();
