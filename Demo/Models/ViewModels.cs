@@ -181,16 +181,6 @@ public class CreateSubjectsVM
         public string ClassId { get; set; }
     }
 
-public class ClassViewModel
-{
-    public string Id { get; set; }
-    public string Name { get; set; }
-    public string ClassType { get; set; }
-    public int Capacity { get; set; }
-}
-
-
-
 // students
 public class StudentsVM
     {
