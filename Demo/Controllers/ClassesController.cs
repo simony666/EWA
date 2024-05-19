@@ -7,6 +7,7 @@ using System.Data;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
+using X.PagedList;
 
 namespace Demo.Controllers
 {
@@ -23,18 +24,48 @@ namespace Demo.Controllers
             this.hp = hp;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? name, string? sort, string? dir, int page = 1)
         {
-            var classes = db.Classes.ToList();
-            var classViewModels = classes.Select(c => new ClassViewModel
-            {
-                Id = c.Id,
-                Name = c.Name,
-                ClassType = c.ClassType,
-                Capacity = db.Students.Count(s => s.ClassId == c.Id) // Count students with matching ClassesId
-            }).ToList();
+            // (1) Searching ------------------------
+            ViewBag.Name = name = name?.Trim() ?? "";
 
-            return View(classViewModels);
+            var searched = db.Classes.Where(c => c.Name.Contains(name));
+
+            // (2) Sorting --------------------------
+            ViewBag.Sort = sort;
+            ViewBag.Dir = dir;
+
+            Func<Class, object> fn = sort switch
+            {
+                "Id" => c => c.Id,
+                "Name" => c => c.Name,
+                "Class Type" => c => c.ClassType,
+                "Capacity" => c => c.Capacity,
+                _ => c => c.Id,
+            };
+
+            var sorted = dir == "des" ?
+                         searched.OrderByDescending(fn) :
+                         searched.OrderBy(fn);
+            // (3) Paging ---------------------------
+            if (page < 1)
+            {
+                return RedirectToAction(null, new { name, sort, dir, page = 1 });
+            }
+
+            var model = sorted.ToPagedList(page, 10);
+
+            if (page > model.PageCount && model.PageCount > 0)
+            {
+                return RedirectToAction(null, new { name, sort, dir, page = model.PageCount });
+            }
+
+            if (Request.IsAjax())
+            {
+                return PartialView("_Index", model);
+            }
+
+            return View(model);
         }
 
 
@@ -103,6 +134,14 @@ namespace Demo.Controllers
             var c = db.Classes.Find(id);
             if (c != null)
             {
+                // Check if there are any students assigned to this class
+                var studentsInClass = db.Students.Any(s => s.ClassId == id);
+                if (studentsInClass)
+                {
+                    TempData["Info"] = $"Class {c.Name} cannot be updated as it has students assigned to it.";
+                    return RedirectToAction("Index");
+                }
+
                 var vm = new ClassesVM
                 {
                     Id = c.Id,
@@ -215,28 +254,10 @@ namespace Demo.Controllers
                     ClassId = vm.ClassesId
                 };
 
-                // Retrieve students based on age range
-                //var students = db.Students.Where(s => s.Age <= vm.MaxAge && s.Age >= vm.MinAge).ToList();
-                //if (students.Count == 0)
-                //{
-                //    TempData["Info"] = $"No student available in the specified age range.";
-                //    return RedirectToAction("Index");
-                //}
-
-                // Store students' IDs in the StudentClasses entity
-                //foreach (var student in students)
-                //{
-                //    classSubject.StudentClasses.Add(new StudentClass
-                //    {
-                //        StudentId = student.Id,
-                //        ClassSubject = classSubject
-                //    });
-                //}
-
                 db.ClassesSubjects.Add(classSubject);
                 db.SaveChanges();
 
-                //TempData["Info"] = $"ClassSubject successfully allocated to {students.Count} students.";
+                TempData["Info"] = $"ClassSubject successfully allocated to {classSubject.ClassId} students.";
                 return RedirectToAction("Index");
             }
 

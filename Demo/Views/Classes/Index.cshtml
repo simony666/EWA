@@ -1,11 +1,14 @@
-﻿@model IEnumerable<ClassViewModel>
+﻿@* @model IEnumerable<ClassesVM> *@
 
 @{
     ViewBag.Title = "Classes | View Classes";
     //IEnumerable<Class> classes = ViewBag.Classes;
 }
+<div id="target">
+    <partial name="_Index">
+</div>
 
- <p>@Model.Count() record(s)</p> 
+@*  <p>@Model.Count() record(s)</p> 
 
 <table class="table">
     <tr>
@@ -31,4 +34,32 @@
             </td>
         </tr>
     }
-</table>
+</table> *@
+@section foot {
+    <script>
+        let timer = null;
+
+        $(document).on('input', '#name', e => {
+            clearTimeout(timer);
+            timer = setTimeout(() => $(e.target.form).submit(), 500);
+        });
+
+        function success() {
+            // let the cursor stay inside the search box
+            $('#name').focus();
+            // cursor at the end, start also at the end
+            $('#name')[0].setSelectionRange(-1, -1);
+
+            const name = $('#name').val().trim();
+
+            if (!name) return;
+
+            const re = new RegExp(escapeRegExp(name), 'gi')
+
+            $('td:nth-child(2)').each((i, el) => {
+                const html = $(el).html().replace(re, '<mark>$&</mark>');
+                $(el).html(html);
+            });
+        }
+    </script>
+}
