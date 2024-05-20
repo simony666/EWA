@@ -7,6 +7,11 @@ using System.Data;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using X.PagedList;
+using System.Net.Mail;
+using iText.Layout;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
+using iText.Layout.Element;
 namespace Demo.Controllers
 {
     public class StudentController : Controller
@@ -137,7 +142,7 @@ namespace Demo.Controllers
             if (selectedClass == null)
             {
                 TempData["Info"] = $"Class {classId} not found.";
-                return RedirectToAction("Index");
+                return RedirectToAction("StudentList");
             }
 
             // Validate age for the class
@@ -155,21 +160,21 @@ namespace Demo.Controllers
                     break;
                 default:
                     TempData["Info"] = "Invalid class type.";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("StudentList");
             }
 
             // If age is not valid for the selected class, return with error message
             if (!isValidAge)
             {
                 TempData["Info"] = $"Student age ({student.Age} years old) is not within the allowed range for class {selectedClass.Name}.";
-                return RedirectToAction("Index");
+                return RedirectToAction("StudentList");
             }
 
             // Check if class capacity will be exceeded (only allows 20 students in a class)
             if (selectedClass.Capacity > 21)
             {
                 TempData["Info"] = $"{selectedClass.Name} is fully occupied. Please select a new class or create a new class to assign students.";
-                return RedirectToAction("Index");
+                return RedirectToAction("StudentList");
             }
 
             // Increase the class capacity by 1
@@ -189,6 +194,10 @@ namespace Demo.Controllers
             // GET: Student/ViewTimetable
             public IActionResult ViewTimetable(string id)
         {
+            //id is student id
+            var parent = db.Parents.FirstOrDefault(p => p.Students.Any(s => s.Id == id));
+
+
             var student = db.Students
                             .Include(s => s.Class)
                                 .ThenInclude(cs => cs.ClassSubjects)
@@ -200,10 +209,107 @@ namespace Demo.Controllers
             {
                 return RedirectToAction("Index");
             }
-
+            
+            SendWarningEmail(parent, student);
             return View(student);
         }
 
+        private void SendWarningEmail(Parent m, Student student)
+        {
+            var mail = new MailMessage();
+            mail.To.Add(new MailAddress(m.Email, m.Name));
+            mail.Subject = "Your child timetable";
+            mail.IsBodyHtml = true;
+
+            var now = DateTime.Now;
+
+
+            var c = student.Class;
+            string[] dayOfWeek = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
+
+            // Construct the email body
+            var emailBody = $@"
+            <html>
+                <body>
+                    <p>Dear {m.Name},</p>
+                    <p>Here is the timetable:</p>
+<table border='1' class='table' style='margin-top: 10px'>
+    <thead>
+        <tr><th colspan='21'>{c.Name} - {student.Name}'s Timetable</th></tr>
+        <tr>
+            <th>Time</th>";
+
+            for (int column = 8; column <= 20; column++)
+            {
+                emailBody += $"<th>{column}:00</th>";
+            }
+
+            emailBody += $@"
+        </tr>
+    </thead>
+    <tbody>";
+
+
+            for (int day = 0; day < 5; day++)
+            {
+                emailBody += $@"
+    <tr>
+        <th>{dayOfWeek[day]}</th>";
+
+                int column = 8;
+                while (column <= 20)
+                {
+                    bool courseFound = false;
+                    string courseId = "";
+                    string courseName = "";
+                    string tutorName = "";
+                    int duration = 0;
+
+                    foreach (var cs in c.ClassSubjects)
+                    {
+                        if (dayOfWeek[day].Equals(cs.DayOfWeek) && cs.StartTime.Hours == column)
+                        {
+                            courseId = cs.Subject.Id;
+                            courseName = cs.Subject.Name;
+                            duration = cs.Duration;
+                            tutorName = cs.Subject.Tutor.Name;
+
+                            courseFound = true;
+                            column += duration + 1;
+                            break;
+                        }
+                    }
+
+                    if (courseFound)
+                    {
+                        emailBody += $@"
+            <td style='text-align: center; background-color:#f0f0f0; font-size:12px;' colspan='{duration + 1}'>
+                <span style='font-weight:bold;'>{courseId}</span> <br>
+                <span style='font-weight:bold;'>Subject Name:</span>{courseName}<br>
+                <span style='font-weight:bold;'>Tutor Name:</span> {tutorName}
+                <br>
+            </td>";
+                    }
+                    else
+                    {
+                        emailBody += "<td></td>";
+                        column++;
+                    }
+                }
+
+                emailBody += "</tr>";
+            }
+
+            emailBody += @"
+    </tbody>
+</table>
+
+            
+        </body>
+        </html>";
+            mail.Body = emailBody;
+            hp.SendEmail(mail);
+        }
     }
 }
 
