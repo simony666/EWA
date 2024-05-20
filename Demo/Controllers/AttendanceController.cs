@@ -5,9 +5,11 @@ using System.Globalization;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Net.Mail;
 using static QRCoder.PayloadGenerator;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Demo.Controllers
 {
+    [Authorize(Roles = "Admin,Tutor")]
     public class AttendanceController : Controller
     {
         private readonly DB db;
