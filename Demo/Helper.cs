@@ -219,6 +219,8 @@ public class Helper
             }
             return ageGroups;
         }
+    }
+
     //Own Function
     public int GetTotalDays(int year, int month)
     {
@@ -237,4 +239,7 @@ public class Helper
 
         return workingDays;
     }
+
+
+
 }
