@@ -170,19 +170,7 @@ public class ChartController : Controller
     // GET: Chart/Data8
     public IActionResult Data8()
     {
-        // TODO: Return student count by program by gender --> JSON
-        /*
-        var dt = db.Students
-                   .GroupBy(s => s.ProgramId)
-                   .OrderBy(g => g.Key)
-                   .Select(g => new object[]
-                   {
-                       g.Key,
-                       g.Count(s => s.Gender == "F"),
-                       g.Count(s => s.Gender == "M")
-                   });
-        */
-
+       
         var dt = db.Classes
                    .OrderBy(c => c.Id)
                    .Select(c => new object[]
