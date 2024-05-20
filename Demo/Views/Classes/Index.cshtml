@@ -1,33 +1,36 @@
-﻿@model ClassesVM
-
-@{
-    Layout = "_StaffLayout";
+﻿@{
     ViewBag.Title = "Classes | View Classes";
-    IEnumerable<Class> classes = ViewBag.Classes;
+    //IEnumerable<Class> classes = ViewBag.Classes;
 }
+<div id="target">
+    <partial name="_Index">
+</div>
 
- <p>@classes.Count() record(s)</p> 
+@section foot {
+    <script>
+        let timer = null;
 
-<table class="table">
-    <tr>
-        <th>Classes Id</th>
-        <th>Classes Name</th>
-        <th>Capacity</th>
-        <th>Edit</th>
-        <th>Delete</th>
-    </tr>
-    @foreach (var c in classes)
-    {
-        <tr>
-            <td>@c.Id</td>
-            <td>@c.Name</td>
-            <td>@c.Capacity</td>
-            <td>
-                <button data-post="/Classes/Update/@c.Id">Update</button>
-            </td>
-            <td>
-                <button data-post="/Classes/Delete/@c.Id">Delete</button>
-            </td>
-        </tr>
-    }
-</table>
+        $(document).on('input', '#name', e => {
+            clearTimeout(timer);
+            timer = setTimeout(() => $(e.target.form).submit(), 500);
+        });
+
+        function success() {
+            // let the cursor stay inside the search box
+            $('#name').focus();
+            // cursor at the end, start also at the end
+            $('#name')[0].setSelectionRange(-1, -1);
+
+            const name = $('#name').val().trim();
+
+            if (!name) return;
+
+            const re = new RegExp(escapeRegExp(name), 'gi')
+
+            $('td:nth-child(2)').each((i, el) => {
+                const html = $(el).html().replace(re, '<mark>$&</mark>');
+                $(el).html(html);
+            });
+        }
+    </script>
+}

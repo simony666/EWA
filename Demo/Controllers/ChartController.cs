@@ -83,9 +83,11 @@ public class ChartController : Controller
     }
 
     // GET: Chart/Data5
+
     public IActionResult Data5(string? id)
     {
         DateTime date = id == null ? DateTime.Now : DateTime.Parse(id);
+   
         var total = db.Students.GroupBy(s => s.ClassId);
 
         var dt = db.Students
@@ -138,4 +140,60 @@ public class ChartController : Controller
 
         return Json(dt);
     }
+
+    public IActionResult Chart7()
+    {
+        return View();
+    }
+
+    // GET: Chart/Data7
+    public IActionResult Data7()
+    {
+        var dt = db.Classes
+                   .GroupBy(c => c.ClassType)
+                   .OrderBy(g => g.Key)
+                   .Select(g => new object[]
+                   {
+                           g.Key,  // ClassType
+                           g.Count()  // Number of classes in each ClassType
+                   });
+
+        return Json(dt);
+    }
+
+    // GET: Chart/Data8
+    public IActionResult Chart8()
+    {
+        return View();
+    }
+
+    // GET: Chart/Data8
+    public IActionResult Data8()
+    {
+        // TODO: Return student count by program by gender --> JSON
+        /*
+        var dt = db.Students
+                   .GroupBy(s => s.ProgramId)
+                   .OrderBy(g => g.Key)
+                   .Select(g => new object[]
+                   {
+                       g.Key,
+                       g.Count(s => s.Gender == "F"),
+                       g.Count(s => s.Gender == "M")
+                   });
+        */
+
+        var dt = db.Classes
+                   .OrderBy(c => c.Id)
+                   .Select(c => new object[]
+                   {
+                           c.Id,
+                           c.Students.Count()
+                   });
+
+        return Json(dt);
+    }
+
+    
+
 }

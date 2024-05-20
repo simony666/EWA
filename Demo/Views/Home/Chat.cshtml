@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "Home | Chat";
+}
+
+@section head {
+    <style>
+        /* NOTE: main > (h1 + #chat + form) */
+        main {
+            display: grid;
+            grid: auto 1fr auto / auto;
+            overflow: auto;
+        }
+
+        #chat {
+            background: #ccc;
+            overflow-y: scroll;
+            
+            display: flex;
+            /* TODO: column-reverse */
+            flex-direction: column-reverse;
+            gap: 5px;
+            padding: 5px;
+            place-items: start;
+        }
+        
+        form {
+            margin-top: 5px;
+            display: flex;
+        }
+
+        #text {
+            flex: 1;
+            padding: 5px;
+        }
+
+        #chat > div {
+            border: 1px solid #999;
+            border-radius: 5px;
+            padding: 5px;
+            word-break: break-all;
+            max-width:50%;
+
+            background: #fff;
+            /* margin-left: 50px; */
+            align-self:start;
+        }
+
+        #chat > div.me {
+            background: lightgreen;
+                max-width: 50%;
+                margin-left: 0;
+            align-self:end
+        }
+    </style>
+}
+
+<div id="chat"></div>
+
+<form>
+    <input id="text" autofocus autocomplete="off">
+    <button>Send</button>
+</form>
+
+@section foot {
+    <script src="/js/signalr.min.js"></script>
+    <script>
+        // TODO(1): SignalR Connection ----------------------------------------
+        const con = new signalR.HubConnectionBuilder()
+            .withUrl('/hub')
+            .build(); // call function from the server
+
+        con.on('ReceiveText', receiveText);
+        con.on('Initialize', initialize);
+
+        con.start().then(main);
+
+        // TODO(2): SignalR Event Functions -----------------------------------
+        
+        function receiveText(n, t) {
+            // 如果上面的名字是我的名字 == me
+            const c = n == name ? 'me' : '';
+
+            // prepend = add to top, append = add behind
+            $('#chat').prepend(`
+                <div class='${c}'>
+                    <b>${n}:</b> ${t}
+                </div>
+            `);
+        }
+
+        function initialize(list) {
+            // TODO
+            for (const m of list) { 
+                receiveText(m.name, m.text);
+            }
+        }   
+
+        // TODO(3): UI Logics -------------------------------------------------
+        
+        let name = '@ViewBag.Name';
+
+        function main() {
+            // if user cancel the textbox and without giving any value ==> Anonymous is given
+            name = name || prompt('Enter name')?.trim() || 'Anonymous';
+            $('#text').prop('placeholder',name);
+
+            $('form').submit(e => {
+                e.preventDefault();
+                const text = $('#text').val().trim();
+                if (text) {
+                    con.invoke('SendText', name, text);
+                }
+                $('#text').val('').focus();
+            });
+        }
+
+    </script>
+}

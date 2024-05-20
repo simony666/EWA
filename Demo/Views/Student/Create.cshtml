@@ -1,0 +1,51 @@
+﻿@model CreateStudentsVM
+
+@{
+    ViewBag.Title = "Student | Create Student";
+    //IEnumerable<Tutors> tutors = ViewBag.Tutors;
+}
+<form method="post" class="form">
+    <div>
+        <table width="100%">
+            <tr>
+                <td><label asp-for="Id">Student Id:</label> </td>
+                <td><input asp-for="Id" name="Id" ID="Id" type="text" maxlength="100" /></td>
+            </tr>
+            <tr>
+                <td><label asp-for="Email">Student Email:</label> </td>
+                <td><input asp-for="Email" name="Email" ID="Email" type="text" maxlength="100" /></td>
+            </tr>
+            <tr>
+                <td><label asp-for="Hash">hash:</label> </td>
+                <td><input asp-for="Hash" name="Hash" ID="Hash" type="text" maxlength="100" /></td>
+            </tr>
+            <tr>
+                <td><label asp-for="Name">Student Name:</label> </td>
+                <td><input asp-for="Name" name="name" ID="name" type="text" maxlength="100" /></td>
+            </tr>
+            <tr>
+                <td><label asp-for="Gender">Gender:</label> </td>
+                <td><input asp-for="Gender" name="Gender" ID="Gender" type="text" maxlength="100" /></td>
+            </tr>
+            <tr>
+                <td><label asp-for="PhotoURL">Photo:</label> </td>
+                <td><input asp-for="PhotoURL" name="PhotoURL" ID="PhotoURL" type="text" maxlength="100" /></td>
+            </tr>
+            <tr>
+                <td><label asp-for="Age">Age:</label> </td>
+                <td><input asp-for="Age" name="Age" ID="Age" type="text" maxlength="100" /></td>
+            </tr>
+            <tr>
+                <td><label asp-for="Phone">Student Phone:</label> </td>
+                <td><input asp-for="Phone" name="Phone" ID="Phone" type="text" maxlength="100" /></td>
+            </tr>
+            
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="Insert" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>

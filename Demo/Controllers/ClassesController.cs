@@ -1,4 +1,4 @@
-﻿/*using Demo.Models;
+﻿using Demo.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
+using X.PagedList;
 
 namespace Demo.Controllers
 {
@@ -22,40 +24,86 @@ namespace Demo.Controllers
             this.hp = hp;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? name, string? sort, string? dir, int page = 1)
         {
-            ViewBag.Classes = db.Classes;
-            return View();
+            // (1) Searching ------------------------
+            ViewBag.Name = name = name?.Trim() ?? "";
+
+            var searched = db.Classes.Where(c => c.Name.Contains(name));
+
+            // (2) Sorting --------------------------
+            ViewBag.Sort = sort;
+            ViewBag.Dir = dir;
+
+            Func<Class, object> fn = sort switch
+            {
+                "Id" => c => c.Id,
+                "Name" => c => c.Name,
+                "Class Type" => c => c.ClassType,
+                "Capacity" => c => c.Capacity,
+                _ => c => c.Id,
+            };
+
+            var sorted = dir == "des" ?
+                         searched.OrderByDescending(fn) :
+                         searched.OrderBy(fn);
+            // (3) Paging ---------------------------
+            if (page < 1)
+            {
+                return RedirectToAction(null, new { name, sort, dir, page = 1 });
+            }
+
+            var model = sorted.ToPagedList(page, 10);
+
+            if (page > model.PageCount && model.PageCount > 0)
+            {
+                return RedirectToAction(null, new { name, sort, dir, page = model.PageCount });
+            }
+
+            if (Request.IsAjax())
+            {
+                return PartialView("_Index", model);
+            }
+
+            return View(model);
         }
 
-        // POST: Subject/Create
+
+        // GET: Classes/Create
         public ActionResult Create()
         {
-
             return View();
         }
 
+        // POST: Classes/Create
         [HttpPost]
         public ActionResult Create(ClassesVM vm)
         {
             if (ModelState.IsValid)
             {
+                // Generate ID
                 vm.Id = NextId();
-                TempData["Info"] = $"Class {vm.Id}.";
-                vm.Capacity = db.ClassesSubjects.Count(c => c.ClassesId == vm.Id);
 
-                if (vm.Capacity > 20)
-                {
-                    TempData["Info"] = $"Class {vm.Id} is fully occupied.";
-                    return RedirectToAction("Index");
-                }
-
-                var classes = new Classes
+                // Create a new class object
+                var classes = new Class
                 {
                     Id = vm.Id,
                     Name = vm.Name,
-                    Capacity = vm.Capacity.Value
+                    ClassType = vm.ClassType,
                 };
+
+
+                // Count the number of students enrolled in the class
+                classes.Capacity = db.Classes.Count(c => c.Id == classes.Id);
+
+                // Check if the capacity exceeds the limit
+                if (classes.Capacity > 20)
+                {
+                    TempData["Info"] = $"Class {vm.Id} is fully occupied.";
+                    //return RedirectToAction("Index");
+                }
+
+                // Add the class object to the context and save changes
                 db.Classes.Add(classes);
                 db.SaveChanges();
 
@@ -64,9 +112,10 @@ namespace Demo.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Classes = db.Classes;
             return View(vm);
         }
+
+
 
 
         // Manually generate next id
@@ -77,6 +126,7 @@ namespace Demo.Controllers
             return (n + 1).ToString("'C'000");
         }
 
+
         // GET: Classes/Update
         //[Authorize(Roles = "Member")]
         public IActionResult Update(string id)
@@ -84,10 +134,19 @@ namespace Demo.Controllers
             var c = db.Classes.Find(id);
             if (c != null)
             {
+                // Check if there are any students assigned to this class
+                var studentsInClass = db.Students.Any(s => s.ClassId == id);
+                if (studentsInClass)
+                {
+                    TempData["Info"] = $"Class {c.Name} cannot be updated as it has students assigned to it.";
+                    return RedirectToAction("Index");
+                }
+
                 var vm = new ClassesVM
                 {
                     Id = c.Id,
                     Name = c.Name,
+                    ClassType = c.ClassType,
                     Capacity = c.Capacity
                 };
                 return View(vm);
@@ -109,8 +168,11 @@ namespace Demo.Controllers
                 if (c != null)
                 {
                     c.Name = vm.Name;
+                    c.ClassType = vm.ClassType;
                     db.SaveChanges();
                     TempData["Info"] = "Class updated.";
+                    return RedirectToAction("index");
+
                 }
                 else
                 {
@@ -134,7 +196,7 @@ namespace Demo.Controllers
             if (c != null)
             {
                 // Check if any students are associated with this class
-                var studentsWithClass = db.ClassesSubjects.Any(s => s.ClassesId.Contains(id));
+                var studentsWithClass = db.ClassesSubjects.Any(s => s.Class.Id.Contains(id));
 
                 if (!studentsWithClass)
                 {
@@ -153,6 +215,55 @@ namespace Demo.Controllers
         }
 
 
+        // GET: Classes/ClassSubject
+        public IActionResult ClassSubject()
+        {
+            ViewBag.ClassesList = new SelectList(db.Classes.OrderBy(t => t.Id), "Id", "Name");
+            ViewBag.SubjectsList = new SelectList(db.Subjects.OrderBy(t => t.Id), "Id", "Name");
+            return View();
+        }
+
+        // POST: Classes/ClassSubject
+        [HttpPost]
+        public IActionResult ClassSubject(SubjectsClassVM vm)
+        {
+            if (ModelState.IsValid)
+            {
+                // Calculate end time based on start time and duration
+                TimeSpan duration = TimeSpan.FromHours(vm.Duration);
+                vm.EndTime = vm.StartTime + duration;
+
+                // Check if the class already has a subject assigned at the same time
+                if (db.ClassesSubjects.Any(cs => cs.ClassId == vm.ClassesId &&
+                                                  cs.DayOfWeek == vm.DayOfWeek &&
+                                                  cs.StartTime <= vm.EndTime &&
+                                                  cs.EndTime >= vm.StartTime))
+                {
+                    TempData["Info"] = $"Another subject is already assigned to the class at this time.";
+                    return RedirectToAction("Index");
+                }
+
+                // Retrieve the class
+                var classSubject = new ClassSubject
+                {
+                    StartTime = vm.StartTime,
+                    EndTime = vm.EndTime,
+                    Duration = vm.Duration,
+                    DayOfWeek = vm.DayOfWeek,
+                    SubjectId = vm.SubjectsId,
+                    ClassId = vm.ClassesId
+                };
+
+                db.ClassesSubjects.Add(classSubject);
+                db.SaveChanges();
+
+                TempData["Info"] = $"ClassSubject successfully allocated to {classSubject.ClassId} students.";
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.ClassesSubjects = db.ClassesSubjects;
+            return View(vm);
+        }
+
     }
 }
-*/

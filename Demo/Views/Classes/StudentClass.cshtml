@@ -1,0 +1,33 @@
+﻿@model Class
+
+
+@{
+    ViewBag.Title = "Classes | Assign Students";
+}
+
+<form method="post" class="form">
+    <div asp-validation-summary="ModelOnly"></div>
+    <label asp-for="Id">Classes ID</label>
+    <b>@Model.Id</b>
+    <br>
+
+    <label asp-for="Name">Classes Name</label>
+    <b>@Model.Name</b>
+    <br>
+
+
+    <label asp-for="Students">Student Name</label>
+    <div>
+        <partial name="_CheckBoxList"
+                 model='("student",ViewBag.StudentList,true)' />
+        <div>
+            <a href="#" data-check="student">Check All</a> |
+            <a href="#" data-uncheck="student">Uncheck All</a>
+        </div>
+    </div>
+    <br>
+
+    <section>
+        <button>Assign</button>
+    </section>
+</form>

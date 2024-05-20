@@ -31,7 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Backup\" />
     <Folder Include="Migrations\" />
+    <Folder Include="Data\" />
   </ItemGroup>
 
 </Project>

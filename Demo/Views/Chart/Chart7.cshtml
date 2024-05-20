@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "Chart 7 | Leong Zhi Yen - Count Total Classes Under Each Class Type";
+}
+
+<div id="chart" style="width: 400px; height: 300px"></div>
+
+<p>
+    <a href="#" id="reload">Reload</a> |
+    <a href="#" id="download" download="piechart.png">Download</a>
+</p>
+
+<p>
+    [ <a href="Data1" target="data">Data</a> ]
+</p>
+
+@section foot {
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        // TODO(1): Load chart library
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(init);
+
+        // TODO(2): Initialize data table and chart
+        let dt, opt, cht;
+
+        function init() {
+            // Data Table
+            dt = new google.visualization.DataTable();
+            dt.addColumn('string', 'Class');
+            dt.addColumn('number', 'Count');
+
+            // Chart Options
+            opt = {
+                title: 'Count Total Classes Under Each Class Type',
+                fontName: 'Roboto',
+                fontSize: 16,
+                titleTextStyle: {
+                    fontSize: 20,
+                },
+                chartArea: {
+                    width: '90%',
+                    height: '90%',
+                    top: 50,
+                    left: 50,
+                },
+                 is3D: true,
+                //pieHole: 0.25,
+            };
+
+            // Chart Object
+            cht = new google.visualization.PieChart($('#chart')[0]);
+
+            $('#reload').click();
+        }
+        
+        // TODO(3): Reload event
+        $('#reload').click(e => {
+            e.preventDefault();
+
+            const url = 'Data7';
+            const param = {};
+
+            $.getJSON(url, param, data => {
+                dt.removeRows(0, dt.getNumberOfRows());
+                dt.addRows(data);
+                cht.draw(dt, opt);
+            });
+        });
+
+        // TODO(4): Download event
+        $('#download').click(e => {
+            e.target.href = cht.getImageURI();
+            e.target.download = Date.now() + '.png';
+        });
+    </script>
+}
