@@ -45,9 +45,10 @@ public class RegisterVM
     [StringLength(100)]
     public string Name { get; set; }
 
+    [Required(ErrorMessage = "Please choose a gender.")]
     public string Gender { get; set; }
 
-    [StringLength(100, MinimumLength = 10, ErrorMessage = "{0} must be between 10 or 11 digits.")]
+    [RegularExpression(@"^\d{10,11}$", ErrorMessage = "{0} must be 10 or 11 digits.")]
     public string Phone { get; set; }
 
     public IFormFile Photo { get; set; }
