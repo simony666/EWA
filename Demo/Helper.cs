@@ -205,4 +205,19 @@ public class Helper
         
         smtp.Send(mail);
     }
+
+
+
+    public static class AgeGroupHelper
+    {
+        public static List<string> GetAgeGroups(int minAge, int maxAge)
+        {
+            var ageGroups = new List<string>();
+            for (int i = minAge; i <= maxAge; i += 5)
+            {
+                ageGroups.Add($"{i} - {i + 4}");
+            }
+            return ageGroups;
+        }
+    }
 }
