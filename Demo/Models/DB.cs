@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Claims;
@@ -17,7 +17,22 @@ public class DB : DbContext
     public DbSet<Attendance> Attendances { get; set; }
     public DbSet<Class> Classes { get; set; }
     public DbSet<ClassSubject> ClassesSubjects { get; set; }
+    public DbSet<ActiveToken> ActiveTokens { get; set; }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Student>()
+            .HasOne(s => s.Class)
+            .WithMany(c => c.Students)
+            .HasForeignKey(s => s.ClassId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<ClassSubject>()
+            .HasOne(cs => cs.Subject)
+            .WithMany(s => s.ClassesSubjects)
+            .HasForeignKey(cs => cs.SubjectId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 }
 
 #nullable disable warnings
@@ -28,10 +43,10 @@ public class User
     public string Id { get; set; }
 
     [MaxLength(100)]
-    public string Email { get; set; }
+    public string? Email { get; set; }
 
     [MaxLength(100)]
-    public string Hash { get; set; }
+    public string? Hash { get; set; }
 
     [MaxLength(100)]
     public string Name { get; set; }
@@ -46,7 +61,9 @@ public class User
     public int Age { get; set; }
 
     [MaxLength(11)]
-    public string Phone { get; set; }
+    public string? Phone { get; set; }
+
+    public bool IsActive { get; set; }
 
     [NotMapped]
     public string Role => GetType().Name;
@@ -56,10 +73,13 @@ public class Student : User
 {
 
     [MaxLength(100)]
-    public new string? Email { get; set; }
+    public new string? Email { get; set; } = "null@gmail.com";
 
     [MaxLength(100)]
-    public new string? Hash { get; set; }
+    public new string? Hash { get; set; } = "123";
+
+    [MaxLength(11)]
+    public new string? Phone { get; set; } = "0123456789";
 
     public string ClassId { get; set; }
     public Class Class { get; set; }
@@ -68,7 +88,7 @@ public class Student : User
 
 public class Parent : User
 {
-
+    public List<Student> Students { get; set; }
 }
 
 public class Admin : User
@@ -102,8 +122,13 @@ public class Attendance
     public int Id { get; set; }
     [MaxLength(1)]
     public bool IsAttend { get; set; }
-    public DateTime DateTime { get; set; } = DateTime.Now;
+    public DateTime MarkTime { get; set; } = DateTime.Now;
+    public DateTime DateTime { get; set; }
+
+    public string ClassId { get; set; }
+    
     public Student Student { get; set; }
+    public Class Class { get; set; }
 }
 
 public class Class
@@ -140,22 +165,13 @@ public class ClassSubject
 
     public Class Class { get; set; } // Navigation property for the Class
     public Subject Subject { get; set; } // Navigation property for the Subject
-}
-
-public class ResetToken
-{
-    [MaxLength(100)]
-    public string UserId { get; set; }
-    [MaxLength(6)]
-    public string Token { get; set; }
-    public DateTime Expire { get; set; }
-
-
-    public User User { get; set; }
+    public List<Attendance> Attendances { get; set; }
 }
 
 public class ActiveToken
 {
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
     [MaxLength(100)]
     public string UserId { get; set; }
     [MaxLength(6)]

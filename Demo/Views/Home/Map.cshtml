@@ -1,0 +1,101 @@
+﻿@model MapVM
+
+@{
+    ViewBag.Title = "Home | Map";
+}
+
+@section head {
+    <style>
+        /* NOTE: main > (h1 + div + #map) */
+        main {
+            display: grid;
+            grid: auto auto 1fr / auto;
+        }
+
+        #type {
+            text-transform: capitalize;
+        }
+
+        #map {
+            margin-top: 5px;
+            border: 1px solid #333;
+        }
+
+        #info {
+            font: 16px 'Roboto';
+            text-align: center;
+        }
+
+        #info img {
+            border: 1px solid #333;
+            width: 300px;
+        }
+    </style>
+}
+
+<div>
+    <button id="store">Store</button>
+    <select id="type">
+        <option>roadmap</option>
+        <option>satellite</option>
+        <option>hybrid</option>
+        <option>terrain</option>
+    </select>
+</div>
+
+<div id="map"></div>
+
+<div hidden>
+    <div id="info">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX85Myj_n-8pmR75sgxwM3wO0tPleVnxHJZmaeddPM1g&s">
+        <div>
+            Find out more information
+            <a href="@Model.Url" target="_blank">here</a>.
+        </div>
+    </div>
+</div>
+
+@section foot {
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwiV5R3XMsrVZKI6NuD7vY4BRqUt9yQQA"></script>
+    <script>
+        // TODO(1): Setup map, marker and info window -------------------------
+        // TAR UMT (KL) --> 3.215, 101.728
+        // TAR UMT (PG) --> 5.453, 100.285
+
+        const gm = google.maps;
+
+        const center = new gm.LatLng(3.215, 101.728);
+
+        const map = new gm.Map($('#map')[0], {
+            center,
+            zoom: 18,
+        });
+
+        const marker = new gm.Marker({
+            map,
+            position: center,
+            icon: '/images/icon.png',
+        });
+
+        const info = new gm.InfoWindow({
+            content: $('#info')[0],
+            anchor: marker,
+        });
+        
+        marker.addListener('click', e => {
+            info.getMap() ? info.close() : info.open(map, marker);
+        });
+
+        // TODO(3): DOM events ------------------------------------------------
+        $('#store').click(e => {
+            // TODO
+            map.setZoom(18);
+            map.panTo(center);
+        });
+
+        $('#type').change(e => {
+            // TODO
+            map.setMapTypeId(e.target.value);
+        });
+    </script>
+}

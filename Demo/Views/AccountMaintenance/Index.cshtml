@@ -1,0 +1,106 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@model IPagedList<User>
+
+@{
+    ViewBag.Title = "User List";
+    string[] fields = { "Id", "Name", "Gender", "Age", "Role" };
+}
+
+<form>
+    @Html.TextBox("name", null, new { autofocus = "" })
+    @Html.Hidden("sort")
+    @Html.Hidden("dir")
+    @Html.Hidden("role")
+</form>
+
+@* <div>
+    <br />
+    <strong>Filter by Address:</strong>
+    <a data-ajax="true"
+       data-ajax-update="#target"
+       data-ajax-loading="#loader"
+       href="?">All</a>
+    @foreach (var role in ViewBag.Role)
+    {
+        <a data-ajax="true" data-ajax-update="#target" data-ajax-loading="#loader" href="?name=@role&sort=@ViewBag.Sort&dir=@ViewBag.Dir"> / @role</a>
+    }
+</div> *@
+
+<div>
+    <br />
+    <strong>Filter by Role:</strong>
+    <a data-ajax="true"
+       data-ajax-update="#target"
+       data-ajax-loading="#loader"
+       href="?name=@ViewBag.Name&role=&sort=@ViewBag.Sort&dir=@ViewBag.Dir">All</a>
+    @foreach (var role in ViewBag.Roles)
+    {
+        <a data-ajax="true" 
+           data-ajax-update="#target" 
+           data-ajax-loading="#loader" 
+           href="?name=@ViewBag.Name&role=@role&sort=@ViewBag.Sort&dir=@ViewBag.Dir"> / @role</a>
+    }
+</div>
+
+<div id="target">
+    <table class="table">
+        <p>
+            @Model.Count of @Model.TotalItemCount record(s) |
+            Page @Model.PageNumber of @Model.PageCount
+        </p>
+
+        <tr>
+            @foreach (var f in fields)
+            {
+                string d = "asc";
+                string c = "";
+
+                if (f == ViewBag.Sort)
+                {
+                    d = ViewBag.Dir == "des" ? "asc" : "des";
+                    c = ViewBag.Dir;
+                }
+
+                <th>
+                    @* <a href="?name=@ViewBag.Name&sort=@f&dir=@d" class="@c">@f</a> *@
+                    <a href="?name=@ViewBag.Name&role=@ViewBag.Role&sort=@f&dir=@d" class="@c">@f</a>
+                </th>
+            }
+            <th></th>
+        </tr>
+
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@u.Id</td>
+                <td>@u.Name</td>
+                <td>@u.Gender</td>
+                <td>@u.Age</td>
+                <td>@u.Role</td>
+                <td>
+                    <button data-get="/AccountMaintenance/Detail/@u.Id">Detail</button>
+                    <button data-get="/AccountMaintenance/UpdateProfile/@u.Id">Update</button>
+                    <button data-post="/AccountMaintenance/Delete/@u.Id">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+
+
+    @{
+        var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+        options.LinkToFirstPageFormat = "First";
+        options.LinkToLastPageFormat = "Last";
+        options.LinkToPreviousPageFormat = "Previous";
+        options.LinkToNextPageFormat = "Next";
+    }
+
+    @Html.PagedListPager(
+            Model,
+            p => $"?name={ViewBag.Name}&sort={ViewBag.Sort}&dir={ViewBag.Dir}&page={p}",
+            options
+            )
+</div>
+

@@ -142,6 +142,12 @@ main h1 {
     display: block;
 }
 
+.table td > button {
+    margin: 0 auto;
+    display: block;
+}
+
+
 /* Pager ---------------------------------------------------------------------- */
 
 .pagination a,
@@ -229,6 +235,12 @@ label > * {
 .field-validation-error,
 .validation-summary-errors {
     color: red;
+}
+
+.form input[type=number]::-webkit-outer-spin-button,
+.form input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /* Photo Upload --------------------------------------------------------------- */

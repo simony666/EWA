@@ -1,6 +1,8 @@
-﻿/*using Microsoft.AspNetCore.Authorization;
+﻿using Demo.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mail;
+using Newtonsoft.Json.Linq;
 
 namespace Demo.Controllers;
 
@@ -9,17 +11,36 @@ public class AccountController : Controller
     private readonly DB db;
     private readonly IWebHostEnvironment en;
     private readonly Helper hp;
+    
 
     public AccountController(DB db, IWebHostEnvironment en, Helper hp)
     {
         this.db = db;
         this.en = en;
-        this.hp = hp;
+        this.hp = hp;        
+    }
+
+    public IActionResult DB()
+    {
+        db.Tutors.Add(new Tutor()
+        {
+            Id = "T004",
+            Name = "Tutor 3",
+            Email = "wangsy-wm22@student.tarc.edu.my",
+            Hash = hp.HashPassword("12345"),
+            Gender = "M",
+            Age = 40,
+            PhotoURL = "xxx.jpg"
+            
+        });
+        db.SaveChanges();
+        return RedirectToAction("Index");
     }
 
     // GET: Account/Login
     public IActionResult Login()
     {
+        ViewBag.CaptchaImage = "";
         return View();
     }
 
@@ -27,11 +48,28 @@ public class AccountController : Controller
     [HttpPost]
     public IActionResult Login(LoginVM vm, string? returnURL)
     {
-        var u = db.Users.Find(vm.Email);
-        
+        var recaptchaSecretKey = "6LedfeEpAAAAALifWprF-8ls_34CvzEQQTfqnocx";
+        var recaptchaResponse = vm.RecaptchaResponse;
+        var httpClient = new HttpClient();
+        var response = httpClient.GetAsync($"https://www.google.com/recaptcha/api/siteverify?secret={recaptchaSecretKey}&response={recaptchaResponse}").Result;
+        var recaptchaResult = response.Content.ReadAsStringAsync().Result;
+        var recaptchaObj = JObject.Parse(recaptchaResult);
+        var recaptchaSuccess = (bool)recaptchaObj.SelectToken("success");
+        if (!recaptchaSuccess)
+        {
+            ModelState.AddModelError("", "reCAPTCHA verification failed.");
+        }
+
+        var u = db.Users.FirstOrDefault(u => u.Email == vm.Email);
+
         if (u == null || !hp.VerifyPassword(u.Hash, vm.Password))
         {
             ModelState.AddModelError("", "Login credentials not matched.");
+        }
+
+        if (u != null && !u.IsActive)
+        {
+            ModelState.AddModelError("", "Account is not activated. Please check your email and activate your account.");
         }
 
         if (ModelState.IsValid)
@@ -40,17 +78,20 @@ public class AccountController : Controller
 
             hp.SignIn(u!.Email, u.Role, vm.RememberMe);
 
-            if (u is Admin m)
+            if (u is Parent p)
             {
-                HttpContext.Session.SetString("PhotoURL", m.PhotoURL);
+                HttpContext.Session.SetString("PhotoURL", p.PhotoURL);
             }
 
             if (string.IsNullOrEmpty(returnURL))
             {
                 return RedirectToAction("Index", "Home");
             }
+
+            return Redirect(returnURL);
         }
-        
+
+        ViewBag.CaptchaImage = "";
         return View(vm);
     }
 
@@ -104,30 +145,118 @@ public class AccountController : Controller
             var err = hp.ValidatePhoto(vm.Photo);
             if (err != "") ModelState.AddModelError("Photo", err);
         }
-        
+
         if (ModelState.IsValid)
         {
-            db.Admins.Add(new()
+            var newParent = new Parent
             {
+                Id = NextId(),
                 Email = vm.Email,
                 Hash = hp.HashPassword(vm.Password),
                 Name = vm.Name,
-                PhotoURL = hp.SavePhoto(vm.Photo)
-            });
+                Gender = vm.Gender,
+                Phone = vm.Phone,
+                PhotoURL = hp.SavePhoto(vm.Photo),
+                Age = vm.Age, // Set Age property
+                IsActive = false
+            };
+
+            db.Users.Add(newParent);
             db.SaveChanges();
 
-            TempData["Info"] = "Register successfully. Please login.";
+            var token = new ActiveToken
+            {
+                UserId = newParent.Id,
+                Token = GenerateActivationToken(),
+                Expire = DateTime.UtcNow.AddHours(3)
+            };
+            db.ActiveTokens.Add(token);
+            db.SaveChanges();
+
+            SendActivationEmail(newParent, token.Token);
+
+            TempData["Info"] = "Register successfully. Please check your email to activate your account.";
             return RedirectToAction("Login");
         }
 
-        return View();
+        return View(vm);
+    }
+
+    // Method to generate activation token
+    private string GenerateActivationToken()
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        var random = new Random();
+        return new string(Enumerable.Repeat(chars, 6)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
+
+    // Method to send activation email
+    private void SendActivationEmail(User u, string token)
+    {
+        var mail = new MailMessage();
+        mail.To.Add(new MailAddress(u.Email, u.Name));
+        mail.Subject = "Account Activation";
+        mail.IsBodyHtml = true;
+
+        var activationLink = Url.Action("Activate", "Account", new { token = token }, Request.Scheme);
+
+        var path = u switch
+        {
+            Admin => Path.Combine(en.WebRootPath, "images", "admin.png"),
+            User p => Path.Combine(en.WebRootPath, "photos", p.PhotoURL),
+            _ => ""
+        };
+
+        var att = new Attachment(path);
+        mail.Attachments.Add(att);
+        att.ContentId = "photo";
+
+        mail.Body = $@"
+            <img src='cid:photo' style='width: 200px; height: 200px; border: 1px solid #333'>
+            <p>Dear {u.Name},</p>
+            <p>Please activate your account by clicking the link below:</p>
+            <p><a href='{activationLink}'>Activate Account</a></p>
+            <p>Thank you!</p>
+        ";
+
+        hp.SendEmail(mail);
+    }
+
+    // Manually generate next id
+    private string NextId()
+    {
+        string max = db.Parents.Max(p => p.Id) ?? "P000";
+        int n = int.Parse(max[1..]);
+        return (n + 1).ToString("'P'000");
+    }
+
+    // Activation action
+    public IActionResult Activate(string token)
+    {
+        var activeToken = db.ActiveTokens.SingleOrDefault(t => t.Token == token && t.Expire > DateTime.UtcNow);
+        if (activeToken != null)
+        {
+            var user = db.Parents.SingleOrDefault(u => u.Id == activeToken.UserId);
+            if (user != null)
+            {
+                user.IsActive = true; // Assuming you have an IsActive property
+                db.ActiveTokens.Remove(activeToken); // Remove the token after activation
+                db.SaveChanges();
+                TempData["Info"] = "Account activated successfully. Please login.";
+                return RedirectToAction("Login");
+            }
+        }
+
+        TempData["Error"] = "Invalid or expired activation token.";
+        return RedirectToAction("Register");
     }
 
     // GET: Account/UpdateProfile
-    [Authorize(Roles = "Member")]
+    [Authorize(Roles = "Parent")]
     public IActionResult UpdateProfile()
     {
-        var m = db.Admins.Find(User.Identity!.Name);
+        var m = db.Users.FirstOrDefault(u => u.Email == User.Identity!.Name);
         if (m == null) return RedirectToAction("Index", "Home");
 
         var vm = new UpdateProfileVM
@@ -141,11 +270,11 @@ public class AccountController : Controller
     }
 
     // POST: Account/UpdateProfile
-    [Authorize(Roles = "Member")]
+    [Authorize(Roles = "Parent")]
     [HttpPost]
     public IActionResult UpdateProfile(UpdateProfileVM vm)
     {
-        var m = db.Admins.Find(User.Identity!.Name);
+        var m = db.Users.FirstOrDefault(u => u.Email == User.Identity!.Name);
         if (m == null) return RedirectToAction("Index", "Home");
 
         if (vm.Photo != null)
@@ -188,7 +317,7 @@ public class AccountController : Controller
     [HttpPost]
     public IActionResult UpdatePassword(UpdatePasswordVM vm)
     {
-        var u = db.Users.Find(User.Identity!.Name);
+        var u = db.Users.FirstOrDefault(u => u.Email == User.Identity!.Name);
         if (u == null) return RedirectToAction("Index", "Home");
 
         if (!hp.VerifyPassword(u.Hash, vm.Current))
@@ -218,7 +347,7 @@ public class AccountController : Controller
     [HttpPost]
     public IActionResult ResetPassword(ResetPasswordVM vm)
     {
-        var u = db.Users.Find(vm.Email);
+        var u = db.Users.FirstOrDefault(u => u.Email == vm.Email);
 
         if (u == null)
         {
@@ -252,9 +381,9 @@ public class AccountController : Controller
 
         var path = u switch
         {
-            Admin    => Path.Combine(en.WebRootPath, "images", "admin.png"),
-            //Member m => Path.Combine(en.WebRootPath, "photos", m.PhotoURL),
-            _        => ""
+            Admin => Path.Combine(en.WebRootPath, "images", "admin.png"),
+            User p => Path.Combine(en.WebRootPath, "photos", p.PhotoURL),
+            _ => ""
         };
 
         var att = new Attachment(path);
@@ -276,4 +405,6 @@ public class AccountController : Controller
         hp.SendEmail(mail);
     }
 }
-*/
+
+
+

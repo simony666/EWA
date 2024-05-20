@@ -1,0 +1,38 @@
+﻿@model List<Student>
+
+@{
+    ViewBag.Title = "Attendance | Generate QR";
+}
+
+<table class="table">
+    <tr>
+        <th>Student Id</th>
+        <th>Name</th>
+        <th>QR Code</th>
+        <th>Download</th>
+    </tr>
+    @foreach (var s in Model)
+    {
+        <tr>
+            <td>@s.Id</td>
+            <td>@s.Name</td>
+            <td>
+                <img src="@($"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={s.Id}")" />
+                </td>
+            <td>
+                <a class="download" download="@($"{s.Id}.jpg")" data-value="@($"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={s.Id}")" href="#">Download</a>
+            </td>
+        </tr>
+    }
+</table>
+
+
+@section foot {
+    <script>
+        $('#download').click(e => {
+            e.preventDefault();
+            e.target.href = $(this).data('value');
+            e.target.download = Date.now() + '.png';
+        });
+    </script>
+}

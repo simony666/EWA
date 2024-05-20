@@ -1,0 +1,62 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@model IPagedList<User>
+
+@{
+    string[] fields = { "Id", "Name", "Gender", "Age", "Role" };
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            @foreach (var f in fields)
+            {
+                string d = "asc";
+                string c = "";
+
+                if (f == ViewBag.Sort)
+                {
+                    d = ViewBag.Dir == "des" ? "asc" : "des";
+                    c = ViewBag.Dir;
+                }
+
+                <th>
+                    <a href="?name=@ViewBag.Name&role=@ViewBag.Role&sort=@f&dir=@d" class="@c">@f</a> @* Include role parameter in the sorting links *@
+                </th>
+            }
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@u.Id</td>
+                <td>@u.Name</td>
+                <td>@u.Gender</td>
+                <td>@u.Age</td>
+                <td>@u.Role</td>
+                <td>
+                    <button data-get="/AccountMaintenance/Detail/@u.Id">Detail</button>
+                    <button data-get="/AccountMaintenance/UpdateProfile/@u.Id">Update</button>
+                    <button data-post="/AccountMaintenance/Delete/@u.Id">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+    options.LinkToFirstPageFormat = "First";
+    options.LinkToLastPageFormat = "Last";
+    options.LinkToPreviousPageFormat = "Previous";
+    options.LinkToNextPageFormat = "Next";
+}
+
+@Html.PagedListPager(
+        Model,
+        p => Url.Action("Index", new { name = ViewBag.Name, role = ViewBag.Role, sort = ViewBag.Sort, dir = ViewBag.Dir, page = p }),
+        options
+    )

@@ -1,0 +1,46 @@
+﻿@model StudentsVM
+
+@{
+    ViewBag.Title = "Home | Rigister Student";
+}
+
+<form method="post" class="form" enctype="multipart/form-data">
+
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <label asp-for="Name"></label>
+    <input asp-for="Name" autofocus />
+    <span asp-validation-for="Name"></span>
+
+    <label asp-for="Age"></label>
+    <input type="number" asp-for="Age" autofocus />
+    <span asp-validation-for="Age"></span>
+
+    <label asp-for="Gender"></label>
+    <div>
+        <label><input type="radio" asp-for="Gender" value="F" />Female</label>
+        <label><input type="radio" asp-for="Gender" value="M" />Male</label>
+    </div>
+    <span asp-validation-for="Gender"></span>
+
+    <label asp-for="ParentId"></label>
+    <select asp-for="ParentId" asp-items="ViewBag.Parents">
+        <option value="">- Select One -</option>
+    </select>
+    <span asp-validation-for="ParentId"></span>
+
+    <label asp-for="Photo"></label>
+    <div>
+        <label class="upload">
+            <small>Select Photo...</small>
+            <input asp-for="Photo" accept="image/jpeg,image/png" hidden>
+            <img src="/images/photo.jpg">
+        </label>
+    </div>
+    <span asp-validation-for="Photo"></span>
+
+    <section>
+        <button type="submit">Submit</button>
+        <button type="reset">Reset</button>
+    </section>
+</form>
