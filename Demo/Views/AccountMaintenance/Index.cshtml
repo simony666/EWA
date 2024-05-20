@@ -9,24 +9,11 @@
 }
 
 <form>
-    @Html.TextBox("name", null, new { autofocus = "" })
-    @Html.Hidden("sort")
-    @Html.Hidden("dir")
-    @Html.Hidden("role")
+    @Html.TextBox("name", ViewBag.Name as string, new { autofocus = "" })
+    @Html.Hidden("sort", ViewBag.Sort as string)
+    @Html.Hidden("dir", ViewBag.Dir as string)
+    @Html.Hidden("role", ViewBag.Role as string)
 </form>
-
-@* <div>
-    <br />
-    <strong>Filter by Address:</strong>
-    <a data-ajax="true"
-       data-ajax-update="#target"
-       data-ajax-loading="#loader"
-       href="?">All</a>
-    @foreach (var role in ViewBag.Role)
-    {
-        <a data-ajax="true" data-ajax-update="#target" data-ajax-loading="#loader" href="?name=@role&sort=@ViewBag.Sort&dir=@ViewBag.Dir"> / @role</a>
-    }
-</div> *@
 
 <div>
     <br />
@@ -34,18 +21,18 @@
     <a data-ajax="true"
        data-ajax-update="#target"
        data-ajax-loading="#loader"
-       href="?name=@ViewBag.Name&role=&sort=@ViewBag.Sort&dir=@ViewBag.Dir">All</a>
+       href="?name=@ViewBag.Name&sort=@ViewBag.Sort&dir=@ViewBag.Dir">All</a>
     @foreach (var role in ViewBag.Roles)
     {
-        <a data-ajax="true" 
-           data-ajax-update="#target" 
-           data-ajax-loading="#loader" 
+        <a data-ajax="true"
+           data-ajax-update="#target"
+           data-ajax-loading="#loader"
            href="?name=@ViewBag.Name&role=@role&sort=@ViewBag.Sort&dir=@ViewBag.Dir"> / @role</a>
     }
 </div>
 
 <div id="target">
-    <table class="table">
+    <table class="table table-striped">
         <p>
             @Model.Count of @Model.TotalItemCount record(s) |
             Page @Model.PageNumber of @Model.PageCount
@@ -64,7 +51,6 @@
                 }
 
                 <th>
-                    @* <a href="?name=@ViewBag.Name&sort=@f&dir=@d" class="@c">@f</a> *@
                     <a href="?name=@ViewBag.Name&role=@ViewBag.Role&sort=@f&dir=@d" class="@c">@f</a>
                 </th>
             }
@@ -88,7 +74,6 @@
         }
     </table>
 
-
     @{
         var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
         options.LinkToFirstPageFormat = "First";
@@ -99,8 +84,7 @@
 
     @Html.PagedListPager(
             Model,
-            p => $"?name={ViewBag.Name}&sort={ViewBag.Sort}&dir={ViewBag.Dir}&page={p}",
+            p => $"?name={ViewBag.Name}&role={ViewBag.Role}&sort={ViewBag.Sort}&dir={ViewBag.Dir}&page={p}",
             options
             )
 </div>
-

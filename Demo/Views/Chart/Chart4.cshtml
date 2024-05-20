@@ -1,0 +1,85 @@
+﻿@model IEnumerable<User>
+@{
+    ViewBag.Title = "Chart | Demo 6 - Column Chart (Age Groups)";
+}
+
+<div id="chart" style="width: 800px; height: 400px"></div>
+<div id="averageCount"></div>
+
+<p>
+    [ <a href="Data4" target="data">Data</a> ]
+</p>
+
+@section foot {
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { packages: ['corechart', 'bar'] });
+        google.charts.setOnLoadCallback(init);
+
+        let dt, opt, cht;
+
+        function init() {
+            dt = new google.visualization.DataTable();
+            dt.addColumn('string', 'Age Group');
+            dt.addColumn('number', 'Count');
+            dt.addColumn({ type: 'number', role: 'annotation' });
+            dt.addColumn('number', 'Average Count');
+            dt.addColumn({ type: 'string', role: 'tooltip', p: { html: true } });
+
+            const style = { bold: true, italic: false, fontSize: 20, color: 'tomato' };
+
+            opt = {
+                title: 'Age Group Distribution of Parents',
+                fontName: 'Roboto',
+                fontSize: 16,
+                titleTextStyle: { fontSize: 20 },
+                chartArea: { width: '85%', height: '70%', top: 60, left: 100 },
+                legend: { position: 'bottom' },
+                hAxis: { title: 'Age Group', titleTextStyle: style },
+                vAxis: { title: 'Count', titleTextStyle: style },
+                animation: { duration: 500, startup: true },
+                colors: ['tomato', 'blue'], // Colors for the bars and line
+                seriesType: 'bars',
+                series: {
+                    0: { type: 'bars' },
+                    1: { type: 'line', lineDashStyle: [4, 4] } // Line series for the average count
+                },
+                tooltip: { isHtml: true }
+            };
+
+            cht = new google.visualization.ComboChart(document.getElementById('chart'));
+            loadData();
+        }
+
+        function loadData() {
+            const url = '@Url.Action("Data4", "Chart")';
+            $('#loader').show();
+
+            $.getJSON(url, function (response) {
+                console.log('Received Data:', response); // Log the entire response
+
+                const averageCount = response.averageCount;
+                const data = response.ageGroups.map(item => [
+                    item.ageGroup,
+                    item.count,
+                    item.count,
+                    averageCount,
+                    `Average Count: ${averageCount.toFixed(2)}`
+                ]);
+
+                console.log('Formatted Data:', data); // Log the formatted data for the DataTable
+
+                dt.removeRows(0, dt.getNumberOfRows());
+                dt.addRows(data);
+
+                // Draw the chart
+                cht.draw(dt, opt);
+
+                // Show the average count of age groups
+                document.getElementById('averageCount').innerText = 'Average Count of Age Groups: ' + averageCount.toFixed(2);
+
+                $('#loader').hide();
+            });
+        }
+    </script>
+}

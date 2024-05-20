@@ -40,29 +40,6 @@ public class HomeController : Controller
         return View(model);
     }
 
-    public IActionResult Chart3()
-    {
-        var users = db.Users.ToList();
-        return View(users);
-    }
-
-    // GET: Chart/Chart3Data
-    [HttpGet]
-    public IActionResult Chart3Data(string? role)
-    {
-        var data = db.Users
-                     .AsEnumerable()
-                     .Where(s => s.Role == role || role == null)
-                     .GroupBy(s => s.Gender)
-                     .OrderBy(g => g.Key)
-                     .Select(g => new object[]
-                     {
-                         g.Key == "F" ? "Female" : "Male",
-                         g.Count()
-                     })
-                     .ToList();
-
-        return Json(data);
-    }
+    
 
 }

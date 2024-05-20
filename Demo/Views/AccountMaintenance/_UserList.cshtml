@@ -8,43 +8,43 @@
 }
 
 <table class="table table-striped">
-    <thead>
-        <tr>
-            @foreach (var f in fields)
-            {
-                string d = "asc";
-                string c = "";
-
-                if (f == ViewBag.Sort)
-                {
-                    d = ViewBag.Dir == "des" ? "asc" : "des";
-                    c = ViewBag.Dir;
-                }
-
-                <th>
-                    <a href="?name=@ViewBag.Name&role=@ViewBag.Role&sort=@f&dir=@d" class="@c">@f</a> @* Include role parameter in the sorting links *@
-                </th>
-            }
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var u in Model)
+    <p>
+        @Model.Count of @Model.TotalItemCount record(s) |
+        Page @Model.PageNumber of @Model.PageCount
+    </p>
+    <tr>
+        @foreach (var f in fields)
         {
-            <tr>
-                <td>@u.Id</td>
-                <td>@u.Name</td>
-                <td>@u.Gender</td>
-                <td>@u.Age</td>
-                <td>@u.Role</td>
-                <td>
-                    <button data-get="/AccountMaintenance/Detail/@u.Id">Detail</button>
-                    <button data-get="/AccountMaintenance/UpdateProfile/@u.Id">Update</button>
-                    <button data-post="/AccountMaintenance/Delete/@u.Id">Delete</button>
-                </td>
-            </tr>
+            string d = "asc";
+            string c = "";
+
+            if (f == ViewBag.Sort)
+            {
+                d = ViewBag.Dir == "des" ? "asc" : "des";
+                c = ViewBag.Dir;
+            }
+
+            <th>
+                <a href="?name=@ViewBag.Name&role=@ViewBag.Role&sort=@f&dir=@d" class="@c">@f</a>
+            </th>
         }
-    </tbody>
+        <th></th>
+    </tr>
+    @foreach (var u in Model)
+    {
+        <tr>
+            <td>@u.Id</td>
+            <td>@u.Name</td>
+            <td>@u.Gender</td>
+            <td>@u.Age</td>
+            <td>@u.Role</td>
+            <td>
+                <button data-get="/AccountMaintenance/Detail/@u.Id">Detail</button>
+                <button data-get="/AccountMaintenance/UpdateProfile/@u.Id">Update</button>
+                <button data-post="/AccountMaintenance/Delete/@u.Id">Delete</button>
+            </td>
+        </tr>
+    }
 </table>
 
 @{
@@ -56,7 +56,7 @@
 }
 
 @Html.PagedListPager(
-        Model,
-        p => Url.Action("Index", new { name = ViewBag.Name, role = ViewBag.Role, sort = ViewBag.Sort, dir = ViewBag.Dir, page = p }),
-        options
-    )
+            Model,
+            p => Url.Action("Index", new { name = ViewBag.Name, role = ViewBag.Role, sort = ViewBag.Sort, dir = ViewBag.Dir, page = p }),
+            options
+        )

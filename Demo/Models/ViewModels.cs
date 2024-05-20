@@ -313,12 +313,12 @@ public class UserVM
     [Remote("CheckEmail", "AccountMaintenance", ErrorMessage = "Duplicated {0}.")]
     public string Email { get; set; }
 
-    [StringLength(100, MinimumLength = 5, ErrorMessage = "{0} must be {2}-{1} characters long.")]
+    [StringLength(100, MinimumLength = 6, ErrorMessage = "{0} must be {2}-{1} characters long.")]
     [DataType(DataType.Password)]
     [Display(Name = "Password")]
     public string Hash { get; set; }
 
-    [StringLength(100, MinimumLength = 5, ErrorMessage = "{0} must be {2}-{1} characters long.")]
+    [StringLength(100, MinimumLength = 6, ErrorMessage = "{0} must be {2}-{1} characters long.")]
     [Compare("Hash", ErrorMessage = "The password and confirmation password do not match.")]
     [DataType(DataType.Password)]
     [Display(Name = "Confirm Password")]

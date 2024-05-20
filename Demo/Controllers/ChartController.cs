@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.X509;
 using System.Linq;
+using static Demo.Helper;
 
 namespace Demo.Controllers;
 
@@ -24,13 +25,13 @@ public class ChartController : Controller
         return View();
     }
 
-    // GET: Chart/Demo1
+    // GET: Chart/Chart1
     public IActionResult Chart1()
     {
         return View();
     }
 
-    // GET: Chart/Data1
+    // GET: Chart/Chart1Data
     public IActionResult Data1()
     {
         var data = db.Users
@@ -42,13 +43,13 @@ public class ChartController : Controller
         return Json(data);
     }
 
-    // GET: Chart/Demo4
+    // GET: Chart/Chart2
     public IActionResult Chart2()
     {
         return View();
     }
 
-    // GET: Chart/Data4
+    // GET: Chart/Chart2Data
     public IActionResult Data2()
     {
         var users = db.Users.ToList();
@@ -76,7 +77,80 @@ public class ChartController : Controller
         return Json(result);
     }
 
-    // GET: Chart/Chart5
+
+    //GET: Chart/Chart3
+    public IActionResult Chart3()
+    {
+        var users = db.Users.ToList();
+        return View(users);
+    }
+
+    // GET: Chart/Chart3Data
+    [HttpGet]
+    public IActionResult Data3(string? role)
+    {
+        var data = db.Users
+                     .AsEnumerable()
+                     .Where(s => s.Role == role || role == null)
+                     .GroupBy(s => s.Gender)
+                     .OrderBy(g => g.Key)
+                     .Select(g => new object[]
+                     {
+                         g.Key == "F" ? "Female" : "Male",
+                         g.Count()
+                     })
+                     .ToList();
+
+        return Json(data);
+    }
+
+
+    // GET: Chart/Demo6
+    public IActionResult Chart4()
+    {
+        int minAge = 0;
+        int maxAge = 0;
+
+        if (db.Users.OfType<Parent>().Any())
+        {
+            minAge = db.Users.OfType<Parent>().Min(u => u.Age);
+            maxAge = db.Users.OfType<Parent>().Max(u => u.Age);
+        }
+
+        ViewBag.AgeGroups = AgeGroupHelper.GetAgeGroups(minAge, maxAge);
+
+        return View();
+    }
+
+    // GET: Chart/Data6
+    [HttpGet]
+    public IActionResult Data4()
+    {
+        var parents = db.Users.OfType<Parent>().ToList();
+
+        var ageGroups = parents
+            .GroupBy(p => (p.Age / 5) * 5)
+            .OrderBy(g => g.Key)
+            .Select(g => new
+            {
+                ageGroup = $"{g.Key} - {g.Key + 4}",
+                count = g.Count()
+            }).ToList();
+
+        var averageCount = ageGroups.Average(g => g.count);
+
+        return Json(new { ageGroups, averageCount });
+    }
+
+
+
+
+
+
+
+
+
+    // GET: Chart/Demo4
     public IActionResult Chart5()
     {
         return View();

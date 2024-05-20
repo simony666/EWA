@@ -76,25 +76,18 @@ namespace Demo.Controllers
             return View(model);
         }*/
 
+        [Authorize(Roles = "Admin")]
         // GET: Index - Combined
         public IActionResult Index(string? name, string? role, string? sort, string? dir, int page = 1)
         {
 
-            ViewBag.Roles = db.Users.Select(u => u.Role).Distinct().ToList();
+            //ViewBag.Roles = db.Users.Select(u => u.Role).Distinct().ToList();
+            ViewBag.Roles = db.Users.Select(u => u.Role).Distinct();
 
             // (1) Searching ------------------------
             ViewBag.Name = name = name?.Trim() ?? "";
-            ViewBag.Role = role = role?.Trim() ?? "";
 
             var searched = db.Users.Where(u => u.Name.Contains(name));
-
-            if (!string.IsNullOrEmpty(role))
-            {
-                searched = searched.Where(u => u.Role == role);
-            }
-
-            //ViewBag.Roles = db.Users.Select(u => u.Role).Distinct().ToList();
-
 
             // (2) Sorting --------------------------
             ViewBag.Sort = sort;
@@ -117,50 +110,34 @@ namespace Demo.Controllers
             // (3) Paging ---------------------------
             if (page < 1)
             {
-                return RedirectToAction(null, new { name, role, sort, dir, page = 1 });
+                return RedirectToAction(null, new { name, sort, dir, page = 1 });
             }
 
             var model = sorted.ToPagedList(page, 10);
 
             if (page > model.PageCount && model.PageCount > 0)
             {
-                return RedirectToAction(null, new { name, role, sort, dir, page = model.PageCount });
+                return RedirectToAction(null, new { name, sort, dir, page = model.PageCount });
             }
 
             //(4) Filtering --------------------------
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return PartialView("_UserList", model); 
+                return PartialView("_H", model); // Return a partial view for AJAX requests
             }
-
 
             return View(model);
         }
 
-        /*//AccountMaintenance / Index
-        public IActionResult Index()
-        {
-            var users = db.Users.Select(user => new UserViewModel
-            {
-                Id = user.Id,
-                Email = user.Email,
-                Name = user.Name,
-                Gender = user.Gender,
-                Phone = user.Phone,
-                Age = user.Age,
-                Role = user.GetType().Name
-            }).ToList();
-
-            return View(users);
-        }*/
-
         // GET: AccountMaintenance / InsertAdmin
+        [Authorize(Roles = "Admin")]
         public IActionResult InsertAdmin()
         {
             return View();
         }
 
         // POST: Home/InsertAdmin
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult InsertAdmin(AdminVM vm)
         {
@@ -168,24 +145,27 @@ namespace Demo.Controllers
 
             if (ModelState.IsValid)
             {
-                db.Admins.Add(new()
+                string password = vm.Hash;
+                Admin admin = new()
                 {
                     Email = vm.Email,
-                    Hash = vm.Hash,
-                    //Id = vm.Id,
+                    Hash = hp.HashPassword(vm.Hash),
                     Id = AdminNextId(),
                     Name = vm.Name,
                     Age = vm.Age,
                     Gender = vm.Gender,
                     Phone = vm.Phone,
-                    PhotoURL = hp.SavePhoto(vm.Photo)
-                });
+                    PhotoURL = hp.SavePhoto(vm.Photo),
+                    IsActive = true
+                };
+
+                db.Admins.Add(admin);
 
                 db.SaveChanges();
 
-                var m = db.Users.FirstOrDefault(a => a.Email == vm.Email);
-                SendPasswordEmail(m);
-               
+                admin.Hash = password;
+                SendPasswordEmail(admin);
+
                 TempData["Info"] = "Record Insered!";
                 return RedirectToAction("Index");
             }
@@ -195,6 +175,7 @@ namespace Demo.Controllers
         }
 
         // GET: AccountMaintenance/ InsertTutor
+        [Authorize(Roles = "Admin")]
         public IActionResult InsertTutor()
         {
             return View();
@@ -202,30 +183,32 @@ namespace Demo.Controllers
 
         // POST: AccountMaintenance / InsertTutor
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult InsertTutor(TutorVM vm)
         {
             ValidateCommonFields(vm.Email, vm.Phone, vm.Photo);
 
             if (ModelState.IsValid)
             {
-                db.Tutors.Add(new()
+                string password = vm.Hash;
+                Tutor tutor = new()
                 {
                     Email = vm.Email,
-                    Hash = vm.Hash,
-                    //Id = vm.Id,
+                    Hash = hp.HashPassword(vm.Hash),
                     Id = TutorNextId(),
                     Name = vm.Name,
                     Age = vm.Age,
                     Gender = vm.Gender,
                     Phone = vm.Phone,
-                    PhotoURL = hp.SavePhoto(vm.Photo)
-                });
+                    PhotoURL = hp.SavePhoto(vm.Photo),
+                    IsActive = true
+                };
 
-
+                db.Tutors.Add(tutor);
                 db.SaveChanges();
 
-                var m = db.Users.FirstOrDefault(a => a.Email == vm.Email);
-                SendPasswordEmail(m);
+                tutor.Hash = password;
+                SendPasswordEmail(tutor);
 
                 TempData["Info"] = "Record Insered!";
                 return RedirectToAction("Index");
@@ -236,6 +219,7 @@ namespace Demo.Controllers
         }
 
         // GET: AccountMaintenance/ InsertParent
+        [Authorize(Roles = "Admin")]
         public IActionResult InsertParent()
         {
             return View();
@@ -243,30 +227,32 @@ namespace Demo.Controllers
 
         // POST: AccountMaintenance / InsertParent 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult InsertParent(ParentVM vm)
         {
             ValidateCommonFields(vm.Email, vm.Phone, vm.Photo);
 
             if (ModelState.IsValid)
             {
-                db.Parents.Add(new()
+                string password = vm.Hash;
+                Parent parent = new()
                 {
                     Email = vm.Email,
-                    Hash = vm.Hash,
-                    //Id = vm.Id,
+                    Hash = hp.HashPassword(vm.Hash),
                     Id = ParentNextId(),
                     Name = vm.Name,
                     Age = vm.Age,
                     Gender = vm.Gender,
                     Phone = vm.Phone,
-                    PhotoURL = hp.SavePhoto(vm.Photo)
-                });
+                    PhotoURL = hp.SavePhoto(vm.Photo),
+                    IsActive = true
+                };
 
-
+                db.Parents.Add(parent);
                 db.SaveChanges();
 
-                var m = db.Users.FirstOrDefault(a => a.Email == vm.Email);
-                SendPasswordEmail(m);
+                parent.Hash = password;
+                SendPasswordEmail(parent);
 
                 TempData["Info"] = "Record Insered!";
                 return RedirectToAction("Index");
@@ -278,6 +264,7 @@ namespace Demo.Controllers
 
 
         // GET: AccountMaintenance/InsertStudent
+        [Authorize(Roles = "Admin")]
         public IActionResult InsertStudent()
         {
             ViewBag.Parents = new SelectList(db.Parents, "Id", "Name");
@@ -286,6 +273,7 @@ namespace Demo.Controllers
 
         // POST: AccountMaintenance/InsertStudent
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult InsertStudent(StudentsVM vm)
         {
             if (ModelState.IsValid("Photo"))
@@ -342,32 +330,32 @@ namespace Demo.Controllers
         //Generate Admin ID
         private string AdminNextId()
         {
-            string max = db.Admins.Max(c => c.Id) ?? "A00000";
+            string max = db.Admins.Max(c => c.Id) ?? "A000";
             int n = int.Parse(max[1..]);
-            return (n + 1).ToString("'A'00000");
+            return (n + 1).ToString("'A'000");
         }
 
         //generate Tutor ID
         private string TutorNextId()
         {
-            string max = db.Tutors.Max(c => c.Id) ?? "T00000";
+            string max = db.Tutors.Max(c => c.Id) ?? "T000";
             int n = int.Parse(max[1..]);
-            return (n + 1).ToString("'T'00000");
+            return (n + 1).ToString("'T'000");
         }
 
         //generate Tutor ID
         private string ParentNextId()
         {
-            string max = db.Parents.Max(c => c.Id) ?? "P00000";
+            string max = db.Parents.Max(c => c.Id) ?? "P000";
             int n = int.Parse(max[1..]);
-            return (n + 1).ToString("'P'00000");
+            return (n + 1).ToString("'P'000");
         }
 
         private string StudentNextId()
         {
-            string max = db.Students.Max(c => c.Id) ?? "S00000";
+            string max = db.Students.Max(c => c.Id) ?? "S000";
             int n = int.Parse(max[1..]);
-            return (n + 1).ToString("'S'00000");
+            return (n + 1).ToString("'S'000");
         }
 
 
@@ -389,6 +377,7 @@ namespace Demo.Controllers
             return !db.Users.Any(s => phone == s.Phone);
         }
 
+        //reuse the validate common fields
         private void ValidateCommonFields(string email, string phone, IFormFile photo)
         {
             if (ModelState.IsValid("Email") && db.Users.Any(u => u.Email == email))
@@ -412,6 +401,7 @@ namespace Demo.Controllers
 
         // GET: Account / UpdateProfile
         //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdateProfile(string? Id)
         {
             var m = db.Users.FirstOrDefault(a => a.Id == Id);
@@ -434,6 +424,7 @@ namespace Demo.Controllers
         // POST: Account / UpdateProfile
         //[Authorize(Roles = "Admin")]
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdateProfile(UpdateProfileByAdminVM vm)
         {
             var m = db.Users.FirstOrDefault(a => a.Id == vm.Id);
@@ -473,9 +464,16 @@ namespace Demo.Controllers
 
         //POST : AccountMaintenance / Delete
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(string? Id)
         {
             var m = db.Users.Find(Id);
+
+            if (m.Id == "A001")
+            {
+                TempData["Info"] = "This Admin Can Not Delete!!!!";
+                return RedirectToAction("Index");
+            }
 
             if (m != null)
             {
@@ -493,6 +491,7 @@ namespace Demo.Controllers
         }
 
         //GET :  Detail method
+        [Authorize(Roles = "Admin")]
         public IActionResult Detail(string? id)
         {
             var u = db.Users.FirstOrDefault(h => h.Id == id);

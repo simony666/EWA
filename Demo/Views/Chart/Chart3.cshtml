@@ -1,0 +1,77 @@
+﻿@model IEnumerable<User>
+@{
+    ViewBag.Title = "Chart 3 | Goh Qin Long - Pie Chart";
+}
+
+<div id="chart" style="width: 400px; height: 300px"></div>
+
+<p id="filter">
+    <a href="#" data-role="">All</a>
+    @{
+        var roles = Model.Select(u => u.Role).Distinct();
+        foreach (var role in roles)
+        {
+            <text>|</text>
+            <a href="#" data-role="@role">@role</a>
+        }
+    }
+</p>
+
+<p>
+    [ <a href="Data3" target="data">Data</a> ]
+</p>
+
+@section foot {
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(init);
+
+        let dt, opt, cht;
+
+        function init() {
+            dt = new google.visualization.DataTable();
+            dt.addColumn('string', 'Gender');
+            dt.addColumn('number', 'Count');
+
+            opt = {
+                title: 'Gender Count By Role - All',
+                fontName: 'Roboto',
+                fontSize: 16,
+                titleTextStyle: { fontSize: 20 },
+                chartArea: {
+                    width: '90%',
+                    height: '90%',
+                    top: 50,
+                    left: 50
+                },
+                colors: ['#dc3912', '#3366cc'],
+            };
+
+            cht = new google.visualization.PieChart(document.getElementById('chart'));
+            $('#filter a').first().click();
+        }
+
+        $('#filter a').click(function (e) {
+            e.preventDefault();
+
+            const url = '@Url.Action("Data3", "Chart")';
+            const param = { role: $(this).data('role') };
+
+            $.getJSON(url, param, function (data) {
+                console.log(data);
+                if (data.length > 0) {
+                    opt.title = 'Gender Count By Role - ' + (param.role || 'All');
+                    dt.removeRows(0, dt.getNumberOfRows());
+                    dt.addRows(data);
+                    cht.draw(dt, opt);
+                } else {
+                    opt.title = 'No data available for ' + (param.role || 'All');
+                    dt.removeRows(0, dt.getNumberOfRows());
+                    cht.draw(dt, opt);
+                }
+            });
+        });
+
+    </script>
+}
