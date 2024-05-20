@@ -67,6 +67,16 @@ public class UpdateProfileVM
     public string? PhotoURL { get; set; }
 
     public IFormFile? Photo { get; set; }
+
+    [Phone]
+    public string? Phone { get; set; }
+
+    [Range(1, 120, ErrorMessage = "Please enter a valid age.")]
+    public int? Age { get; set; }
+
+    [Required(ErrorMessage = "Gender is required.")]
+    [RegularExpression("^(M|F)$", ErrorMessage = "Gender must be 'M' or 'F'.")]
+    public string? Gender { get; set; }
 }
 
 public class UpdatePasswordVM

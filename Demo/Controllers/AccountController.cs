@@ -67,7 +67,7 @@ public class AccountController : Controller
             ModelState.AddModelError("", "Login credentials not matched.");
         }
 
-        if (u != null && !u.IsActive)
+        if (u == null || !u.IsActive)
         {
             ModelState.AddModelError("", "Account is not activated. Please check your email and activate your account.");
         }
@@ -263,7 +263,10 @@ public class AccountController : Controller
         {
             Email = m.Email,
             Name = m.Name,
-            PhotoURL = m.PhotoURL
+            PhotoURL = m.PhotoURL,
+            Phone = m.Phone,
+            Age = m.Age,
+            Gender = m.Gender
         };
 
         return View(vm);
@@ -286,6 +289,9 @@ public class AccountController : Controller
         if (ModelState.IsValid)
         {
             m.Name = vm.Name;
+            m.Phone = vm.Phone;
+            m.Age = (int)vm.Age;
+            m.Gender = vm.Gender;
 
             if (vm.Photo != null)
             {
