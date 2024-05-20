@@ -108,10 +108,16 @@ public class ChartController : Controller
         return Json(dt);
     }
 
-    // GET: Chart/Data5
-    public IActionResult Data6(string? id, string? date)
+    // GET: Chart/Chart6
+    public IActionResult Chart6()
     {
-        DateTime targetDate = date == null ? DateTime.Now : DateTime.Parse(date);
+        return View();
+    }
+
+    // GET: Chart/Data6
+    public IActionResult Data6(string? id)
+    {
+        DateTime targetDate = id == null ? DateTime.Now : DateTime.Parse(id);
         var total = db.Students.GroupBy(s => s.ClassId);
 
         var dt = db.Students
@@ -135,7 +141,7 @@ public class ChartController : Controller
             AbsencesCount = s.AbsencesCount
         })
         .ToList()
-        .Select(g => new object[] { g.StudentName, g.ClassName, g.AbsencesCount })
+        .Select(g => new object[] { g.StudentName, g.AbsencesCount })
         .ToList();
 
         return Json(dt);
