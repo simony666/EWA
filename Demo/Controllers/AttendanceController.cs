@@ -433,7 +433,7 @@ namespace Demo.Controllers
             var model = new List<StudentAttendanceVM>();
 
             var students = id == null ? db.Students.ToList() : db.Students.Where(s => s.Id == id).ToList();
-            var totalClasses = GetTotalDays(DateTime.Now.Year, DateTime.Now.Month);
+            var totalClasses = hp.GetTotalDays(DateTime.Now.Year, DateTime.Now.Month);
             //totalClasses = 3;
 
 
@@ -465,24 +465,6 @@ namespace Demo.Controllers
                     
             }   
             return View(model);
-        }
-
-        public int GetTotalDays(int year, int month)
-            {
-            DateTime today = DateTime.Now;
-            int totalDays = year == today.Year && month == today.Month ? today.Day : DateTime.DaysInMonth(year, month);
-            int workingDays = 0;
-
-            for (int day = 1; day <= totalDays; day++)
-                {
-                DateTime currentDate = new DateTime(year, month, day);
-                if (currentDate.DayOfWeek != DayOfWeek.Saturday && currentDate.DayOfWeek != DayOfWeek.Sunday)
-                {
-                    workingDays++;
-                }
-            }
-
-            return workingDays;
         }
 
         public IActionResult SendWarning(string id, double percentage) {

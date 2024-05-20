@@ -1,0 +1,119 @@
+﻿@{
+    ViewBag.Title = "Chart 6";
+    DateTime today = DateTime.Today;
+    string max = today.ToString("yyyy-MM");
+    string default_date = ViewBag.Date ?? max;
+}
+@Html.TextBox("date", default_date, new { type = "month", max = max })
+<br/>
+<div id="chart" style="width: 600px; height: 400px"></div>
+
+<p>
+    <a href="#" id="reload">Reload</a> |
+    <a href="#" id="toggle">Toggle Orientation</a>
+</p>
+
+<p>
+    [ <a href="Data3" target="data">Data</a> ]
+</p>
+
+@section foot {
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(init);
+
+        let dt, opt, cht;
+        const url = 'Data6';
+
+        function init() {
+            dt = new google.visualization.DataTable();
+            // Data table columns: Program and Count
+            dt.addColumn('string', 'Name');
+            dt.addColumn('number', 'Absent Count');
+
+            const style = { bold: true, italic: false, fontSize: 20, color: 'purple' };
+
+            opt = {
+                title: 'Top 10 Absent Student',
+                fontName: 'Roboto',
+                fontSize: 16,
+                titleTextStyle: { fontSize: 20 },
+                chartArea: {
+                    width: '80%',
+                    height: '70%',
+                    top: 60,
+                    left: 80
+                },
+                colors: ['purple'],
+                // TODO: legend, vAxis, hAxis, animation, orientation
+                legend: 'none',
+                vAxis: {
+                    title: 'Absent Count',
+                    titleTextStyle: style,
+                    minValue: 0,
+                    gridlines: { interval: [1, 2, 5] },
+                },
+                hAxis: {
+                    title: 'Student',
+                    titleTextStyle: style,
+                },
+                animation: {
+                    duration: 500,
+                    startup: true,
+                },
+                orientation: 'horizontal', // vertical
+            };
+
+            cht = new google.visualization.ColumnChart($('#chart')[0]);
+
+            $('#reload').click();
+        }
+
+        $('#reload').click(e => {
+            e.preventDefault();
+
+            const date = $('#date').val();
+            const param = { id: date };
+
+            opt.title = `Top 10 Absent Class on ${date}`;
+            $.getJSON(url, param, data => {
+                dt.removeRows(0, dt.getNumberOfRows());
+                dt.addRows(data);
+                cht.draw(dt, opt);
+            });
+        });
+
+        $('#toggle').click(e => {
+            e.preventDefault();
+
+            // TODO: Toggle orientation (horizontal <--> vertical)
+            //       Toggle axis (vAxis <--> hAxis)
+            opt.orientation = opt.orientation == 'vertical' ?
+                'horizontal' :
+                'vertical';
+
+            [opt.vAxis, opt.hAxis] = [opt.hAxis, opt.vAxis];
+
+            cht.draw(dt, opt);
+        });
+        $('#date').change(e => {
+            e.preventDefault();
+
+            const el = e.target;
+            if (el.value > el.max) {
+                el.value = el.max;
+            }
+
+            const date = $('#date').val();
+            const param = { id: date };
+            opt.title = `Top 10 Absent Class on ${date}`;
+
+            $.getJSON(url, param, data => {
+                dt.removeRows(0, dt.getNumberOfRows());
+                dt.addRows(data);
+                cht.draw(dt, opt);
+            });
+        })
+    </script>
+}

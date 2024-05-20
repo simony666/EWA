@@ -1,0 +1,76 @@
+﻿@model Student
+
+@{
+    ViewBag.Title = "Students | Timetable";
+}
+
+@{
+    var c = Model.Class;
+    string[] dayOfWeek = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
+}
+
+<table border="1" class="table" style="margin-top: 10px">
+    <thead>
+        <tr><th colspan="21">@c.Name - @Model.Name's Timetable</th></tr>
+        <tr>
+            <th>Time</th>
+            @for (int column = 8; column <= 20; column++)
+            {
+                <th>@column:00</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @for (int day = 0; day < 5; day++)
+        {
+            <tr>
+                <th>@dayOfWeek[day]</th>
+                @{
+                    // Initialize the starting column for each day
+                    int column = 8;
+                    // Loop through each hour from 8 AM to 8 PM
+                    while (column <= 20)
+                    {
+                        bool courseFound = false;
+                        string courseId = "";
+                        string courseName = "";
+                        string tutorName = "";
+                        int duration = 0;
+                        
+                        // Iterate through each ClassSubject to find matching courses for the current day and time
+                        foreach (var cs in c.ClassSubjects)
+                        {
+                            if (dayOfWeek[day].Equals(cs.DayOfWeek) && cs.StartTime.Hours == column)
+                            {
+                                courseId = cs.Subject.Id;
+                                courseName = cs.Subject.Name;
+                                duration = cs.Duration ;
+                                tutorName = cs.Subject.Tutor.Name;
+
+                                courseFound = true;
+                                column += duration + 1;
+                                break;
+                            }
+                        }
+
+                        if (courseFound)
+                        {
+                            <td style="text-align: center; background-color:#f0f0f0; font-size:12px;" colspan="@((duration + 1))">
+                                <span style="font-weight:bold;">@courseId</span> <br>
+                                <span style="font-weight:bold;">Subject Name:</span>@courseName<br>
+                                <span style="font-weight:bold;">Tutor Name:</span> @tutorName
+
+                            <br>
+                            </td>          
+                        }
+                        else
+                        {
+                            <td></td>
+                            column++;
+                        }
+                    }
+                }
+            </tr>
+        }
+    </tbody>
+</table>

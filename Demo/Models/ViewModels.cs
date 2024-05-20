@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Demo.Models;
 
@@ -97,98 +98,163 @@ public class ResetPasswordVM
 //--------------------------------------------------------------
 //                     Leong Zhi Yen
 //--------------------------------------------------------------
+// create Tutors
+    public class CreateTutorsVM
+    {
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public string Hash { get; set; }
+        public string Name { get; set; }
+        public string Gender { get; set; }
+        public string? PhotoURL { get; set; }
+        public int Age { get; set; }
+        public string Phone{ get; set;}
+    }
 
-// create Subjects
-public class CreateSubjectsVM
-{
-    public string? Id { get; set; }
-
-    [StringLength(100)]
-    public string Name { get; set; }
-
-    [Precision(6, 2)]
-    public decimal Fees { get; set; }
-
-    [Display(Name = "Tutor Name")]
-    public string TutorId { get; set; }
-
-    //[Display(Name = "Classes Name")]
-    //public string ClassId { get; set; }
-}
-
-public class UpdateSubjectsVM
-{
-    public string? Id { get; set; }
-
-    [StringLength(100)]
-    public string Name { get; set; }
-
-    [Precision(6, 2)]
-    public decimal Fees { get; set; }
-
-    [Display(Name = "Tutor Name")]
-    public string TutorId { get; set; }
-}
-
-// classes
-public class ClassesVM
-{
-    public string? Id { get; set; }
-
-    [StringLength(100)]
-    public string Name { get; set; }
-
-    [Range(1, 20)]
-    public int? Capacity { get; set; }
-
-}
-
-public class UpdateClassesVM
-{
-    public string? Id { get; set; }
-
-    [StringLength(100)]
-    [Required(ErrorMessage = "Name is required")]
-    public string Name { get; set; }
-
-    [Range(1, 20)]
-    public int? Capacity { get; set; }
-}
-
-public class TutorClassVM
+// Students
+public class CreateStudentsVM
 {
     public string Id { get; set; }
-
+    public string Email { get; set; }
+    public string Hash { get; set; }
     public string Name { get; set; }
-
+    public string Gender { get; set; }
+    public string? PhotoURL { get; set; }
+    public int Age { get; set; }
+    public string Phone { get; set; }
+    [Display(Name = "Student Name")]
     public string ClassId { get; set; }
 }
 
 
+// create Subjects
+public class CreateSubjectsVM
+    {
+        public string? Id { get; set; }
 
+        [StringLength(100)]
+        public string Name { get; set; }
 
+        [Precision(6, 2)]
+        public decimal Fees { get; set; }
 
-// subject Class
-public class SubjectsClassVM 
-{ 
-    //public string Id { get; set; }
+        [Display(Name = "Tutor Name")]
+        public string TutorId { get; set; }
 
-    [Display(Name = "Start Time"), DataType(DataType.Time)]
-    public TimeSpan StartTime { get; set; }
+    }
 
-    [Display(Name = "End Time"), DataType(DataType.Time)]
-    public TimeSpan EndTime { get; set; }
+    public class UpdateSubjectsVM
+    {
+        public string? Id { get; set; }
 
-    public int Duration { get; set; }
-    [StringLength(100)]
-    public string DayOfWeek { get; set; }
+        [StringLength(100)]
+        public string Name { get; set; }
 
-    public string SubjectsId { get; set; }
+        [Precision(6, 2)]
+        public decimal Fees { get; set; }
 
-    public string? StudentsId { get; set; }
+        [Display(Name = "Tutor Name")]
+        public string TutorId { get; set; }
+    }
 
-    public string ClassesId { get; set; }
+    // classes
+    public class ClassesVM
+    {
+        public string? Id { get; set; }
+
+        [StringLength(100)]
+        public string Name { get; set; }
+        [StringLength(100)]
+        public string ClassType { get; set; }
+
+        [Range(1, 20)]
+        public int? Capacity { get; set; }
+
 }
+
+    public class UpdateClassesVM
+    {
+        public string? Id { get; set; }
+
+        [StringLength(100)]
+        [Required(ErrorMessage = "Name is required")]
+        public string Name { get; set; }
+
+        [Range(1, 20)]
+        public int? Capacity { get; set; }
+    }
+
+    public class TutorClassVM
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string ClassId { get; set; }
+    }
+
+// students
+//public class StudentsVM
+//    {
+//        public string? Id { get; set; }
+
+//        [StringLength(100)]
+//        public string Name { get; set; }
+
+//        [StringLength(1)]
+//        public string Gender { get; set; }
+
+//        public int Age { get; set; }
+
+//        public string? PhotoURL { get; set; }
+
+//        public IFormFile? Photo { get; set; }
+
+//        public string ClassesId { get; set; }
+
+//    }
+
+    // tutors
+    public class TutorsVM
+    {
+        public string? Id { get; set; }
+
+        [StringLength(100)]
+        public string Name { get; set; }
+
+        [StringLength(1)]
+        public string Gender { get; set; }
+
+        public string? PhotoURL { get; set; }
+
+        public IFormFile? Photo { get; set; }
+
+        public int Age { get; set; }
+
+    }
+
+    // subject Class
+    public class SubjectsClassVM
+    {
+        //public string Id { get; set; }
+
+        [Display(Name = "Start Time"), DataType(DataType.Time)]
+        public TimeSpan StartTime { get; set; }
+
+        [Display(Name = "End Time"), DataType(DataType.Time)]
+        public TimeSpan EndTime { get; set; }
+
+        public int Duration { get; set; }
+        [StringLength(100)]
+        public string DayOfWeek { get; set; }
+
+        public string SubjectsId { get; set; }
+
+        public string? StudentsId { get; set; }
+
+        public string ClassesId { get; set; }
+    }
+
 
 //--------------------------------------------------------------
 //                     Yong Choy Mun
@@ -226,6 +292,15 @@ public class StudentAttendanceVM
     public string Name { get; set; }
     public double Percentage { get; set; }
 }
+
+public class StudentAbsenceVM
+{
+    public string StudentId { get; set; }
+    public string StudentName { get; set; }
+    public string ClassName { get; set; }
+    public int AbsencesCount { get; set; }
+}
+
 //--------------------------------------------------------------
 //                     Goh Qin Long
 //--------------------------------------------------------------
