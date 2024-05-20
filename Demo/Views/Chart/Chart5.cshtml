@@ -10,7 +10,7 @@
 </p>
 
 <p>
-    [ <a href="Data4" target="data">Data</a> ]
+    [ <a href="Data5" target="data">Data</a> ]
 </p>
 
 @section foot {
@@ -24,23 +24,23 @@
         function init() {
             dt = new google.visualization.DataTable();
             // Data table columns: Program, Female and Male
-            dt.addColumn('string', 'Program');
-            dt.addColumn('number', 'Female');
-            dt.addColumn('number', 'Male');
+            dt.addColumn('string', 'ClassName');
+            dt.addColumn('number', 'Attend');
+            dt.addColumn('number', 'Absent');
 
             const style = { bold: true, italic: false, fontSize: 20, color: 'purple' };
 
             opt = {
-                title: 'Student Count By Program By Gender',
+                title: 'Attendance Status of Each Class',
                 fontName: 'Roboto',
                 fontSize: 16,
                 titleTextStyle: { fontSize: 20 },
                 chartArea: { width: '65%', height: '70%', top: 60, left: 80 },
-                vAxis: { title: 'Student Count', titleTextStyle: style },
-                hAxis: { title: 'Program', titleTextStyle: style },
+                vAxis: { title: 'Student Count', titleTextStyle: style, ticks: [1, 2, 3]  },
+                hAxis: { title: 'Class Name', titleTextStyle: style },
                 animation: { duration: 500, startup: true },
                 // TODO: colors ['#dc3912', '#3366cc'], isStacked, focusTarget
-                colors: ['#dc3912', '#3366cc'],
+                colors: ['#00ff00', '#dc3912'],
                 isStacked: false, // true
                 focusTarget: 'datum', // category
             };
@@ -53,7 +53,7 @@
         $('#reload').click(e => {
             e.preventDefault();
 
-            const url = 'Data4';
+            const url = 'Data5';
             const param = {};
 
             $.getJSON(url, param, data => {

@@ -75,37 +75,33 @@ public class ChartController : Controller
         return Json(result);
     }
 
-    // GET: Chart/Demo4
+    // GET: Chart/Chart5
     public IActionResult Chart5()
     {
         return View();
     }
 
-    // GET: Chart/Data4
-    public IActionResult Data5()
+    // GET: Chart/Data5
+    public IActionResult Data5(string? DateStr)
     {
-        var users = db.Users.ToList();
+        DateTime date = DateStr == null ? DateTime.Now : DateTime.Parse(DateStr);
+        var total = db.Students.GroupBy(s => s.ClassId);
 
-        var dt = users
-                 .GroupBy(u => u.GetType().Name)
-                 .Select(g => new
-                 {
-                     Role = g.Key,
-                     FemaleActive = g.Count(u => u.Gender == "F" && u.IsActive),
-                     FemaleInactive = g.Count(u => u.Gender == "F" && !u.IsActive),
-                     MaleActive = g.Count(u => u.Gender == "M" && u.IsActive),
-                     MaleInactive = g.Count(u => u.Gender == "M" && !u.IsActive)
-                 })
-                 .OrderBy(x => x.Role)
-                 .ToList();
+        var dt = db.Students
+            .Include(s => s.Class)
+            .GroupBy(s => s.Class.Name)
+            .Select(g => new
+            {
+                ClassName = g.Key,
+                AttendanceCount = g.SelectMany(s => s.Attendances)
+                                   .Count(a => a.MarkTime.Date == date.Date && a.IsAttend),
+                AbsenceCount = g.Count() - g.SelectMany(s => s.Attendances)
+                                .Count(a => a.MarkTime.Date == date.Date && a.IsAttend)
+            })
+            .ToList()
+            .Select(g => new object[] { g.ClassName, g.AttendanceCount, g.AbsenceCount })
+            .ToList();
 
-        var result = dt.Select(x => new object[]
-        {
-        x.Role,
-        x.FemaleActive, x.FemaleInactive,
-        x.MaleActive, x.MaleInactive
-        });
-
-        return Json(result);
+        return Json(dt);
     }
 }
