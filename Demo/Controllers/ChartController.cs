@@ -143,13 +143,6 @@ public class ChartController : Controller
     }
 
 
-
-
-
-
-
-
-
     // GET: Chart/Demo4
     public IActionResult Chart5()
     {
