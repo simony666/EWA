@@ -226,6 +226,15 @@ public class StudentAttendanceVM
     public string Name { get; set; }
     public double Percentage { get; set; }
 }
+
+public class StudentAbsenceVM
+{
+    public string StudentId { get; set; }
+    public string StudentName { get; set; }
+    public string ClassName { get; set; }
+    public int AbsencesCount { get; set; }
+}
+
 //--------------------------------------------------------------
 //                     Goh Qin Long
 //--------------------------------------------------------------

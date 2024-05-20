@@ -205,4 +205,23 @@ public class Helper
         
         smtp.Send(mail);
     }
+
+    //Own Function
+    public int GetTotalDays(int year, int month)
+    {
+        DateTime today = DateTime.Now;
+        int totalDays = year == today.Year && month == today.Month ? today.Day : DateTime.DaysInMonth(year, month);
+        int workingDays = 0;
+
+        for (int day = 1; day <= totalDays; day++)
+        {
+            DateTime currentDate = new DateTime(year, month, day);
+            if (currentDate.DayOfWeek != DayOfWeek.Saturday && currentDate.DayOfWeek != DayOfWeek.Sunday)
+            {
+                workingDays++;
+            }
+        }
+
+        return workingDays;
+    }
 }

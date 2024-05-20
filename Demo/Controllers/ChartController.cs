@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.X509;
 using System.Linq;
 
 namespace Demo.Controllers;
@@ -82,9 +83,9 @@ public class ChartController : Controller
     }
 
     // GET: Chart/Data5
-    public IActionResult Data5(string? DateStr)
+    public IActionResult Data5(string? id)
     {
-        DateTime date = DateStr == null ? DateTime.Now : DateTime.Parse(DateStr);
+        DateTime date = id == null ? DateTime.Now : DateTime.Parse(id);
         var total = db.Students.GroupBy(s => s.ClassId);
 
         var dt = db.Students
@@ -94,13 +95,46 @@ public class ChartController : Controller
             {
                 ClassName = g.Key,
                 AttendanceCount = g.SelectMany(s => s.Attendances)
-                                   .Count(a => a.MarkTime.Date == date.Date && a.IsAttend),
+                                   .Count(a => a.DateTime.Date == date.Date && a.IsAttend),
                 AbsenceCount = g.Count() - g.SelectMany(s => s.Attendances)
-                                .Count(a => a.MarkTime.Date == date.Date && a.IsAttend)
+                                .Count(a => a.DateTime.Date == date.Date && a.IsAttend)
             })
             .ToList()
             .Select(g => new object[] { g.ClassName, g.AttendanceCount, g.AbsenceCount })
             .ToList();
+
+        return Json(dt);
+    }
+
+    // GET: Chart/Data5
+    public IActionResult Data6(string? id, string? date)
+    {
+        DateTime targetDate = date == null ? DateTime.Now : DateTime.Parse(date);
+        var total = db.Students.GroupBy(s => s.ClassId);
+
+        var dt = db.Students
+        .Include(s => s.Class)
+        .Include(s => s.Attendances)
+        .Select(s => new
+        {
+            s.Id,
+            s.Name,
+            ClassName = s.Class.Name,
+            AbsencesCount = hp.GetTotalDays(targetDate.Year, targetDate.Month) - s.Attendances
+                .Count(a => a.DateTime.Year == targetDate.Year && a.DateTime.Month == targetDate.Month && a.IsAttend)
+        })
+        .OrderByDescending(s => s.AbsencesCount)
+        .Take(10)
+        .Select(s => new StudentAbsenceVM
+        {
+            StudentId = s.Id,
+            StudentName = s.Name,
+            ClassName = s.ClassName,
+            AbsencesCount = s.AbsencesCount
+        })
+        .ToList()
+        .Select(g => new object[] { g.StudentName, g.ClassName, g.AbsencesCount })
+        .ToList();
 
         return Json(dt);
     }
