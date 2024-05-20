@@ -114,7 +114,7 @@ namespace Demo.Controllers
 
             if (s == null)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("StudentList");
             }
 
 
@@ -133,7 +133,7 @@ namespace Demo.Controllers
             if (student == null)
             {
                 TempData["Info"] = $"Student {id} not found.";
-                return RedirectToAction("Index");
+                return RedirectToAction("StudentList");
             }
 
             // Find the class by classId
@@ -207,7 +207,7 @@ namespace Demo.Controllers
 
             if (student == null)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("StudentList");
             }
             
             SendWarningEmail(parent, student);
