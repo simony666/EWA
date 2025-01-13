@@ -106,6 +106,15 @@ Kindergarten Management System with secure login, password recovery, account mai
     <img src="https://github.com/user-attachments/assets/f042475e-676e-4697-963b-c1c49bdf164c" width="550" title="">
   </li>
 </ol>
+
+### Report1 - User Roles Count (Pie Chart)
+  <img src="https://github.com/user-attachments/assets/0b0f61d4-6846-413a-a7be-dbaf1c4dd3b3" width="550" title="" >
+
+
+### Report2 - User Count By Role By Gender By Activity (Column Chart)
+  <img src="https://github.com/user-attachments/assets/885835bf-5ef5-40f6-9ebf-3303cc12c8d3" width="550" title="" >
+ 
+
 <hr> 
 
 ## 2. User Account Maintenance
@@ -193,6 +202,13 @@ Kindergarten Management System with secure login, password recovery, account mai
     </p>
   </li>
 </ol>
+
+### Report1 - Gender Count by Role (Pie Chart)
+  <img src="https://github.com/user-attachments/assets/e11cc73e-ae74-4d67-ae1e-000af0ce6b85" width="550" title="" >
+
+### Report2 - Age Group Distribution of Parents (Column Chart)
+  <img src="https://github.com/user-attachments/assets/88590a54-f380-4f49-bff0-6553ba8fa180" width="550" title="" >
+
 <hr>
 
 ## 3. Subject & Class Allocation
@@ -235,41 +251,72 @@ Kindergarten Management System with secure login, password recovery, account mai
 <ol>
   <li> 
     <b>Create a Subject</b> <br>
-    <img src="" width="550" title="">
-    <p align="justify">Admin can create a subject
-</p>
+    <img src="https://github.com/user-attachments/assets/a1f25308-83fb-40bd-ac55-1366bc687c9b" width="550" title="">
+    <p align="justify">Admin can create a subject</p>
   </li>
   <li> 
-    <b>View Classes</b> <br>
-    <img src="https://github.com/user-attachments/assets/5b032daf-8cb5-430e-bd96-99c3707ed9b1" width="550" title="">
-    <p align="justify">Display the classes that have been created</p>
+    <b>View Subjects</b> <br>
+    <img src="https://github.com/user-attachments/assets/691dc831-74bb-452c-905b-1ea5dae80849" width="550" title="">
+    <p align="justify">Successfully created a subject.</p>
   </li>
   <li> 
-    <b>Update Class Details</b> <br>
-    <img src="https://github.com/user-attachments/assets/d16f808a-0441-4767-bbfb-9627493efebe" width="550" title="">
-    <p align="justify"> Admin can update the classes when the class capacity is 0</p>
+    <b>Update Subject's Details</b> <br>
+    <img src="https://github.com/user-attachments/assets/f17cc459-73d2-48cf-a110-1f47de1503d5" width="550" title="">
+    <p align="justify"> Update a subject (SU002) tutor name</p>
   </li>
   <li> 
-    <b>Error Message - Update Class Details</b> <br>
-    <img src="https://github.com/user-attachments/assets/040c8bbe-eb95-40b3-ab38-183113aac744" width="550" title="">
-    <p align="justify"> Admin are unable to update the classes when the class capacity is more than 0</p>
+    <b>Successful Message - Update Class Details</b> <br>
+    <img src="https://github.com/user-attachments/assets/4db87d51-b0f1-46e9-94bd-eec9aab43332" width="550" title="">
+    <p align="justify"> Successfully updated a subject (SU002) tutor name</p>
   </li>
   <li> 
-    <b>Delete Class</b> <br>
-    <img src="https://github.com/user-attachments/assets/8920ea59-6c38-4150-92b7-7441c9f90cd3" width="550" title="">
-    <p align="justify"> Admin can delete the classes when the class capacity is 0</p>
+    <b>Delete Subject</b> <br>
+    <img src="https://github.com/user-attachments/assets/21e7006e-452a-4bed-93c5-595d7186c8f9" width="550" title="">
+    <p align="justify"> Successfully delete subject (SU002) as it has not been assigned to a class</p>
   </li>
   <li> 
-    <b>Error Message - Delete Class</b> <br>
-    <img src="https://github.com/user-attachments/assets/93a2efce-72f5-4307-bcca-0094f59711d2" width="550" title="">
-    <p align="justify">Admin cannot delete the classes when there are students allocated inside the class.</p>
+    <b>Error Message - Delete Subject</b> <br>
+    <img src="https://github.com/user-attachments/assets/a5a02127-51f0-4087-8239-b6d6f37b07a7" width="550" title="">
+    <p align="justify">Cannot delete subject (SU000) as it has been assigned to a class</p>
   </li>
 </ol>
-Class-Subject Allocation
-Tutor-Class Allocation
-Student-Class Allocation
-Searching, Filtering & Paging
-Tutor and student timetable
+
+### Class-Subject & Tutor-Class Allocation
+<ol>
+  <li> 
+    <b>Assign Subject to a class</b> <br>
+    <img src="https://github.com/user-attachments/assets/90614433-2428-43ce-8a3b-47b0dec70be0" width="550" title="">
+    <p align="justify">Assigned subject (Drawing) to a class (Junior class 1)</p>
+  </li>
+  <li> 
+    <b>View Class Subject Allocation</b> <br>
+    <img src="https://github.com/user-attachments/assets/f851c3f9-362b-44bc-ba28-aa1dbf375ecd" width="550" title="">
+    <p align="justify">The subject(SU001) is successfully assigned on Thursday at 11 am - 1 pm</p>
+  </li>
+  <li> 
+    <b>Error Message - Class-Subject Allocation</b> <br>
+    <img src="https://github.com/user-attachments/assets/1e5cf559-f36f-4387-aa68-a44eceb09939" width="550" title="">
+    <p align="justify"> Cannot assign Dancing class on Thursday from 11 am - 1 pm as there is another subject is taken at that time for (Junior Class 1)</p>
+  </li>
+</ol>
+
+### Student-Class Allocation
+<ol>
+  <li> 
+    <b>Assign students to a class</b> <br>
+    <img src="https://github.com/user-attachments/assets/90780a12-bc38-4540-9cd2-c4007d2b5df6 width="550" title="">
+  </li>
+  <li> 
+    <b>View Student-Class Allocation</b> <br>
+    <img src="https://github.com/user-attachments/assets/9ef8503b-435a-482b-aa07-762512b02556" width="550" title="">
+    <p align="justify">Successfully assign students to a class (Junior Class 1)</p>
+  </li>
+  <li> 
+    <b>Error Message - Student-Class Allocation</b> <br>
+    <img src="https://github.com/user-attachments/assets/c4a11f94-3f8a-4324-bf72-0a0569bd92ef" width="550" title="">
+    <p align="justify"> Cannot assign students to a class (Sophomore Class 1) because the student age is not equal to 5</p>
+  </li>
+</ol>
 
 ### Generates and sends timetable to tutors and student’s parent by Email
 <ol>
@@ -300,31 +347,68 @@ Tutor and student timetable
   </li>
 </ol>
 
-4. Attendance Tracking
-PIC: Yong Choy Mun
-Class Calendar (Daily/Weekly)
-Class-Student Attendance List
-Attendance Taking (Manual)
-Attendance Taking (QR Code Generating)
-Attendance Taking (QR Code Scanning)
-Warning Letter (Email)
+### Report1 - Count Total Classes Under Each Class Type (Pie Chart)
+  <img src="https://github.com/user-attachments/assets/81624fd8-dae0-40df-b6b0-4a72bdb779ef" width="550" title="" >
 
-5. Data Report
-PIC: Wang Siew You
-User Roles Count (Pie Chart)
-User Count By Role By Gender By Activity (Column Chart)
-PIC: Goh QIn Long
-Gender Count by Role (Pie Chart)
-Age Group Distribution of Parents (Column Chart)
-PIC: Leong Zhi Yen
-Class Allocation Report (Pie Chart)
-Student-Class Report (Column Chart)
-PIC: Yong Choy Mun 
-Class Attendance Report (Column Chart)
-Top 10 Absent Student By Month (Column)
+### Report2 - Student Count by Classes (Column Chart)
+  <img src="https://github.com/user-attachments/assets/673272a6-74a8-4fd3-a8e1-16fa7c6563ca" width="550" title="" >
 
-6. Others
-PIC: Goh Qin Long
-Google Maps (Store Location)
-PIC: Leong Zhi Yen
-Real-Time Chat Room (Public)
+<hr>
+
+## 4. Attendance Tracking
+### PIC: Yong Choy Mun - Admin side: Admin, Tutor
+### Class Calendar (Daily/Weekly)
+<ol>
+  <li> 
+    <br>
+    <img src="https://github.com/user-attachments/assets/274099cc-08f5-41df-a439-6264ada0d66f" width="550" title="" >
+  </li>
+</ol>
+
+### Class-Student Attendance List
+<ol>
+  <li> 
+    <br>
+    <img src="https://github.com/user-attachments/assets/013f7545-70e8-4be0-b5d8-dee4f5bb4965" width="550" title="" >
+  </li>
+</ol>
+
+### Attendance Taking (Manual)
+<ol>
+  <li> 
+    <br>
+    <img src="https://github.com/user-attachments/assets/6dd1d2d1-3145-4073-b34e-3802e27f5726" width="550" title="" >
+  </li>
+</ol>
+
+### Attendance Taking (QR Code Generating for students)
+<ol>
+  <li> 
+    <br>
+    <img src="https://github.com/user-attachments/assets/8cdc6e74-fa8f-47a0-942e-367695dfb9a0" width="550" title="" >
+  </li>
+</ol>
+
+### Attendance Taking (QR Code Scanning)
+<ol>
+  <li> 
+    <br>
+    <img src="https://github.com/user-attachments/assets/9be45592-646a-4d9e-beeb-71452588de51" width="550" title="" >
+  </li>
+</ol>
+
+### Warning Letter (Email)
+<ol>
+  <li> 
+    <br>
+    <img src="https://github.com/user-attachments/assets/40dfcfd5-cce7-4d07-93db-4ecdf4c7e804" width="550" title="" >
+  </li>
+</ol>
+
+### Report1 - Class Attendance Status (Column Chart)
+  <img src="https://github.com/user-attachments/assets/c0d6f3dd-9554-4185-a3d6-5a36cc15badb" width="550" title="" >
+
+### Report2 - Top 10 Absent Student By Month (Column Chart)
+  <img src="https://github.com/user-attachments/assets/90396f1d-e915-4d55-9f36-fd292cc7a0a2" width="550" title="" >
+
+
