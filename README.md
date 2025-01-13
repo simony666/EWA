@@ -1,5 +1,4 @@
-![{8F3C0AC3-33F6-40D0-BC89-BFD31C3C2121}](https://github.com/user-attachments/assets/fc7b7ef0-06a1-48f7-891e-4eec2b444877)# Kindergarten Management System
-
+# Kindergarten Management System
 Kindergarten Management System with secure login, password recovery, account maintenance (Admin, Tutor, Parent, Student), subject/class allocation, attendance tracking (QR/manual), and data reports (charts). Includes features like timetables, warning letters, Google Maps, and real-time chat
 
 <hr>
@@ -196,16 +195,110 @@ Kindergarten Management System with secure login, password recovery, account mai
 </ol>
 <hr>
 
-3. Subject & Class Allocation
-PIC: Leong Zhi Yen
-Subject Maintenance (CRUD)
-Class Maintenance (CRUD)
+## 3. Subject & Class Allocation
+### PIC: Leong Zhi Yen - Admin side: Admin, Tutor
+### Class Maintenance (CRUD)
+<ol>
+  <li> 
+    <b>Create a Class</b> <br>
+    <img src="https://github.com/user-attachments/assets/b1f7b50b-9eae-421a-aa90-768e5fde7458" width="550" title="">
+    <p align="justify">Admin have to create a class first before creating a subject</p>
+  </li>
+  <li> 
+    <b>View Classes</b> <br>
+    <img src="https://github.com/user-attachments/assets/5b032daf-8cb5-430e-bd96-99c3707ed9b1" width="550" title="">
+    <p align="justify">Display the classes that have been created</p>
+  </li>
+  <li> 
+    <b>Update Class Details</b> <br>
+    <img src="https://github.com/user-attachments/assets/d16f808a-0441-4767-bbfb-9627493efebe" width="550" title="">
+    <p align="justify"> Admin can update the classes when the class capacity is 0</p>
+  </li>
+  <li> 
+    <b>Error Message - Update Class Details</b> <br>
+    <img src="https://github.com/user-attachments/assets/040c8bbe-eb95-40b3-ab38-183113aac744" width="550" title="">
+    <p align="justify"> Admin are unable to update the classes when the class capacity is more than 0</p>
+  </li>
+  <li> 
+    <b>Delete Class</b> <br>
+    <img src="https://github.com/user-attachments/assets/8920ea59-6c38-4150-92b7-7441c9f90cd3" width="550" title="">
+    <p align="justify"> Admin can delete the classes when the class capacity is 0</p>
+  </li>
+  <li> 
+    <b>Error Message - Delete Class</b> <br>
+    <img src="https://github.com/user-attachments/assets/93a2efce-72f5-4307-bcca-0094f59711d2" width="550" title="">
+    <p align="justify">Admin cannot delete the classes when there are students allocated inside the class.</p>
+  </li>
+</ol>
+
+### Subject Maintenance (CRUD)
+<ol>
+  <li> 
+    <b>Create a Subject</b> <br>
+    <img src="" width="550" title="">
+    <p align="justify">Admin can create a subject
+</p>
+  </li>
+  <li> 
+    <b>View Classes</b> <br>
+    <img src="https://github.com/user-attachments/assets/5b032daf-8cb5-430e-bd96-99c3707ed9b1" width="550" title="">
+    <p align="justify">Display the classes that have been created</p>
+  </li>
+  <li> 
+    <b>Update Class Details</b> <br>
+    <img src="https://github.com/user-attachments/assets/d16f808a-0441-4767-bbfb-9627493efebe" width="550" title="">
+    <p align="justify"> Admin can update the classes when the class capacity is 0</p>
+  </li>
+  <li> 
+    <b>Error Message - Update Class Details</b> <br>
+    <img src="https://github.com/user-attachments/assets/040c8bbe-eb95-40b3-ab38-183113aac744" width="550" title="">
+    <p align="justify"> Admin are unable to update the classes when the class capacity is more than 0</p>
+  </li>
+  <li> 
+    <b>Delete Class</b> <br>
+    <img src="https://github.com/user-attachments/assets/8920ea59-6c38-4150-92b7-7441c9f90cd3" width="550" title="">
+    <p align="justify"> Admin can delete the classes when the class capacity is 0</p>
+  </li>
+  <li> 
+    <b>Error Message - Delete Class</b> <br>
+    <img src="https://github.com/user-attachments/assets/93a2efce-72f5-4307-bcca-0094f59711d2" width="550" title="">
+    <p align="justify">Admin cannot delete the classes when there are students allocated inside the class.</p>
+  </li>
+</ol>
 Class-Subject Allocation
 Tutor-Class Allocation
 Student-Class Allocation
 Searching, Filtering & Paging
 Tutor and student timetable
-Send timetable to tutor and student’s parent by Email
+
+### Generates and sends timetable to tutors and student’s parent by Email
+<ol>
+  <li> 
+    <b>Tutor's Timetable </b><br>
+    <img src="https://github.com/user-attachments/assets/52919fcf-3bec-4111-ace3-e40e1a9227b7" width="550" title="" >
+    <p align="justify">
+      A timetable showing the subject name and subject ID that the tutor is in charge of. It also shows the class name that the class have that subject. This is done by including the Tutors table, Subjects     table, ClassesSubjects table and Class Table. Before this, the tutor must assigned to a class and teach a subject
+    </p>
+  </li>
+  <li> 
+    <b>Student's Timetable </b><br>
+    <img src="https://github.com/user-attachments/assets/efda9c7f-f335-47ce-b5de-cb0267584cf0" width="550" title="" >
+    <p align="justify">
+      A timetable showing the subject name and subject ID of that particular student class involved. It also shows the tutor's name of the subject. This is done by including the Students table, Class table,             ClassesSubjects table, Subjects Table and Tutor table. Before this, the class must be eligible to take that particular subject when assigned a subject to the class.
+    </p>
+  </li>
+</ol>
+
+### Real-time Chat room
+<ol>
+  <li> 
+    <b>A real-time live chat between admin and parents</b><br>
+    <img src="https://github.com/user-attachments/assets/68215f39-4cd0-4f1b-a72a-dc60b8f8c9a3" width="550" title="" >
+    <p align="justify">
+     A real-time chat room allows the parents to talk to the admin or the customer to talk to the admin. The real-time chat functionality is implemented using SignalR, where the client establishes a connection with the server, and messages are exchanged via SignalR hubs, allowing instantaneous updates to all connected clients. When a user sends a message, it's broadcast to all clients. Each client updates its chat window accordingly.
+    </p>
+  </li>
+</ol>
 
 4. Attendance Tracking
 PIC: Yong Choy Mun
