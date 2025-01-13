@@ -55,19 +55,19 @@ Kindergarten Management System with secure login, password recovery, account mai
 </div>
 
 #### Login and Logout
-
-Password Hashing
-Password Recovery (Email)
-
-
-
 <div align="center"> 
-  <b>Google Recaptcha</b> <br>
-  <img src="https://github.com/user-attachments/assets/3c908b87-819b-4312-ad0e-c396194f231d" width="350" title="Activation Email"/>
+  <b>Google Recaptcha in Login page</b> <br>
+  <img src="https://github.com/user-attachments/assets/3c908b87-819b-4312-ad0e-c396194f231d" width="350" title="Activation Email"/><br>
+  <b>The error message will display where the email is not activated</b> <br>
+  <img src="https://github.com/user-attachments/assets/23d9729b-c7d2-494e-842f-da1aaf544952" width="350" title="Email validation"/>
   <p align="justify">
     Users simply click a checkbox indicating they are human. This is followed by a challenge-response test if necessary. Automatically triggers verification when users click on an existing button on the site, with no need for an explicit checkbox.
   </p>
 </div>
+
+Password Hashing
+Password Recovery (Email)
+
 
 <hr> 
 
